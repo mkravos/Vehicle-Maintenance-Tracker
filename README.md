@@ -1,2 +1,2 @@
 # Vehicle-Maintenance-Tracker
-Hobbyist-focused vehicle maintenance tracking application.
+Use case: Hobbyist-focused application for tracking vehicle maintenance must implement a database able to store multiple vehicles by year, make, model, mileage, and VIN, as well as service items for each vehicle. Each service item will contain a name, date, mileage, service interval, cost, and receipt. The application will be used to notify the user of upcoming maintenance tasks.
