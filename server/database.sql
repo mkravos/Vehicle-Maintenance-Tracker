@@ -1,25 +1,25 @@
-CREATE DATABASE Vehicle_Maintenance_DB;
+CREATE DATABASE vehicle_maintenance_db;
 
-CREATE TABLE UserAccount(
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255),
+CREATE TABLE user_account(
+    id SERIAL PRIMARY KEY, 
+    username VARCHAR(255), 
     userkey VARCHAR(255)
 );
 
-CREATE TABLE Vehicle(
+CREATE TABLE vehicle(
     id SERIAL PRIMARY KEY,
     vehicle_name VARCHAR(255) NOT NULL,
     model_year INT NOT NULL,
     make VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
     mileage INT,
-    VIN VARCHAR(255)
+    vin VARCHAR(255)
 );
 
-CREATE TABLE ServiceItem(
+CREATE TABLE service_item(
     id SERIAL PRIMARY KEY,
     item_name VARCHAR(255) NOT NULL,
-    service_data DATE NOT NULL,
+    service_date DATE NOT NULL,
     mileage INT NOT NULL,
     interval_miles INT,
     interval_time INT,
@@ -27,12 +27,14 @@ CREATE TABLE ServiceItem(
     receipt_image VARCHAR(255)
 );
 
-CREATE TABLE MaintenanceRecord(
-    id PRIMARY KEY REFERENCES Vehicle,
-    id REFERENCES ServiceItem
+CREATE TABLE maintenance_record(
+    id SERIAL PRIMARY KEY,
+    vehicle_id INT REFERENCES vehicle(id),
+    item_id INT REFERENCES service_item(id)
 );
 
-CREATE TABLE UserVehicle(
-    id PRIMARY KEY REFERENCES UserAccount,
-    id REFERENCES Vehicle
+CREATE TABLE user_vehicle(
+    id SERIAL PRIMARY KEY,
+    account_id INT REFERENCES user_account(id),
+    vehicle_id INT REFERENCES vehicle(id)
 );
