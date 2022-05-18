@@ -1,18 +1,20 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Hobbyist-focused vehicle maintenance tracking application.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Maj Kravos",
   "license": "ISC",
   "dependencies": {
+    "all": "^0.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "postgresql": "^0.0.1"
+    "postgres": "^3.2.2"
   }
 }
