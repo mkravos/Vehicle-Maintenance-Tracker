@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  background-color: #fbfbfb;
+  background-color: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,4 +11,18 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: black;
+}
+
+.Garage-header {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.Garage-card-text {
+  font-size: 15px;
 }
