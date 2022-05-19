@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 import BootstrapNavbar from './components/BootstrapNavbar.js';
 import { Button, Form } from 'react-bootstrap';
 
 function App() {
   return (
-    <Router>
       <body>
         <Routes>
           <Route exact path="/" element={<Login/>}></Route>
@@ -15,7 +14,6 @@ function App() {
           <Route exact path="/report" element={<Report/>}></Route>
         </Routes>
       </body>
-    </Router>
   );
 }
 
@@ -38,7 +36,7 @@ function Login() {
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Remember me" />
             </Form.Group>
-            <Button href="/dashboard" variant="primary" /*type="submit"*/>Log In</Button>
+            <Link to="/dashboard"><Button variant="primary" /*type="submit"*/>Log In</Button></Link>
           </Form>
         </div>
       </header>
