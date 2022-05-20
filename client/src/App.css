@@ -26,3 +26,26 @@
 .Garage-card-text {
   font-size: 15px;
 }
+
+.Dashboard-header {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.Dashboard-card-text {
+  font-size: 20px;
+}
+
+.Modal-filename {
+  font-size: 12px;
+}
+
+.Garage-dropdown-container {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,6 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
-import { Navbar, Nav, Container } from 'react-bootstrap'
+import { Navbar, Nav, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 class BootstrapNavbar extends React.Component {
@@ -13,7 +13,6 @@ class BootstrapNavbar extends React.Component {
                 <Nav className="m-auto">
                     <Nav.Link><Link to="/dashboard" className="nav-link">Dashboard</Link></Nav.Link>
                     <Nav.Link><Link to="/garage" className="nav-link">Garage</Link></Nav.Link>
-                    <Nav.Link><Link to="/report" className="nav-link">Report</Link></Nav.Link>
                 </Nav>
                 </Navbar.Collapse>
             </Container>

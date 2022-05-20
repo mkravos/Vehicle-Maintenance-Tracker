@@ -1,10 +1,16 @@
+import React from 'react';
 import BootstrapNavbar from './BootstrapNavbar.js';
-import { Card, DropdownButton, Dropdown } from 'react-bootstrap';
+import UpdateMileage from './UpdateMileage.js';
+import RecordServiceItem from './RecordServiceItem.js';
+import ViewServiceRecords from './ViewServiceRecords';
+import GenerateReport from './GenerateReport.js';
+import { Card, Dropdown, DropdownButton } from 'react-bootstrap';
+
 
 function Garage() {
     return (
       <div className="Garage">
-        <BootstrapNavbar></BootstrapNavbar>
+        <BootstrapNavbar/>
         <header className="Garage-header">
           <br/>
           <p>Garage</p>
@@ -20,31 +26,21 @@ function Garage() {
                   Last Service:
                 </p>
               </Card.Text>
-              <DropdownButton id="dropdown-basic-button" title="Actions">
-                <Dropdown.Item href="#/action-1">Update Mileage</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Record Service Item</Dropdown.Item>
-              </DropdownButton>
+              <div className="Garage-dropdown-container">
+                <DropdownButton id="dropdown-basic-button" title="Actions">
+                  <UpdateMileage/>
+                  <RecordServiceItem/>
+                  <ViewServiceRecords/>
+                  <GenerateReport/>
+                </DropdownButton>
+                <DropdownButton className="Vehicle-dropdown" variant="outline-primary" id="dropdown-basic-button" title="Vehicle">
+                  <Dropdown.Item>Edit Vehicle</Dropdown.Item>
+                  <Dropdown.Item>Remove Vehicle</Dropdown.Item>
+                </DropdownButton>
+              </div>
             </Card.Body>
           </Card>
           <br/>
-          <Card className="col-sm-8">
-            <Card.Body>
-              <Card.Title>Year, Make, Model</Card.Title>
-              <Card.Text>
-                <p className="Garage-card-text">
-                  Name:
-                  <br/>
-                  Mileage:
-                  <br/>
-                  Last Service:
-                </p>
-              </Card.Text>
-              <DropdownButton id="dropdown-basic-button" title="Actions">
-                <Dropdown.Item href="#/action-1">Update Mileage</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Record Service Item</Dropdown.Item>
-              </DropdownButton>
-            </Card.Body>
-          </Card>
         </header>
       </div>
     );
