@@ -24,7 +24,11 @@ function Register() {
               <Form.Group className="mb-3" controlId="formBasicCheckbox">
                 <Form.Check type="checkbox" label="Remember me" />
               </Form.Group>
-              <center><Link to="/dashboard"><Button variant="primary" /*type="submit"*/>Register</Button></Link></center>
+              <center>
+                <Link to="/dashboard"><Button variant="primary" /*type="submit"*/>Register</Button></Link>
+                <br/><br/>
+                <Link to="/">Already have an account? Log in!</Link>
+              </center>
             </Form>
           </div>
         </header>

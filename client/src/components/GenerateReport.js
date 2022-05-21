@@ -14,7 +14,7 @@ function GenerateReport() {
   
         <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>
-            <Modal.Title>Generate Report</Modal.Title>
+            <Modal.Title>Generate Report for (Vehicle Name)</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <DropdownButton id="dropdown-basic-button" title="Generate Report For">

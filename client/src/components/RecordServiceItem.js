@@ -14,7 +14,7 @@ function RecordServiceItem() {
   
         <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>
-            <Modal.Title>Record Service Item</Modal.Title>
+            <Modal.Title>Record Service Item for (Vehicle Name)</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form className="form-control-lg">

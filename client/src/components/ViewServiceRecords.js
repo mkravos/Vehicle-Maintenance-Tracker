@@ -14,7 +14,7 @@ function ViewServiceRecords() {
   
         <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>
-            <Modal.Title>View Service Records</Modal.Title>
+            <Modal.Title>View Service Records for (Vehicle Name)</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Accordion defaultActiveKey="0">

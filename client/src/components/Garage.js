@@ -4,8 +4,8 @@ import UpdateMileage from './UpdateMileage.js';
 import RecordServiceItem from './RecordServiceItem.js';
 import ViewServiceRecords from './ViewServiceRecords';
 import GenerateReport from './GenerateReport.js';
+import AddVehicle from './AddVehicle.js';
 import { Card, Dropdown, DropdownButton } from 'react-bootstrap';
-
 
 function Garage() {
     return (
@@ -41,6 +41,7 @@ function Garage() {
             </Card.Body>
           </Card>
           <br/>
+          <AddVehicle caller="Add"/>
         </header>
       </div>
     );

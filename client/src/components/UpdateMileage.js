@@ -14,13 +14,13 @@ function UpdateMileage() {
   
         <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>
-            <Modal.Title>Update Mileage</Modal.Title>
+            <Modal.Title>Update Mileage for (Vehicle Name)</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form className="form-control-lg">
               <Form.Group className="mb-3" controlId="update-mileage-box">
-                <Form.Label>Mileage for Year, Make, Model</Form.Label>
-                <Form.Control placeholder="Enter new mileage" />
+                <Form.Label>Mileage</Form.Label>
+                <Form.Control placeholder="Enter current mileage" />
               </Form.Group>
             </Form>
           </Modal.Body>
