@@ -42,11 +42,53 @@
   font-size: 20px;
 }
 
+.RSI-attach-file {
+  display: flex;
+  align-items: center;
+}
+
 .Modal-filename {
   font-size: 12px;
+  margin-left: 10px;
 }
 
 .Garage-dropdown-container {
   display: flex;
   justify-content: space-between;
+}
+
+.RSI-servicename {
+  display: flex;
+}
+
+.servicenamebox {
+  margin-right: 1px;
+}
+
+.VSR-card-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.VSR-card-buttons {
+  display: flex;
+}
+
+.Edit-service-item-button {
+  margin-left: 5px;
+}
+
+.Dashboard-card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Generate-report-body {
+  display: flex;
+  align-items: center;
+}
+
+.Report-name {
+  font-size: 12px;
+  margin-left: 10px;
 }

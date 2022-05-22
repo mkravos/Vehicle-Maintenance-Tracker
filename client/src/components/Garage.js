@@ -5,7 +5,9 @@ import RecordServiceItem from './RecordServiceItem.js';
 import ViewServiceRecords from './ViewServiceRecords';
 import GenerateReport from './GenerateReport.js';
 import AddVehicle from './AddVehicle.js';
-import { Card, Dropdown, DropdownButton } from 'react-bootstrap';
+import EditVehicle from './EditVehicle.js';
+import RemoveVehicle from './RemoveVehicle.js';
+import { Card, DropdownButton } from 'react-bootstrap';
 
 function Garage() {
     return (
@@ -34,14 +36,14 @@ function Garage() {
                   <GenerateReport/>
                 </DropdownButton>
                 <DropdownButton className="Vehicle-dropdown" variant="outline-primary" id="dropdown-basic-button" title="Vehicle">
-                  <Dropdown.Item>Edit Vehicle</Dropdown.Item>
-                  <Dropdown.Item>Remove Vehicle</Dropdown.Item>
+                  <EditVehicle/>
+                  <RemoveVehicle/>
                 </DropdownButton>
               </div>
             </Card.Body>
           </Card>
           <br/>
-          <AddVehicle caller="Add"/>
+          <AddVehicle/>
         </header>
       </div>
     );

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form, DropdownButton } from 'react-bootstrap';
 
-function RecordServiceItem() {
+function EditServiceItem() {
     const [show, setShow] = useState(false);
   
     const handleClose = () => setShow(false);
@@ -10,11 +10,11 @@ function RecordServiceItem() {
   
     return (
       <div className="Garage-modal">
-        <Dropdown.Item onClick={handleShow}>Record Service Item</Dropdown.Item>
+        <Button variant="outline-primary" className="Edit-service-item-button btn-sm" onClick={handleShow}>Edit</Button>
   
         <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>
-            <Modal.Title>Record Service Item for (Vehicle Name)</Modal.Title>
+            <Modal.Title>Edit (Service Item Name)</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form className="form-control-lg">
@@ -64,6 +64,9 @@ function RecordServiceItem() {
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
+            <Button variant="danger" onClick={handleClose}>
+              Delete Record
+            </Button>
             <Button variant="primary" onClick={handleClose}>
               Save
             </Button>
@@ -73,4 +76,4 @@ function RecordServiceItem() {
     )
   }
   
-  export default RecordServiceItem;
+  export default EditServiceItem;

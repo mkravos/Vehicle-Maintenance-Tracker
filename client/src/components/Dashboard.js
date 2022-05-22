@@ -1,5 +1,5 @@
 import BootstrapNavbar from './BootstrapNavbar.js';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 
 function Dashboard() {
     return (
@@ -9,7 +9,12 @@ function Dashboard() {
           <br/>
           <p>Dashboard</p>
           <Card border='danger' key='Danger' className="col-sm-8">
-            <Card.Header className='text-danger'>PAST DUE</Card.Header>
+            <Card.Header className='Dashboard-card-header text-danger'>
+              <div>PAST DUE</div>
+              <Button variant="outline-danger" className="btn-sm">
+                Don't Track This Item
+              </Button>
+            </Card.Header>
             <Card.Body>
               <Card.Title>Year, Make, Model</Card.Title>
               <Card.Text>
@@ -21,7 +26,12 @@ function Dashboard() {
           </Card>
           <br/>
           <Card border='warning' key='Warning' className="col-sm-8">
-            <Card.Header className='text-warning'>COMING UP</Card.Header>
+            <Card.Header className='Dashboard-card-header text-warning'>
+              <div>COMING UP</div>
+              <Button variant="outline-danger" className="btn-sm">
+                Don't Track This Item
+              </Button>
+            </Card.Header>
             <Card.Body>
               <Card.Title>Year, Make, Model</Card.Title>
               <Card.Text>
@@ -33,7 +43,12 @@ function Dashboard() {
           </Card>
           <br/>
           <Card border='success' key='Success' className="col-sm-8">
-            <Card.Header className='text-success'>OK</Card.Header>
+            <Card.Header className='Dashboard-card-header text-success'>
+              <div>OK</div>
+              <Button variant="outline-danger" className="btn-sm">
+                Don't Track This Item
+              </Button>
+            </Card.Header>
             <Card.Body>
               <Card.Title>Year, Make, Model</Card.Title>
               <Card.Text>

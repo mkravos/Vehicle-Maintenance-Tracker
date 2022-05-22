@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, CardGroup, Card } from 'react-bootstrap';
-import EditServiceItem from './EditServiceItem';
 
-function ViewServiceRecords() {
+function PickReportRecord() {
     const [show, setShow] = useState(false);
   
     const handleClose = () => setShow(false);
@@ -11,11 +10,11 @@ function ViewServiceRecords() {
   
     return (
       <div className="Garage-modal">
-        <Dropdown.Item onClick={handleShow}>View Service Records</Dropdown.Item>
+        <Dropdown.Item onClick={handleShow}>One Service Record</Dropdown.Item>
   
         <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>
-            <Modal.Title>View Service Records for (Vehicle Name)</Modal.Title>
+            <Modal.Title>Generate Report for One Record</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <CardGroup>
@@ -24,8 +23,7 @@ function ViewServiceRecords() {
                   <div className="VSR-card-title">
                     <Card.Title>(Service Item Name)</Card.Title>
                     <div className="VSR-card-buttons">
-                      <Button variant="outline-success" className="btn-sm">Tracking</Button>
-                      <EditServiceItem/>
+                      <Button variant="outline-primary" className="btn-sm">Generate Report</Button>
                     </div>
                   </div>
                   Last Serviced: (date, mileage)<br/>
@@ -37,8 +35,8 @@ function ViewServiceRecords() {
             </CardGroup>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={handleClose}>
-              Close
+            <Button variant="secondary" onClick={handleClose}>
+              Cancel
             </Button>
           </Modal.Footer>
         </Modal>
@@ -46,4 +44,4 @@ function ViewServiceRecords() {
     )
   }
   
-  export default ViewServiceRecords;
+  export default PickReportRecord;
