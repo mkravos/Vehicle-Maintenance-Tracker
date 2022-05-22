@@ -17,7 +17,7 @@ function Register() {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Enter password" />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Group className="mb-3" controlId="formBasicPassword-2">
                 <Form.Label>Re-enter password</Form.Label>
                 <Form.Control type="password" placeholder="Re-enter password" />
               </Form.Group>

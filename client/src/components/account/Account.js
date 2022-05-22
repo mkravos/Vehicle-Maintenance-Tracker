@@ -1,5 +1,8 @@
 import BootstrapNavbar from '../BootstrapNavbar.js';
-import { Card, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Card, DropdownButton } from 'react-bootstrap';
+import ChangeUsername from './ChangeUsername.js'
+import ChangePassword from './ChangePassword.js';
+import DeleteAccount from './DeleteAccount.js';
 
 function Account() {
   return (
@@ -16,9 +19,9 @@ function Account() {
                 </p>
               </Card.Text>
               <DropdownButton id="dropdown-basic-button" title="Actions">
-                <Dropdown.Item>Change Username</Dropdown.Item>
-                <Dropdown.Item>Change Password</Dropdown.Item>
-                <Dropdown.Item>Delete Account</Dropdown.Item>
+                <ChangeUsername/>
+                <ChangePassword/>
+                <DeleteAccount/>
               </DropdownButton>
             </Card.Body>
           </Card>
