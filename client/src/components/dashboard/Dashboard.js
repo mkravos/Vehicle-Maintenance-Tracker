@@ -1,4 +1,4 @@
-import BootstrapNavbar from './BootstrapNavbar.js';
+import BootstrapNavbar from '../BootstrapNavbar.js';
 import { Card, Button } from 'react-bootstrap';
 
 function Dashboard() {

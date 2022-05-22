@@ -13,6 +13,7 @@ class BootstrapNavbar extends React.Component {
                 <Nav className="m-auto">
                     <Nav.Link><Link to="/dashboard" className="nav-link">Dashboard</Link></Nav.Link>
                     <Nav.Link><Link to="/garage" className="nav-link">Garage</Link></Nav.Link>
+                    <Nav.Link><Link to="/account" className="nav-link">Account</Link></Nav.Link>
                 </Nav>
                 </Navbar.Collapse>
             </Container>

@@ -1,5 +1,5 @@
 import React from 'react';
-import BootstrapNavbar from './BootstrapNavbar.js';
+import BootstrapNavbar from '../BootstrapNavbar.js';
 import UpdateMileage from './UpdateMileage.js';
 import RecordServiceItem from './RecordServiceItem.js';
 import ViewServiceRecords from './ViewServiceRecords';
@@ -19,7 +19,7 @@ function Garage() {
             <Card.Body>
               <Card.Title>Year, Make, Model</Card.Title>
               <Card.Text>
-                <p className="Garage-card-text">
+                <p className="Card-text">
                   Name:
                   <br/>
                   Mileage:
