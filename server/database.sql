@@ -22,9 +22,11 @@ CREATE TABLE service_item(
     service_date DATE NOT NULL,
     mileage INT NOT NULL,
     interval_miles INT,
-    interval_time INT,
+    interval_time DATE,
+    part_number VARCHAR(255),
     cost INT,
-    receipt_image VARCHAR(255)
+    receipt_image VARCHAR(255),
+    tracking BOOLEAN DEFAULT true
 );
 
 CREATE TABLE maintenance_record(
