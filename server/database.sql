@@ -26,7 +26,7 @@ CREATE TABLE service_item(
     part_number VARCHAR(255),
     cost INT,
     receipt_image VARCHAR(255),
-    tracking BOOLEAN DEFAULT true
+    tracking BOOLEAN NOT NULL DEFAULT true
 );
 
 CREATE TABLE maintenance_record(
