@@ -14,9 +14,8 @@ function Garage() {
       <div className="Garage">
         <BootstrapNavbar/>
         <header className="Garage-header">
-          <br/>
-          <p>Garage</p>
-          <Card className="col-sm-8">
+          <p className="Page-title">Garage</p>
+          <Card className="col-sm-8 Card">
             <Card.Body>
               <Card.Title>Year, Make, Model</Card.Title>
               <Card.Text>
@@ -42,7 +41,6 @@ function Garage() {
               </div>
             </Card.Body>
           </Card>
-          <br/>
           <AddVehicle/>
         </header>
       </div>

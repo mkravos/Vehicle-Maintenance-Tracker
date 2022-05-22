@@ -6,9 +6,8 @@ function Dashboard() {
       <div className="Dashboard">
         <BootstrapNavbar/>
         <header className="Dashboard-header">
-          <br/>
-          <p>Dashboard</p>
-          <Card border='danger' key='Danger' className="col-sm-8">
+          <p className="Page-title">Dashboard</p>
+          <Card border='danger' key='Danger' className="col-sm-8 Card">
             <Card.Header className='Dashboard-card-header text-danger'>
               <div>PAST DUE</div>
               <Button variant="outline-danger" className="btn-sm">
@@ -24,8 +23,7 @@ function Dashboard() {
               </Card.Text>
             </Card.Body>
           </Card>
-          <br/>
-          <Card border='warning' key='Warning' className="col-sm-8">
+          <Card border='warning' key='Warning' className="col-sm-8 Card">
             <Card.Header className='Dashboard-card-header text-warning'>
               <div>COMING UP</div>
               <Button variant="outline-danger" className="btn-sm">
@@ -41,8 +39,7 @@ function Dashboard() {
               </Card.Text>
             </Card.Body>
           </Card>
-          <br/>
-          <Card border='success' key='Success' className="col-sm-8">
+          <Card border='success' key='Success' className="col-sm-8 Card">
             <Card.Header className='Dashboard-card-header text-success'>
               <div>OK</div>
               <Button variant="outline-danger" className="btn-sm">
@@ -58,7 +55,6 @@ function Dashboard() {
               </Card.Text>
             </Card.Body>
           </Card>
-          <br/>
         </header>
       </div>
     );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Dropdown, Button, Modal, CardGroup, Card } from 'react-bootstrap';
+import { Dropdown, Button, Modal, Card } from 'react-bootstrap';
 
 function PickReportRecord() {
     const [show, setShow] = useState(false);
@@ -17,22 +17,20 @@ function PickReportRecord() {
             <Modal.Title>Generate Report for One Record</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <CardGroup>
-              <Card>
-                <Card.Body>
-                  <div className="VSR-card-title">
-                    <Card.Title>(Service Item Name)</Card.Title>
-                    <div className="VSR-card-buttons">
-                      <Button variant="outline-primary" className="btn-sm">Generate Report</Button>
-                    </div>
+            <Card className="Card">
+              <Card.Body>
+                <div className="VSR-card-title">
+                  <Card.Title>(Service Item Name)</Card.Title>
+                  <div className="VSR-card-buttons">
+                    <Button variant="outline-primary" className="btn-sm">Generate Report</Button>
                   </div>
-                  Last Serviced: (date, mileage)<br/>
-                  Next Service: (date, mileage)<br/>
-                  Part Number: (part_number)<br/>
-                  Service Cost: (cost)<br/>
-                </Card.Body>
-              </Card>
-            </CardGroup>
+                </div>
+                Last Serviced: (date, mileage)<br/>
+                Next Service: (date, mileage)<br/>
+                Part Number: (part_number)<br/>
+                Service Cost: (cost)<br/>
+              </Card.Body>
+            </Card>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

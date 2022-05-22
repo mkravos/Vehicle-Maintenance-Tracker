@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Dropdown, Button, Modal, Form, DropdownButton } from 'react-bootstrap';
+import { Button, Modal, Form } from 'react-bootstrap';
 
 function EditServiceItem() {
     const [show, setShow] = useState(false);
@@ -20,12 +20,7 @@ function EditServiceItem() {
             <Form className="form-control-lg">
               <Form.Group className="mb-3" controlId="service-name-box">
                 <Form.Label>Name</Form.Label>
-                <div className="RSI-servicename">
-                  <Form.Control className="servicenamebox" placeholder="Enter part name" />
-                  <DropdownButton variant="outline-secondary">
-                    <Dropdown.Item> Existing Service Item</Dropdown.Item>
-                  </DropdownButton>
-                </div>
+                <Form.Control className="servicenamebox" placeholder="Enter part name" />
               </Form.Group>
               <Form.Group className="mb-3" controlId="service-date-box">
                 <Form.Label>Date</Form.Label>
