@@ -21,7 +21,6 @@ app.post("/register", async (req, res, next) => {
     res.json(registerNewAccount.rows[0]);
   } catch (err) {
     if (err.message == "duplicate key value violates unique constraint \"user_account_username_key\"") {
-      next(err);
       res.send(err);
     } else {
       console.error(err.message);

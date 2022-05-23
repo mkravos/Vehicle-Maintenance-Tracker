@@ -16,7 +16,9 @@ function Register() {
         ).then(async res => {
           if(res.ok) {
             const text = await res.text();
-            throw new Error(text);
+            if (text.includes("\"code\":\"23505\"")) {
+              throw new Error("This username already exists. Please choose a new username.");
+            }
           }
         });
         console.log(register_request);
