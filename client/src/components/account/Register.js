@@ -30,6 +30,7 @@ function Register() {
                 <Link to="/">Already have an account? Log in!</Link>
               </center>
             </Form>
+            <a href="https://www.freepik.com/vectors/modern-texture" target="_blank" rel="noopener noreferrer" className="Background-attribution">Modern texture vector created by rawpixel.com - www.freepik.com</a>
           </div>
         </header>
       </div>

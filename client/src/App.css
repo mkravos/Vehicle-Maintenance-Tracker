@@ -110,3 +110,11 @@
   font-size: 12px;
   margin-left: 10px;
 }
+
+.Background-attribution {
+  font-size: 10px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  position: absolute; bottom: 0;
+}

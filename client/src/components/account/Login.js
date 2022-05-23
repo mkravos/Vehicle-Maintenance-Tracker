@@ -26,6 +26,7 @@ function Login() {
                   <Link to="/register">Don't have an account? Register!</Link>
               </center>
             </Form>
+            <a href="https://www.freepik.com/vectors/modern-texture" target="_blank" rel="noopener noreferrer" className="Background-attribution">Modern texture vector created by rawpixel.com - www.freepik.com</a>
           </div>
         </header>
       </div>
