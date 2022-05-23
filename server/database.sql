@@ -2,8 +2,8 @@ CREATE DATABASE vehicle_maintenance_db;
 
 CREATE TABLE user_account(
     id SERIAL PRIMARY KEY, 
-    username VARCHAR(255), 
-    userkey VARCHAR(255)
+    username VARCHAR(255) NOT NULL,
+    userkey VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE vehicle(
