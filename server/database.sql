@@ -2,8 +2,8 @@ CREATE DATABASE vehicle_maintenance_db;
 
 CREATE TABLE user_account(
     id SERIAL PRIMARY KEY, 
-    username VARCHAR(255) NOT NULL,
-    userkey VARCHAR(255) NOT NULL
+    username VARCHAR(255) UNIQUE NOT NULL,
+    userkey VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE vehicle(
@@ -31,12 +31,12 @@ CREATE TABLE service_item(
 
 CREATE TABLE maintenance_record(
     id SERIAL PRIMARY KEY,
-    vehicle_id INT REFERENCES vehicle(id),
-    item_id INT REFERENCES service_item(id)
+    vehicle_id INT REFERENCES vehicle(id) NOT NULL,
+    item_id INT REFERENCES service_item(id) NOT NULL
 );
 
 CREATE TABLE user_vehicle(
     id SERIAL PRIMARY KEY,
-    account_id INT REFERENCES user_account(id),
-    vehicle_id INT REFERENCES vehicle(id)
+    account_id INT REFERENCES user_account(id) NOT NULL,
+    vehicle_id INT REFERENCES vehicle(id) NOT NULL
 );

@@ -2,28 +2,74 @@ import React, { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
+function containsWhitespace(str) {
+  return /\s/.test(str);
+}
+
 function Register() {
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
+    const usernameErrorDiv = document.getElementById('usernameErrorDiv');
+    const passwordErrorDiv = document.getElementById('passwordErrorDiv');
 
     const registerNewAccount = async e => {
       e.preventDefault();
       try {
+        // client-side error checking
+        if(containsWhitespace(username) && containsWhitespace(password)) {
+          throw new Error("ALL_WHITESPACE");
+        } else {
+          passwordErrorDiv.textContent="";
+          usernameErrorDiv.textContent="";
+        }
+        if(containsWhitespace(username)) { 
+          throw new Error("UNAME_WHITESPACE");
+        } else usernameErrorDiv.textContent="";
+        if(containsWhitespace(password)) {
+          throw new Error("PWORD_WHITESPACE");
+        } else passwordErrorDiv.textContent="";
+        if(username==="" && password==="") {
+          throw new Error("ALL_NULL");
+        } else {
+          usernameErrorDiv.textContent="";
+          passwordErrorDiv.textContent="";
+        }
+        if(username==="") { 
+          throw new Error("UNAME_NULL");
+        } else usernameErrorDiv.textContent="";
+        if(password==="") {
+          throw new Error("PWORD_NULL");
+        } else passwordErrorDiv.textContent="";
+
         const register_request = await fetch("http://localhost:1234/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({username, password})}
         ).then(async res => {
+          // server-side error checking
           if(res.ok) {
             const text = await res.text();
             if (text.includes("\"code\":\"23505\"")) {
-              throw new Error("This username already exists. Please choose a new username.");
-            }
+              throw new Error("DUP"); // duplicate username error
+            } else usernameErrorDiv.textContent="";
           }
         });
         console.log(register_request);
       } catch (err) {
-        console.error(err);
+        if(err.message==="DUP") usernameErrorDiv.textContent="This username already exists.";
+        else if(err.message==="UNAME_NULL") usernameErrorDiv.textContent="Please create a username.";
+        else if(err.message==="PWORD_NULL") passwordErrorDiv.textContent="Please create a password.";
+        else if(err.message==="ALL_NULL") {
+          usernameErrorDiv.textContent="Please create a username.";
+          passwordErrorDiv.textContent="Please create a password.";
+        }
+        else if(err.message==="UNAME_WHITESPACE") usernameErrorDiv.textContent="Username cannot contain a space.";
+        else if(err.message==="PWORD_WHITESPACE") passwordErrorDiv.textContent="Password cannot contain a space.";
+        else if(err.message==="ALL_WHITESPACE") {
+          usernameErrorDiv.textContent="Username cannot contain a space.";
+          passwordErrorDiv.textContent="Password cannot contain a space.";
+        }
+        else console.error(err);
       }
     }
 
@@ -37,10 +83,12 @@ function Register() {
               <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control value={username} type="username" placeholder="Enter username" onChange={e => setUsername(e.target.value)}/>
+                <div id="usernameErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control value={password} type="password" placeholder="Enter password" onChange={e => setPassword(e.target.value)}/>
+                <div id="passwordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
               {/*<Form.Group className="mb-3" controlId="formBasicPassword-2">
                 <Form.Label>Re-enter password</Form.Label>
@@ -50,8 +98,8 @@ function Register() {
                 <Form.Check type="checkbox" label="Remember me" />
               </Form.Group>*/}
               <center>
-                <Button variant="primary" type="submit">Register</Button>
-                <br/><br/>
+                <Button className="Register-btn" variant="primary" type="submit">Register</Button>
+                <br/>
                 <Link to="/">Already have an account? Log in!</Link>
               </center>
             </Form>

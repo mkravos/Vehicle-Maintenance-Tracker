@@ -118,3 +118,12 @@
   justify-content: center;
   position: absolute; bottom: 0;
 }
+
+.Register-error {
+  min-height: 25px;
+  font-size: 15px;
+}
+
+.Register-btn {
+  margin-bottom: 30px;
+}
