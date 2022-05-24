@@ -29,19 +29,7 @@ app.post("/register", async (req, res, next) => {
 });
 
 // get an account ID (log in)
-app.get("/", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const logIn = await pool.query(
-      "SELECT id FROM user_account WHERE username=$1 AND passkey=$2",
-      [username, password]
-    );
 
-    res.json(logIn.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
 
 // update an account (change username)
 

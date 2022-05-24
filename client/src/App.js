@@ -11,10 +11,10 @@ function App() {
   return (
     <Routes>
       <Route exact path="/" element={<Login/>}></Route>
-      <Route exact path="/register" element={<Register/>}></Route>
       <Route exact path="/dashboard" element={<Dashboard/>}></Route>
       <Route exact path="/garage" element={<Garage/>}></Route>
       <Route exact path="/account" element={<Account/>}></Route>
+      <Route exact path="/register" element={<Register/>}></Route>
     </Routes>
   );
 }

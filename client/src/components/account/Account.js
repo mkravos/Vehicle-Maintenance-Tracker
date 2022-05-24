@@ -13,10 +13,8 @@ function Account() {
         <Card className="col-sm-8 Card">
             <Card.Body>
               <Card.Title>Account Information</Card.Title>
-              <Card.Text>
-                <p className="Card-text">
-                  Change your username, password, or delete your account.
-                </p>
+              <Card.Text className="Card-text">
+                Change your username, password, or delete your account.
               </Card.Text>
               <DropdownButton id="dropdown-basic-button" title="Actions">
                 <ChangeUsername/>

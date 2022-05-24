@@ -18,14 +18,12 @@ function Garage() {
           <Card className="col-sm-8 Card">
             <Card.Body>
               <Card.Title>Year, Make, Model</Card.Title>
-              <Card.Text>
-                <p className="Card-text">
-                  Name:
-                  <br/>
-                  Mileage:
-                  <br/>
-                  Last Service:
-                </p>
+              <Card.Text className="Card-text">
+                Name:
+                <br/>
+                Mileage:
+                <br/>
+                Last Service:
               </Card.Text>
               <div className="Garage-dropdown-container">
                 <DropdownButton id="dropdown-basic-button" title="Actions">

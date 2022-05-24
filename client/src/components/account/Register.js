@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 function containsWhitespace(str) {
   return /\s/.test(str);
 }
+function containsSpecialChars(str) {
+  return /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(str);
+}
 
 function Register() {
     const [ username, setUsername ] = useState("");
@@ -30,6 +33,9 @@ function Register() {
         if(containsWhitespace(password)) {
           throw new Error("PWORD_WHITESPACE");
         } else passwordErrorDiv.textContent="";
+        if(containsSpecialChars(username)) { 
+          throw new Error("UNAME_SPECIAL");
+        } else usernameErrorDiv.textContent="";
         if(password !== verify_password) {
           throw new Error("PWORD_MISMATCH");
         } else verifyPasswordErrorDiv.textContent="";
@@ -56,6 +62,7 @@ function Register() {
           usernameErrorDiv.textContent="Username cannot contain a space.";
           passwordErrorDiv.textContent="Password cannot contain a space.";
         }
+        else if(err.message==="UNAME_SPECIAL") usernameErrorDiv.textContent="Username can't contain special characters.";
         else if(err.message==="PWORD_MISMATCH") verifyPasswordErrorDiv.textContent="Passwords do not match.";
         else console.error(err);
       }
@@ -87,7 +94,7 @@ function Register() {
                 <Form.Check type="checkbox" label="Remember me" />
               </Form.Group> */}
               <center>
-                <Button className="Register-btn" variant="primary" type="submit">Register</Button>
+                <Button className="Login-btn" variant="primary" type="submit">Register</Button>
                 <br/>
                 <Link to="/">Already have an account? Log in!</Link>
               </center>

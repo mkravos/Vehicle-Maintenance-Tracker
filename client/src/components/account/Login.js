@@ -1,7 +1,11 @@
+import React, { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 function Login() {
+    const [ username, setUsername ] = useState("");
+    const [ password, setPassword ] = useState("");
+
     return (
       <div className="Login">
         <header className="App-header">
@@ -11,17 +15,17 @@ function Login() {
             <Form className="form-control-lg">
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="username" placeholder="Enter username" />
+                <Form.Control value={username} type="username" placeholder="Enter username" onChange={e => setUsername(e.target.value)} required/>
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Enter password" />
+                <Form.Control value={password} type="password" placeholder="Enter password" onChange={e => setPassword(e.target.value)} required/>
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Remember me" />
+                <Form.Check type="checkbox" label="Remember me"/>
               </Form.Group>
               <center>
-                  <Link to="/dashboard"><Button className="Register-btn" variant="primary" /*type="submit"*/>Log In</Button></Link>
+                  <Button className="Login-btn" variant="primary" type="submit">Log In</Button>
                   <br/><br/>
                   <Link to="/register">Don't have an account? Register!</Link>
               </center>
