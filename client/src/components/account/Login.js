@@ -6,7 +6,7 @@ function Login() {
       <div className="Login">
         <header className="App-header">
           <h1>Vehicle Maintenance Tracker</h1>
-          <p>Please log in to continue.</p>
+          <p className="loginTitle">Please log in to continue.</p>
           <div>
             <Form className="form-control-lg">
               <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -21,7 +21,7 @@ function Login() {
                 <Form.Check type="checkbox" label="Remember me" />
               </Form.Group>
               <center>
-                  <Link to="/dashboard"><Button variant="primary" /*type="submit"*/>Log In</Button></Link>
+                  <Link to="/dashboard"><Button className="Register-btn" variant="primary" /*type="submit"*/>Log In</Button></Link>
                   <br/><br/>
                   <Link to="/register">Don't have an account? Register!</Link>
               </center>

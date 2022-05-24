@@ -9,8 +9,10 @@ function containsWhitespace(str) {
 function Register() {
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [ verify_password, setVerifyPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const passwordErrorDiv = document.getElementById('passwordErrorDiv');
+    const verifyPasswordErrorDiv = document.getElementById('verifyPasswordErrorDiv');
 
     const registerNewAccount = async e => {
       e.preventDefault();
@@ -28,18 +30,9 @@ function Register() {
         if(containsWhitespace(password)) {
           throw new Error("PWORD_WHITESPACE");
         } else passwordErrorDiv.textContent="";
-        if(username==="" && password==="") {
-          throw new Error("ALL_NULL");
-        } else {
-          usernameErrorDiv.textContent="";
-          passwordErrorDiv.textContent="";
-        }
-        if(username==="") { 
-          throw new Error("UNAME_NULL");
-        } else usernameErrorDiv.textContent="";
-        if(password==="") {
-          throw new Error("PWORD_NULL");
-        } else passwordErrorDiv.textContent="";
+        if(password !== verify_password) {
+          throw new Error("PWORD_MISMATCH");
+        } else verifyPasswordErrorDiv.textContent="";
 
         const register_request = await fetch("http://localhost:1234/register", {
             method: "POST",
@@ -57,18 +50,13 @@ function Register() {
         console.log(register_request);
       } catch (err) {
         if(err.message==="DUP") usernameErrorDiv.textContent="This username already exists.";
-        else if(err.message==="UNAME_NULL") usernameErrorDiv.textContent="Please create a username.";
-        else if(err.message==="PWORD_NULL") passwordErrorDiv.textContent="Please create a password.";
-        else if(err.message==="ALL_NULL") {
-          usernameErrorDiv.textContent="Please create a username.";
-          passwordErrorDiv.textContent="Please create a password.";
-        }
         else if(err.message==="UNAME_WHITESPACE") usernameErrorDiv.textContent="Username cannot contain a space.";
         else if(err.message==="PWORD_WHITESPACE") passwordErrorDiv.textContent="Password cannot contain a space.";
         else if(err.message==="ALL_WHITESPACE") {
           usernameErrorDiv.textContent="Username cannot contain a space.";
           passwordErrorDiv.textContent="Password cannot contain a space.";
         }
+        else if(err.message==="PWORD_MISMATCH") verifyPasswordErrorDiv.textContent="Passwords do not match.";
         else console.error(err);
       }
     }
@@ -77,26 +65,27 @@ function Register() {
       <div className="Register">
         <header className="App-header">
           <h1>Vehicle Maintenance Tracker</h1>
-          <p>Welcome! Register an account.</p>
+          <p className="loginTitle">Welcome! Register an account.</p>
           <div>
             <Form className="form-control-lg" onSubmit={registerNewAccount}>
               <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
-                <Form.Control value={username} type="username" placeholder="Enter username" onChange={e => setUsername(e.target.value)}/>
+                <Form.Control value={username} type="username" placeholder="Enter username" onChange={e => setUsername(e.target.value)} required/>
                 <div id="usernameErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control value={password} type="password" placeholder="Enter password" onChange={e => setPassword(e.target.value)}/>
+                <Form.Control value={password} type="password" placeholder="Enter password" onChange={e => setPassword(e.target.value)} required/>
                 <div id="passwordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
-              {/*<Form.Group className="mb-3" controlId="formBasicPassword-2">
+              <Form.Group className="mb-3" controlId="formBasicPassword-2">
                 <Form.Label>Re-enter password</Form.Label>
-                <Form.Control type="password" placeholder="Re-enter password" />
+                <Form.Control value={verify_password} type="password" placeholder="Re-enter password" onChange={e => setVerifyPassword(e.target.value)} required/>
+                <div id="verifyPasswordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicCheckbox">
+              {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
                 <Form.Check type="checkbox" label="Remember me" />
-              </Form.Group>*/}
+              </Form.Group> */}
               <center>
                 <Button className="Register-btn" variant="primary" type="submit">Register</Button>
                 <br/>
