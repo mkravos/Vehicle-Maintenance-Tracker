@@ -1,5 +1,5 @@
 import BootstrapNavbar from '../BootstrapNavbar.js';
-import { Card, DropdownButton } from 'react-bootstrap';
+import { Card, DropdownButton, Button } from 'react-bootstrap';
 import ChangeUsername from './ChangeUsername.js'
 import ChangePassword from './ChangePassword.js';
 import DeleteAccount from './DeleteAccount.js';
@@ -23,6 +23,7 @@ function Account() {
               </DropdownButton>
             </Card.Body>
           </Card>
+          <Button variant="outline-danger" className="Logout-btn">Log Out</Button>
       </header>
     </div>
   );

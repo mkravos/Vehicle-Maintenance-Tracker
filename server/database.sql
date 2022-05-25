@@ -1,7 +1,8 @@
 CREATE DATABASE vehicle_maintenance_db;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE user_account(
-    id SERIAL PRIMARY KEY, 
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), 
     username VARCHAR(255) UNIQUE NOT NULL,
     userkey VARCHAR(255) NOT NULL
 );
@@ -37,6 +38,6 @@ CREATE TABLE maintenance_record(
 
 CREATE TABLE user_vehicle(
     id SERIAL PRIMARY KEY,
-    account_id INT REFERENCES user_account(id) NOT NULL,
+    account_id UUID REFERENCES user_account(id) NOT NULL,
     vehicle_id INT REFERENCES vehicle(id) NOT NULL
 );
