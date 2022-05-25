@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import './App.css';
 import Login from './components/account/Login.js';
 import Register from './components/account/Register.js';
@@ -25,15 +25,29 @@ function App() {
   useEffect(() => {
     checkAuthenticated();
   }, []);
+  
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const setAuth = boolean => {
+    setIsAuthenticated(boolean);
+  };
 
   return (
     <Routes>
-      <Route exact path="/" element={<Login/>}></Route>
-      <Route exact path="/dashboard" element={<Dashboard/>}></Route>
-      <Route exact path="/garage" element={<Garage/>}></Route>
-      <Route exact path="/account" element={<Account/>}></Route>
-      <Route exact path="/register" element={<Register/>}></Route>
+      <Route exact path="/" 
+        element={
+          // props => !isAuthenticated ? (
+          //   <Login {...props} setAuth={setAuth} />
+          // ) : (
+          //   <Navigate to="/dashboard"/>
+          // ) 
+          <Login/>
+        }
+      />
+      <Route exact path="/dashboard" element={<Dashboard/>}/>
+      <Route exact path="/garage" element={<Garage/>}/>
+      <Route exact path="/account" element={<Account/>}/>
+      <Route exact path="/register" element={<Register/>}/>
     </Routes>
   );
 }
