@@ -3,13 +3,47 @@ const app = express();
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const pool = require("./db.js");
-const jwtGenerator = require("./utils/jwtGenerator.js")
+const jwtGenerator = require("./utils/jwtGenerator.js");
+const authorize = require("./middleware/authorize.js");
 
 // middleware
 app.use(cors());
 app.use(express.json()); // req.body
 
 // ROUTES //
+
+// verify validity of token
+app.get("/verified", authorize, async (req, res) => {
+  try {
+    res.json(true);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get user id
+app.get("/uuid", authorize, async (req, res) => {
+  try {
+    res.json(req.user);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get username by id
+app.post("/username", authorize, async (req, res) => {
+  try {
+    const user = await pool.query(
+      "SELECT username FROM user_account WHERE id = $1",
+      [req.user.id] 
+    );
+    
+    res.json(user.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
 
 // register new account
 app.post("/register", async (req, res) => {

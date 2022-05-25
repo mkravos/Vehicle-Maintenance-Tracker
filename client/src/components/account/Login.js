@@ -5,6 +5,35 @@ import { Link } from "react-router-dom";
 function Login() {
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
+    const usernameErrorDiv = document.getElementById('usernameErrorDiv');
+    const passwordErrorDiv = document.getElementById('passwordErrorDiv');
+
+    const log_in = async e => {
+      e.preventDefault();
+      try {
+        const register_request = await fetch("http://localhost:1234/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({username, password})}
+        ).then(async res => {
+          // server-side error checking
+          if(res.ok) {
+            const text = await res.text();
+            if (text.includes("UNAME_NON_EXISTING")) {
+              throw new Error("UNAME_NON_EXISTING"); // invalid username error
+            } else usernameErrorDiv.textContent="";
+            if (text.includes("PWORD_INVALID")) {
+              throw new Error("PWORD_INVALID"); // invalid password error
+            } else passwordErrorDiv.textContent="";
+          }
+        });
+        console.log(register_request);
+      } catch (err) {
+        if(err.message==="UNAME_NON_EXISTING") usernameErrorDiv.textContent="Username does not exist.";
+        else if(err.message==="PWORD_INVALID") passwordErrorDiv.textContent="Your password is incorrect.";
+        else console.error(err);
+      }
+    }
 
     return (
       <div className="Login">
@@ -12,7 +41,7 @@ function Login() {
           <h1>Vehicle Maintenance Tracker</h1>
           <p className="loginTitle">Please log in to continue.</p>
           <div>
-            <Form className="form-control-lg">
+            <Form className="form-control-lg" onSubmit={log_in}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Username</Form.Label>
                 <Form.Control value={username} type="username" placeholder="Enter username" onChange={e => setUsername(e.target.value)} required/>
