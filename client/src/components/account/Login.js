@@ -29,13 +29,15 @@ function Login({setAuth}) {
             }
           }
         });
-        
-        const parseRes = await login_request.json();
+
+        const parseRes = await login_request.json(); // typeerror: cannot read properties of undefined (reading 'json') at log_in
         if(parseRes.token) {
           localStorage.setItem("token", parseRes.token);
           setAuth(true);
+          console.log("Authentication passed.");
         } else {
           setAuth(false);
+          console.log("Authentication failed.");
         }
       } catch (err) {
         if(err.message==="UNAME_NON_EXISTING") usernameErrorDiv.textContent="Username does not exist.";
