@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
-function Login() {
+function Login({setAuth}) {
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
@@ -11,7 +11,7 @@ function Login() {
     const log_in = async e => {
       e.preventDefault();
       try {
-        const register_request = await fetch("http://localhost:1234/", {
+        const login_request = await fetch("http://localhost:1234/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({username, password})}
@@ -24,10 +24,19 @@ function Login() {
             } else usernameErrorDiv.textContent="";
             if (text.includes("PWORD_INVALID")) {
               throw new Error("PWORD_INVALID"); // invalid password error
-            } else passwordErrorDiv.textContent="";
+            } else {
+              passwordErrorDiv.textContent="";
+            }
           }
         });
-        console.log(register_request);
+        
+        const parseRes = await login_request.json();
+        if(parseRes.token) {
+          localStorage.setItem("token", parseRes.token);
+          setAuth(true);
+        } else {
+          setAuth(false);
+        }
       } catch (err) {
         if(err.message==="UNAME_NON_EXISTING") usernameErrorDiv.textContent="Username does not exist.";
         else if(err.message==="PWORD_INVALID") passwordErrorDiv.textContent="Your password is incorrect.";

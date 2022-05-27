@@ -8,7 +8,14 @@ import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
 
 function App() {
-  const checkAuthenticated = async () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const setAuth = boolean => {
+    setIsAuthenticated(boolean);
+  };
+
+  // check if user is authenticated
+  const isAuth = async () => {
     try {
       const res = await fetch("http://localhost:1234/", {
         method: "POST",
@@ -23,14 +30,8 @@ function App() {
   }
 
   useEffect(() => {
-    checkAuthenticated();
+    isAuth();
   }, []);
-  
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const setAuth = boolean => {
-    setIsAuthenticated(boolean);
-  };
 
   return (
     <Routes>
@@ -40,8 +41,8 @@ function App() {
           //   <Login {...props} setAuth={setAuth} />
           // ) : (
           //   <Navigate to="/dashboard"/>
-          // ) 
-          <Login/>
+          // )
+          <Login setAuth={setAuth}/>
         }
       />
       <Route exact path="/dashboard" element={<Dashboard/>}/>

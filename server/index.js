@@ -99,12 +99,6 @@ app.post("/", async (req, res) => {
   }
 });
 
-// update an account
-
-
-// delete an account
-
-
 app.listen(1234, () => {
   console.log("Server is running on port: 1234");
 });

@@ -11,9 +11,9 @@ class BootstrapNavbar extends React.Component {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="m-auto">
-                    <Nav.Link><Link to="/dashboard" className="nav-link">Dashboard</Link></Nav.Link>
-                    <Nav.Link><Link to="/garage" className="nav-link">Garage</Link></Nav.Link>
-                    <Nav.Link><Link to="/account" className="nav-link">Account</Link></Nav.Link>
+                    <Link to="/dashboard" className="nav-link">Dashboard</Link>
+                    <Link to="/garage" className="nav-link">Garage</Link>
+                    <Link to="/account" className="nav-link">Account</Link>
                 </Nav>
                 </Navbar.Collapse>
             </Container>
