@@ -8,6 +8,8 @@ import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
 import Error404 from './components/Error404.js';
 
+// protected routes: https://www.robinwieruch.de/react-router-private-routes/#:~:text=Private%20Routes%20in%20React%20Router,page%2C%20they%20cannot%20access%20it.
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -37,23 +39,30 @@ function App() {
   useEffect(() => {
     isAuth();
   }, []);
-  console.log(isAuthenticated);
 
-  const ProtectedRoute = (isAuthenticated) => { // issue here: not redirecting after login
+  const ProtectedRoute = () => {
     if (!isAuthenticated) {
-      console.log("not authenticated");
       return <Navigate to={"/"} replace />;
     } else {
-      console.log("authenticated");
       return <Outlet/>;
     }
   };
 
+  const AuthenticationRoute = () => {
+    if (isAuthenticated) {
+      return <Navigate to={"/dashboard"} replace />;
+    } else {
+      return <Outlet/>;
+    }
+  }
+
   return (
     <Routes>
-      <Route exact path="/" element={<Login setAuth={setAuth}/>}/>
-      <Route exact path="/register" element={<Register/>}/>
-      <Route element={<ProtectedRoute isAuthenticated={isAuthenticated}/>}>
+      <Route element={<AuthenticationRoute/>}>
+        <Route exact path="/" element={<Login setAuth={setAuth}/>}/>
+        <Route exact path="/register" element={<Register/>}/>
+      </Route>
+      <Route element={<ProtectedRoute/>}>
         <Route exact path="/dashboard" element={<Dashboard/>}/>
         <Route exact path="/garage" element={<Garage/>}/>
         <Route exact path="/account" element={<Account/>}/>

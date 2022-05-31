@@ -53,6 +53,8 @@ function Register() {
             } else usernameErrorDiv.textContent="";
           }
         });
+        verifyPasswordErrorDiv.textContent="Registered successfully. Please log in.";
+        verifyPasswordErrorDiv.className = "Register-error text-success";
         console.log(register_request);
       } catch (err) {
         if(err.message==="DUP") usernameErrorDiv.textContent="This username already exists.";
