@@ -21,11 +21,11 @@ function App() {
   const isAuth = async () => {
     try {
       const res = await fetch("http://localhost:1234/", {
-        method: "POST",
+        method: "GET",
         headers: { jwt_token: localStorage.token }
       });
 
-      const parseRes = await res.json();
+      const parseRes = await res.text();
       parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
     } catch (err) {
       if(err.message === "Unexpected token U in JSON at position 0") {
