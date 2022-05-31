@@ -6,6 +6,7 @@ import Register from './components/account/Register.js';
 import Account from './components/account/Account.js';
 import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
+import Error404 from './components/Error404.js';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -25,18 +26,25 @@ function App() {
       const parseRes = await res.json();
       parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
     } catch (err) {
-      console.error(err.message);
+      if(err.message === "Unexpected token U in JSON at position 0") {
+        return; // user has not made a login attempt, ignore the console error.
+      } else {
+        console.error(err.message);
+      }
     }
   }
 
   useEffect(() => {
     isAuth();
   }, []);
+  console.log(isAuthenticated);
 
-  const ProtectedRoute = () => {
+  const ProtectedRoute = (isAuthenticated) => { // issue here: not redirecting after login
     if (!isAuthenticated) {
+      console.log("not authenticated");
       return <Navigate to={"/"} replace />;
     } else {
+      console.log("authenticated");
       return <Outlet/>;
     }
   };
@@ -45,12 +53,12 @@ function App() {
     <Routes>
       <Route exact path="/" element={<Login setAuth={setAuth}/>}/>
       <Route exact path="/register" element={<Register/>}/>
-      <Route element={<ProtectedRoute/>}>
+      <Route element={<ProtectedRoute isAuthenticated={isAuthenticated}/>}>
         <Route exact path="/dashboard" element={<Dashboard/>}/>
         <Route exact path="/garage" element={<Garage/>}/>
         <Route exact path="/account" element={<Account/>}/>
       </Route>
-      <Route path="*" element={<p className="e404">404: There's nothing here!</p>}/>
+      <Route path="*" element={<Error404/>}/>
     </Routes>
   );
 }
