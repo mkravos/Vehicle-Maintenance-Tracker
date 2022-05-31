@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import './App.css';
 import Login from './components/account/Login.js';
 import Register from './components/account/Register.js';
@@ -33,22 +33,24 @@ function App() {
     isAuth();
   }, []);
 
+  const ProtectedRoute = () => {
+    if (!isAuthenticated) {
+      return <Navigate to={"/"} replace />;
+    } else {
+      return <Outlet/>;
+    }
+  };
+
   return (
     <Routes>
-      <Route exact path="/" 
-        element={
-          // props => !isAuthenticated ? (
-          //   <Login {...props} setAuth={setAuth} />
-          // ) : (
-          //   <Navigate to="/dashboard"/>
-          // )
-          <Login setAuth={setAuth}/>
-        }
-      />
-      <Route exact path="/dashboard" element={<Dashboard/>}/>
-      <Route exact path="/garage" element={<Garage/>}/>
-      <Route exact path="/account" element={<Account/>}/>
+      <Route exact path="/" element={<Login setAuth={setAuth}/>}/>
       <Route exact path="/register" element={<Register/>}/>
+      <Route element={<ProtectedRoute/>}>
+        <Route exact path="/dashboard" element={<Dashboard/>}/>
+        <Route exact path="/garage" element={<Garage/>}/>
+        <Route exact path="/account" element={<Account/>}/>
+      </Route>
+      <Route path="*" element={<p className="e404">404: There's nothing here!</p>}/>
     </Routes>
   );
 }

@@ -7,6 +7,7 @@ function Login({setAuth}) {
     const [ password, setPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const passwordErrorDiv = document.getElementById('passwordErrorDiv');
+    var parseRes;
 
     const log_in = async e => {
       e.preventDefault();
@@ -26,11 +27,12 @@ function Login({setAuth}) {
               throw new Error("PWORD_INVALID"); // invalid password error
             } else {
               passwordErrorDiv.textContent="";
+              parseRes = JSON.parse(text);
             }
           }
         });
 
-        const parseRes = await login_request.json(); // typeerror: cannot read properties of undefined (reading 'json') at log_in
+        console.log(login_request);
         if(parseRes.token) {
           localStorage.setItem("token", parseRes.token);
           setAuth(true);
