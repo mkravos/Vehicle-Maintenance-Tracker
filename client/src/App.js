@@ -65,7 +65,7 @@ function App() {
       <Route element={<ProtectedRoute/>}>
         <Route exact path="/dashboard" element={<Dashboard/>}/>
         <Route exact path="/garage" element={<Garage/>}/>
-        <Route exact path="/account" element={<Account/>}/>
+        <Route exact path="/account" element={<Account setAuth={setAuth}/>}/>
       </Route>
       <Route path="*" element={<Error404/>}/>
     </Routes>

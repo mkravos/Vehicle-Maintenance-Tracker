@@ -4,7 +4,12 @@ import ChangeUsername from './ChangeUsername.js'
 import ChangePassword from './ChangePassword.js';
 import DeleteAccount from './DeleteAccount.js';
 
-function Account() {
+function Account({setAuth}) {
+  const log_out = async () => {
+    localStorage.removeItem("token");
+    setAuth(false);
+  }
+
   return (
     <div className="Account">
       <BootstrapNavbar/>
@@ -23,7 +28,7 @@ function Account() {
               </DropdownButton>
             </Card.Body>
           </Card>
-          <Button variant="outline-danger" className="Logout-btn">Log Out</Button>
+          <Button variant="outline-danger" className="Logout-btn" onClick={log_out}>Log Out</Button>
       </header>
     </div>
   );
