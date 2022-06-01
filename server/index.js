@@ -103,6 +103,88 @@ app.post("/", async (req, res) => {
   }
 });
 
+// delete an account
+app.post("/delete-account", async (req, res) => {
+  try {
+    // destructure req.body
+    const { username, password } = req.body;
+
+    // check if username exists in database
+    const user = await pool.query("SELECT * FROM user_account WHERE username = $1", [username]);
+    if(user.rows.length === 0) { throw new Error("UNAME_NON_EXISTING"); }
+
+    // check if password is correct
+    const validPassword = await bcrypt.compare(password, user.rows[0].userkey);
+    if(!validPassword) { throw new Error("PWORD_INVALID"); }
+
+    // delete account
+    await pool.query("DELETE FROM user_account WHERE username = $1", [username]);
+  } catch (err) {
+    if(err.message==="UNAME_NON_EXISTING") { res.send(err.message); }
+    else if(err.message==="PWORD_INVALID") { res.send(err.message); }
+    else console.error(err);
+  }
+});
+
+// change username
+app.post("/change-username", async (req, res) => {
+  try {
+    // destructure req.body
+    const { username, new_username, password } = req.body;
+
+    // check if username exists in database
+    const user = await pool.query("SELECT * FROM user_account WHERE username = $1", [username]);
+    if(user.rows.length === 0) { throw new Error("UNAME_NON_EXISTING"); }
+
+    // check if password is correct
+    const validPassword = await bcrypt.compare(password, user.rows[0].userkey);
+    if(!validPassword) { throw new Error("PWORD_INVALID"); }
+
+    // change username
+    await pool.query("UPDATE user_account SET username = $2 WHERE username = $1 RETURNING *", [username, new_username]);
+  } catch (err) {
+    if(err.message==="UNAME_NON_EXISTING") { res.send(err.message); }
+    else if(err.message==="PWORD_INVALID") { res.send(err.message); }
+    else console.error(err);
+  }
+});
+
+// change password
+app.post("/change-password", async (req, res) => {
+  try {
+    // destructure req.body
+    const { username, password, new_password } = req.body;
+
+    // check if username exists in database
+    const user = await pool.query("SELECT * FROM user_account WHERE username = $1", [username]);
+    if(user.rows.length === 0) { throw new Error("UNAME_NON_EXISTING"); }
+
+    // check if current password is correct
+    const validPassword = await bcrypt.compare(password, user.rows[0].userkey);
+    if(!validPassword) { throw new Error("PWORD_INVALID"); }
+
+    // bcrypt the user password
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+
+    const bcryptPassword = await bcrypt.hash(new_password, salt);
+
+    // change password
+    const changePassword = await pool.query("UPDATE user_account SET passkey = $2 WHERE username = $1 RETURNING *", [username, bcryptPassword]);
+
+    // remove old login token
+    localStorage.removeItem("token");
+
+    // generate jwt token
+    const token = jwtGenerator(changePassword.rows[0].id);
+    res.json({token});
+  } catch (err) {
+    if(err.message==="UNAME_NON_EXISTING") { res.send(err.message); }
+    else if(err.message==="PWORD_INVALID") { res.send(err.message); }
+    else console.error(err);
+  }
+});
+
 app.listen(1234, () => {
   console.log("Server is running on port: 1234");
 });
