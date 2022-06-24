@@ -10,6 +10,25 @@ function Account({setAuth}) {
     setAuth(false);
   }
 
+  const getUsername = async () => {
+    try {
+      const res = await fetch("http://localhost:1234/username", {
+        method: "POST",
+        headers: { jwt_token: localStorage.token }
+      });
+
+      const parseRes = await res.json();
+      return parseRes;
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  const p = getUsername();
+  p.then(value => {
+    console.log(value.username);
+  })
+
   return (
     <div className="Account">
       <BootstrapNavbar/>
@@ -17,7 +36,7 @@ function Account({setAuth}) {
         <p className="Page-title">Account Settings</p>
         <Card className="col-sm-8 Card">
             <Card.Body>
-              <Card.Title>Account Information</Card.Title>
+              <Card.Title>Account information for {username}</Card.Title>
               <Card.Text className="Card-text">
                 Change your username, password, or delete your account.
               </Card.Text>

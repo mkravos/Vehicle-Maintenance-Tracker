@@ -23,7 +23,7 @@ app.get("/verify", authorize, async (req, res) => {
   }
 });
 
-// get user id
+// get user id with jwt_token
 app.get("/uuid", authorize, async (req, res) => {
   try {
     res.json(req.user);
@@ -32,7 +32,7 @@ app.get("/uuid", authorize, async (req, res) => {
   }
 });
 
-// get username by id
+// get username with jwt_token
 app.post("/username", authorize, async (req, res) => {
   try {
     const user = await pool.query(
