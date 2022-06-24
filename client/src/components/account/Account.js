@@ -36,7 +36,7 @@ function Account({setAuth}) {
         <p className="Page-title">Account Settings</p>
         <Card className="col-sm-8 Card">
             <Card.Body>
-              <Card.Title>Account information for {username}</Card.Title>
+              <Card.Title>Account information for (Username)</Card.Title>
               <Card.Text className="Card-text">
                 Change your username, password, or delete your account.
               </Card.Text>
