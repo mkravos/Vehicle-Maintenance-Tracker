@@ -7,7 +7,7 @@ module.exports = function(req, res, next) {
         return res.json("Missing Credentials");
       }
     } else if (req.path === "/") {
-      if (![password].every(Boolean)) {
+      if (![name, password].every(Boolean)) {
         return res.json("Missing Credentials");
       }
     }

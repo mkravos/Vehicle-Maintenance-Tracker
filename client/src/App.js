@@ -20,13 +20,13 @@ function App() {
   // check if user is authenticated
   const isAuth = async () => {
     try {
-      const res = await fetch("http://localhost:1234/", {
+      const res = await fetch("http://localhost:1234/verify", {
         method: "GET",
         headers: { jwt_token: localStorage.token }
       });
 
       const parseRes = await res.text();
-      parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
+      parseRes === 'true' ? setIsAuthenticated(true) : setIsAuthenticated(false);
     } catch (err) {
       if(err.message === "Unexpected token U in JSON at position 0") {
         return; // user has not made a login attempt, ignore the console error.
