@@ -1,5 +1,6 @@
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import { Card, DropdownButton, Button } from 'react-bootstrap';
+import { useState } from 'react';
 import ChangeUsername from './ChangeUsername.js'
 import ChangePassword from './ChangePassword.js';
 import DeleteAccount from './DeleteAccount.js';
@@ -9,6 +10,8 @@ function Account({setAuth}) {
     localStorage.removeItem("token");
     setAuth(false);
   }
+
+  const [username, setUsername] = useState("");
 
   const getUsername = async () => {
     try {
@@ -26,7 +29,7 @@ function Account({setAuth}) {
 
   const p = getUsername();
   p.then(value => {
-    console.log(value.username);
+    setUsername(value.username);
   })
 
   return (
@@ -36,7 +39,7 @@ function Account({setAuth}) {
         <p className="Page-title">Account Settings</p>
         <Card className="col-sm-8 Card">
             <Card.Body>
-              <Card.Title>Account information for (Username)</Card.Title>
+              <Card.Title>Account information for {username}</Card.Title>
               <Card.Text className="Card-text">
                 Change your username, password, or delete your account.
               </Card.Text>
