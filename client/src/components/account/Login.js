@@ -51,7 +51,7 @@ function Login({setAuth}) {
     return (
       <div className="Login">
         <header className="App-header">
-          <h1>Vehicle Maintenance Tracker</h1>
+          <h1>Garage</h1>
           <p className="loginTitle">Please log in to continue.</p>
           <div>
             <Form className="form-control-lg" onSubmit={log_in}>

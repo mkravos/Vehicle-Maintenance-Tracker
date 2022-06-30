@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const bcrypt = require("bcrypt");
-var cookieParser = require('cookie-parser');
 const pool = require("./db.js");
 const jwtGenerator = require("./utils/jwtGenerator.js");
 const authorize = require("./middleware/authorize.js");
@@ -10,7 +9,6 @@ const authorize = require("./middleware/authorize.js");
 // middleware
 app.use(cors());
 app.use(express.json()); // req.body
-app.use(cookieParser());
 
 // ROUTES //
 
@@ -93,8 +91,6 @@ app.post("/", async (req, res) => {
 
     // generate jwt token
     const token = jwtGenerator(user.rows[0].id);
-    // save token in cookie: https://www.tutorialspoint.com/expressjs/expressjs_cookies.htm 
-    console.log(cookieParser("token", token));
     res.json({token});
   } catch (err) {
     if(err.message==="UNAME_NON_EXISTING") { res.send(err.message); }

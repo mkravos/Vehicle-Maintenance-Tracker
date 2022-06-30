@@ -73,7 +73,7 @@ function Register() {
     return (
       <div className="Register">
         <header className="App-header">
-          <h1>Vehicle Maintenance Tracker</h1>
+          <h1>Garage</h1>
           <p className="loginTitle">Welcome! Register an account.</p>
           <div>
             <Form className="form-control-lg" onSubmit={registerNewAccount}>
