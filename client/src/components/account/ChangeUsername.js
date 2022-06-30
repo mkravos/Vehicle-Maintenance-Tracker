@@ -21,6 +21,25 @@ function ChangeUsername() {
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const passwordErrorDiv = document.getElementById('passwordErrorDiv');
 
+    const getUsername = async () => {
+      try {
+        const res = await fetch("http://localhost:1234/username", {
+          method: "POST",
+          headers: { jwt_token: localStorage.token }
+        });
+  
+        const parseRes = await res.json();
+        return parseRes;
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+  
+    const p = getUsername();
+    p.then(value => {
+      setUsername(value.username);
+    })
+
     const handleSubmit = async e => {
       e.preventDefault();
       try {
@@ -72,12 +91,12 @@ function ChangeUsername() {
             <Form className="form-control-lg" id="changeUsernameForm">
               <Form.Group className="mb-3" controlId="change-username-box">
                 <Form.Label>New Username</Form.Label>
-                <Form.Control placeholder="Enter new username" required/>
+                <Form.Control value={new_username} onChange={e => setNewUsername(e.target.value)} type="new_username" placeholder="Enter new username" required/>
                 <div id="usernameErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
               <Form.Group className="mb-3" controlId="password-box">
                 <Form.Label>Verify Password</Form.Label>
-                <Form.Control placeholder="Enter your current password" required/>
+                <Form.Control value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Enter your current password" required/>
                 <div id="passwordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
             </Form>
