@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import AppHeader from "../AppHeader";
 
 function containsWhitespace(str) {
   return /\s/.test(str);
@@ -73,7 +74,7 @@ function Register() {
     return (
       <div className="Register">
         <header className="App-header">
-          <h1>Garage</h1>
+          <AppHeader/>
           <p className="loginTitle">Welcome! Register an account.</p>
           <div>
             <Form className="form-control-lg" onSubmit={registerNewAccount}>

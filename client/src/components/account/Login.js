@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import AppHeader from "../AppHeader";
 
 function Login({setAuth}) {
     const [ username, setUsername ] = useState("");
@@ -51,7 +52,7 @@ function Login({setAuth}) {
     return (
       <div className="Login">
         <header className="App-header">
-          <h1>Garage</h1>
+          <AppHeader/>
           <p className="loginTitle">Please log in to continue.</p>
           <div>
             <Form className="form-control-lg" onSubmit={log_in}>
