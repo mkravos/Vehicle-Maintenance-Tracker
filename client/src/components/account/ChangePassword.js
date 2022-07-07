@@ -43,11 +43,14 @@ function ChangePassword() {
 
       try {
         // client-side error checking
-        if(containsWhitespace(password)) { 
+        if(containsWhitespace(new_password)) { 
           throw new Error("PWORD_WHITESPACE");
         } else newPasswordErrorDiv.textContent="";
         if(new_password !== confirm_new_password) {
           throw new Error("PWORD_MISMATCH");
+        } else newPasswordErrorDiv.textContent="";
+        if(!password || !new_password || !confirm_new_password) {
+          throw new Error("MISSING_REQ_FIELDS")
         } else newPasswordErrorDiv.textContent="";
 
         const change_password_request = await fetch("http://localhost:1234/change-password", {
@@ -68,6 +71,7 @@ function ChangePassword() {
         console.log(change_password_request);
       } catch (err) {
         if(err.message==="PWORD_WHITESPACE") newPasswordErrorDiv.textContent="New password cannot contain a space.";
+        else if(err.message==="MISSING_REQ_FIELDS") newPasswordErrorDiv.textContent="Please fill in all required fields.";
         else if(err.message==="PWORD_MISMATCH") newPasswordErrorDiv.textContent="Passwords do not match.";
         else if(err.message==="PWORD_INVALID") passwordErrorDiv.textContent="Your current password is incorrect.";
         else console.error(err);
