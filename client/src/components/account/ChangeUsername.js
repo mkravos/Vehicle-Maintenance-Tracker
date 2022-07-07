@@ -60,7 +60,7 @@ function ChangeUsername() {
           // server-side error checking
           if(res.ok) {
             const text = await res.text();
-            if (text.includes("\"code\":\"23505\"")) {
+            if (text.includes("DUP")) {
               throw new Error("DUP"); // duplicate username error
             } else usernameErrorDiv.textContent="";
             if (text.includes("PWORD_INVALID")) {

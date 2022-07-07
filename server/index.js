@@ -133,6 +133,10 @@ app.post("/change-username", async (req, res) => {
     const user = await pool.query("SELECT * FROM user_account WHERE username = $1", [username]);
     if(user.rows.length === 0) { throw new Error("UNAME_NON_EXISTING"); }
 
+    // check if new username already exists
+    const newUser = await pool.query("SELECT * FROM user_account WHERE username = $1", [new_username]);
+    if(newUser.rows.length > 0) { throw new Error("DUP"); }
+
     // check if password is correct
     const validPassword = await bcrypt.compare(password, user.rows[0].userkey);
     if(!validPassword) { throw new Error("PWORD_INVALID"); }
@@ -142,6 +146,7 @@ app.post("/change-username", async (req, res) => {
     res.send("SUCCESS");
   } catch (err) {
     if(err.message==="UNAME_NON_EXISTING") { res.send(err.message); }
+    else if(err.message==="DUP") { res.send(err.message); }
     else if(err.message==="PWORD_INVALID") { res.send(err.message); }
     else console.error(err);
   }
