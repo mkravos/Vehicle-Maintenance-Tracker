@@ -115,6 +115,7 @@ app.post("/delete-account", async (req, res) => {
 
     // delete account
     await pool.query("DELETE FROM user_account WHERE username = $1", [username]);
+    res.send("SUCCESS");
   } catch (err) {
     if(err.message==="UNAME_NON_EXISTING") { res.send(err.message); }
     else if(err.message==="PWORD_INVALID") { res.send(err.message); }

@@ -5,31 +5,44 @@ import { Button, Modal, Dropdown, Form } from 'react-bootstrap';
 function DeleteAccount() {
     const [show, setShow] = useState(false);
     const [ password, setPassword ] = useState("");
+    const [ username, setUsername ] = useState("");
     const passwordErrorDiv = document.getElementById('passwordErrorDiv');
 
-    const get_username = () => {
+    const getUsername = async () => {
       try {
-        const request = fetch("http://localhost:1234/username", {
-          method: "GET",
-          headers: { "token": localStorage.getItem("token") }
+        const res = await fetch("http://localhost:1234/username", {
+          method: "POST",
+          headers: { jwt_token: localStorage.token }
         });
-        console.log(request.username);
-        return request.username;
+  
+        const parseRes = await res.json();
+        return parseRes;
       } catch (err) {
         console.error(err.message);
       }
     }
   
+    const p = getUsername();
+    p.then(value => {
+      setUsername(value.username);
+    })
+  
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const log_out = async () => {
+      localStorage.removeItem("token");
+      window.location.reload();
+    }
+
+    // delete all service records
+    
+    // delete all vehicles
+
+    // delete account
     const delete_account = async e => {
       e.preventDefault();
       try {
-        const username = get_username();
-        // delete all service records
-        // delete all vehicles
-        // delete account
         const delete_request = await fetch("http://localhost:1234/delete-account", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -47,6 +60,8 @@ function DeleteAccount() {
               passwordErrorDiv.textContent="";
             }
           }
+          handleClose();
+          log_out();
         });
 
         console.log(delete_request);
@@ -54,8 +69,6 @@ function DeleteAccount() {
         if(err.message==="PWORD_INVALID") passwordErrorDiv.textContent="Your password is incorrect.";
         else console.error(err);
       }
-
-      handleClose();
     }
   
     return (
