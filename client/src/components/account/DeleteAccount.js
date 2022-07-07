@@ -35,14 +35,14 @@ function DeleteAccount() {
       window.location.reload();
     }
 
-    // delete all service records
-    
-    // delete all vehicles
-
-    // delete account
-    const delete_account = async e => {
+    const handleSubmit = async e => {
       e.preventDefault();
       try {
+        // delete all service records
+    
+        // delete all vehicles
+
+        // delete account
         const delete_request = await fetch("http://localhost:1234/delete-account", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -80,7 +80,7 @@ function DeleteAccount() {
             <Modal.Title>Delete Your Account</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form id="delete-form" className="form-control-lg" onSubmit={delete_account}>
+            <Form id="delete-form" className="form-control-lg" onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="password-box">
                   <Form.Label>
                     Are you sure you would like to irreversibly delete your account? This will also remove all vehicles and maintenance records you have stored here.
