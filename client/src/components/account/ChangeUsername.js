@@ -42,6 +42,7 @@ function ChangeUsername() {
 
     const handleSubmit = async e => {
       e.preventDefault();
+
       try {
         // client-side error checking
         if(containsWhitespace(username)) { 
@@ -66,6 +67,8 @@ function ChangeUsername() {
               throw new Error("PWORD_INVALID"); // invalid password error
             } else passwordErrorDiv.textContent="";
           }
+          handleClose();
+          window.location.reload();
         });
         console.log(change_username_request);
       } catch (err) {
@@ -75,8 +78,6 @@ function ChangeUsername() {
         else if(err.message==="PWORD_INVALID") passwordErrorDiv.textContent="Your password is incorrect.";
         else console.error(err);
       }
-
-      handleClose();
     }
   
     return (

@@ -138,6 +138,7 @@ app.post("/change-username", async (req, res) => {
 
     // change username
     await pool.query("UPDATE user_account SET username = $2 WHERE username = $1 RETURNING *", [username, new_username]);
+    res.send("SUCCESS");
   } catch (err) {
     if(err.message==="UNAME_NON_EXISTING") { res.send(err.message); }
     else if(err.message==="PWORD_INVALID") { res.send(err.message); }
@@ -166,10 +167,7 @@ app.post("/change-password", async (req, res) => {
     const bcryptPassword = await bcrypt.hash(new_password, salt);
 
     // change password
-    const changePassword = await pool.query("UPDATE user_account SET passkey = $2 WHERE username = $1 RETURNING *", [username, bcryptPassword]);
-
-    // remove old login token
-    localStorage.removeItem("token");
+    const changePassword = await pool.query("UPDATE user_account SET userkey = $2 WHERE username = $1 RETURNING *", [username, bcryptPassword]);
 
     // generate jwt token
     const token = jwtGenerator(changePassword.rows[0].id);
