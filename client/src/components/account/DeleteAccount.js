@@ -4,9 +4,9 @@ import { Button, Modal, Dropdown, Form } from 'react-bootstrap';
 
 function DeleteAccount() {
     const [show, setShow] = useState(false);
-    const [ password, setPassword ] = useState("");
-    const [ username, setUsername ] = useState("");
-    const passwordErrorDiv = document.getElementById('passwordErrorDiv');
+    const [passwordErrors, setPasswordErrors] = useState([""]);
+    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
 
     const getUsername = async () => {
       try {
@@ -38,6 +38,11 @@ function DeleteAccount() {
     const handleSubmit = async e => {
       e.preventDefault();
       try {
+        // client-side error checking
+        if(!password) {
+          throw new Error("MISSING_REQ_FIELDS")
+        } else setPasswordErrors([""]);
+
         // delete all service records
     
         // delete all vehicles
@@ -53,12 +58,10 @@ function DeleteAccount() {
             const text = await res.text();
             if (text.includes("UNAME_NON_EXISTING")) {
               throw new Error("UNAME_NON_EXISTING"); // invalid username error
-            } else passwordErrorDiv.textContent="";
+            } else setPasswordErrors([""]);
             if (text.includes("PWORD_INVALID")) {
               throw new Error("PWORD_INVALID"); // invalid password error
-            } else {
-              passwordErrorDiv.textContent="";
-            }
+            } else setPasswordErrors([""]);
           }
           handleClose();
           log_out();
@@ -66,7 +69,8 @@ function DeleteAccount() {
 
         console.log(delete_request);
       } catch (err) {
-        if(err.message==="PWORD_INVALID") passwordErrorDiv.textContent="Your password is incorrect.";
+        if(err.message==="PWORD_INVALID") setPasswordErrors(["Your password is incorrect."]);
+        if(err.message==="MISSING_REQ_FIELDS") setPasswordErrors(["You must enter your password."]);
         else console.error(err);
       }
     }
@@ -85,8 +89,12 @@ function DeleteAccount() {
                   <Form.Label>
                     Are you sure you would like to irreversibly delete your account? This will also remove all vehicles and maintenance records you have stored here.
                   </Form.Label>
-                  <Form.Control value={password} type="password" placeholder="Enter your current password" onChange={e => setPassword(e.target.value)} required/>
-                  <div id="passwordErrorDiv" className="Register-error text-danger"></div>
+                  <Form.Control value={password} type="password" placeholder="Enter your current password*" onChange={e => setPassword(e.target.value)} required/>
+                  <div id="passwordErrorDiv" className="Register-error text-danger">
+                    {passwordErrors.map((error, ind) => (
+                        <div key={ind}>{error}</div>
+                    ))}
+                  </div>
               </Form.Group>
             </Form>
           </Modal.Body>
