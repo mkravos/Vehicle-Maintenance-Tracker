@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
-
-function containsWhitespace(str) {
-  return /\s/.test(str);
-}
+import { containsWhitespace } from '../utilities/InputValidation'
 
 function ChangePassword() {
     const [show, setShow] = useState(false);

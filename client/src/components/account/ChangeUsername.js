@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
-
-function containsWhitespace(str) {
-  return /\s/.test(str);
-}
-function containsSpecialChars(str) {
-  return /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(str);
-}
+import { containsSpecialChars, containsWhitespace } from '../utilities/InputValidation'
 
 function ChangeUsername() {
     const [show, setShow] = useState(false);
@@ -51,10 +45,10 @@ function ChangeUsername() {
 
       try {
         // client-side error checking
-        if(containsWhitespace(username)) { 
+        if(containsWhitespace(new_username)) { 
           throw new Error("UNAME_WHITESPACE");
         } else setUsernameErrors([""]);
-        if(containsSpecialChars(username)) { 
+        if(containsSpecialChars(new_username)) { 
           throw new Error("UNAME_SPECIAL");
         } else setUsernameErrors([""]);
         if(!password || !new_username) {
