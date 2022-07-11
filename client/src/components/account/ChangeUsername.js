@@ -17,7 +17,14 @@ function ChangeUsername() {
     const [new_username, setNewUsername] = useState("");
     const [password, setPassword] = useState("");
   
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+      setShow(false);
+      setUsernameErrors([""]);
+      setPasswordErrors([""]);
+      setUsername("");
+      setNewUsername("");
+      setPassword("");
+    }
     const handleShow = () => setShow(true);
 
     const getUsername = async () => {

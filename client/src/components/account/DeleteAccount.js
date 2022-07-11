@@ -27,7 +27,12 @@ function DeleteAccount() {
       setUsername(value.username);
     })
   
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+      setShow(false);
+      setPassword("");
+      setUsername("");
+      setPasswordErrors([""]);
+    }
     const handleShow = () => setShow(true);
 
     const log_out = async () => {

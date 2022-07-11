@@ -15,7 +15,15 @@ function ChangePassword() {
     const [new_password, setNewPassword] = useState("");
     const [confirm_new_password, setConfirmNewPassword] = useState("");
   
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+      setShow(false);
+      setPasswordErrors([""]);
+      setNewPasswordErrors([""]);
+      setUsername("");
+      setPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+    }
     const handleShow = () => setShow(true);
 
     const getUsername = async () => {
