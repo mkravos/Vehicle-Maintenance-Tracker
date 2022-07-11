@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
-import { containsSpecialChars, containsWhitespace } from '../utilities/InputValidation'
+import { containsSpecialChars, containsWhitespace, checkUsernameLength } from '../utilities/InputValidation';
 
 function ChangeUsername() {
     const [show, setShow] = useState(false);
@@ -54,6 +54,9 @@ function ChangeUsername() {
         if(!password || !new_username) {
           throw new Error("MISSING_REQ_FIELDS")
         } else setPasswordErrors([""]);
+        if(!checkUsernameLength(new_username)) {
+          throw new Error("USERNAME_LENGTH");
+        } else setUsernameErrors([""]);
 
         const change_username_request = await fetch("http://localhost:1234/change-username", {
             method: "POST",
@@ -80,6 +83,7 @@ function ChangeUsername() {
         else if(err.message==="UNAME_SPECIAL") setUsernameErrors(["Username can't contain special characters."]);
         else if(err.message==="PWORD_INVALID") setPasswordErrors(["Your password is incorrect."]);
         else if(err.message==="MISSING_REQ_FIELDS") setPasswordErrors(["Please fill in all required fields (*)."]);
+        else if(err.message==="USERNAME_LENGTH") setUsernameErrors(["Username must be at least 3 characters long."]);
         else console.error(err);
       }
     }

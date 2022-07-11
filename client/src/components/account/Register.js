@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import AppHeader from "../AppHeader";
-import { containsSpecialChars, containsWhitespace } from '../utilities/InputValidation'
+import { containsSpecialChars, containsWhitespace, checkPasswordLength, checkUsernameLength } from '../utilities/InputValidation';
 
 function Register() {
     const [ username, setUsername ] = useState("");
@@ -34,6 +34,12 @@ function Register() {
         if(password !== verify_password) {
           throw new Error("PWORD_MISMATCH");
         } else verifyPasswordErrorDiv.textContent="";
+        if(!checkPasswordLength(password)) {
+          throw new Error("PASSWORD_LENGTH");
+        } else verifyPasswordErrorDiv.textContent="";
+        if(!checkUsernameLength(username)) {
+          throw new Error("USERNAME_LENGTH");
+        } else usernameErrorDiv.textContent="";
 
         const register_request = await fetch("http://localhost:1234/register", {
             method: "POST",
@@ -61,6 +67,8 @@ function Register() {
         }
         else if(err.message==="UNAME_SPECIAL") usernameErrorDiv.textContent="Username can't contain special characters.";
         else if(err.message==="PWORD_MISMATCH") verifyPasswordErrorDiv.textContent="Passwords do not match.";
+        else if(err.message==="PASSWORD_LENGTH") verifyPasswordErrorDiv.textContent="Password must be at least 10 characters long.";
+        else if(err.message==="USERNAME_LENGTH") usernameErrorDiv.textContent="Username must be at least 3 characters long.";
         else console.error(err);
       }
     }

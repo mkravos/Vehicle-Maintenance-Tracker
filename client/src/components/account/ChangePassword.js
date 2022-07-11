@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
-import { containsWhitespace } from '../utilities/InputValidation'
+import { containsWhitespace, checkPasswordLength } from '../utilities/InputValidation';
 
 function ChangePassword() {
     const [show, setShow] = useState(false);
@@ -54,7 +54,10 @@ function ChangePassword() {
           throw new Error("PWORD_MISMATCH");
         } else setNewPasswordErrors([""]);
         if(!password || !new_password || !confirm_new_password) {
-          throw new Error("MISSING_REQ_FIELDS")
+          throw new Error("MISSING_REQ_FIELDS");
+        } else setNewPasswordErrors([""]);
+        if(!checkPasswordLength(new_password)) {
+          throw new Error("PASSWORD_LENGTH");
         } else setNewPasswordErrors([""]);
 
         const change_password_request = await fetch("http://localhost:1234/change-password", {
@@ -78,6 +81,7 @@ function ChangePassword() {
         else if(err.message==="MISSING_REQ_FIELDS") setNewPasswordErrors(["Please fill in all required fields (*)."]);
         else if(err.message==="PWORD_MISMATCH") setNewPasswordErrors(["Passwords do not match."]);
         else if(err.message==="PWORD_INVALID") setPasswordErrors(["Your current password is incorrect."]);
+        else if(err.message==="PASSWORD_LENGTH") setNewPasswordErrors(["New password must be at least 10 characters long."]);
         else console.error(err);
       }
     }
