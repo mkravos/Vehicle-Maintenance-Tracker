@@ -136,3 +136,7 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.reCaptchaDiv {
+  height: 100px;
+}

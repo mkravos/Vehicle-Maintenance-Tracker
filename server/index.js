@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
+const axios = require('axios');
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const pool = require("./db.js");
 const jwtGenerator = require("./utils/jwtGenerator.js");
 const authorize = require("./middleware/authorize.js");
+const recaptcha_secret = "6LeqHgghAAAAAMei7U_kcKKjrs4NDSL7ItH22NQQ";
 
 // middleware
 app.use(cors());
@@ -48,8 +50,14 @@ app.post("/username", authorize, async (req, res) => {
 // register new account
 app.post("/register", async (req, res) => {
   try {
-    // destructure req.body (username, password)  
-    const { username, password } = req.body;
+    // destructure req.body 
+    const { username, password, recaptcha_response } = req.body;
+
+    const recaptcha_request = await axios.post(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${recaptcha_secret}&response=${recaptcha_response}`
+    );
+    let recaptcha_request_data = recaptcha_request.data || {};
+    if(!recaptcha_request_data.success) { throw new Error("CAPTCHA_FAIL"); }
 
     // bcrypt the user password
     const saltRounds = 10;
@@ -69,7 +77,11 @@ app.post("/register", async (req, res) => {
   } catch (err) {
     if (err.message == "duplicate key value violates unique constraint \"user_account_username_key\"") {
       res.send(err);
-    } else {
+    } 
+    else if (err.message == "CAPTCHA_FAIL") {
+      res.send(err);
+    }
+    else {
       console.error(err.message);
     }
   }
@@ -79,7 +91,13 @@ app.post("/register", async (req, res) => {
 app.post("/", async (req, res) => {
   try {
     // destructure req.body
-    const { username, password } = req.body;
+    const { username, password, recaptcha_response } = req.body;
+
+    const recaptcha_request = await axios.post(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${recaptcha_secret}&response=${recaptcha_response}`
+    );
+    let recaptcha_request_data = recaptcha_request.data || {};
+    if(!recaptcha_request_data.success) { throw new Error("CAPTCHA_FAIL"); }
 
     // check if username exists in database
     const user = await pool.query("SELECT * FROM user_account WHERE username = $1", [username]);

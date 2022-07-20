@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
-import { Link } from "react-router-dom";
 import AppHeader from "../AppHeader";
 import { containsSpecialChars, containsWhitespace, checkPasswordLength, checkUsernameLength } from '../utilities/InputValidation';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 function Register() {
+    const recaptchaRef = React.useRef();
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ verify_password, setVerifyPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const passwordErrorDiv = document.getElementById('passwordErrorDiv');
     const verifyPasswordErrorDiv = document.getElementById('verifyPasswordErrorDiv');
+    const recaptcha_key = "6LeqHgghAAAAACivDNxoCr4VP7d3d9T9h5ewVKmk";
 
     const registerNewAccount = async e => {
       e.preventDefault();
@@ -41,22 +43,28 @@ function Register() {
           throw new Error("USERNAME_LENGTH");
         } else usernameErrorDiv.textContent="";
 
-        const register_request = await fetch("http://localhost:1234/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({username, password})}
-        ).then(async res => {
-          // server-side error checking
-          if(res.ok) {
-            const text = await res.text();
-            if (text.includes("\"code\":\"23505\"")) {
-              throw new Error("DUP"); // duplicate username error
-            } else usernameErrorDiv.textContent="";
-          }
-        });
-        verifyPasswordErrorDiv.textContent="Registered successfully. Please log in.";
-        verifyPasswordErrorDiv.className = "Register-error text-success";
-        console.log(register_request);
+        const recaptcha_response = await recaptchaRef.current.getValue();
+        recaptchaRef.current.reset();
+        if(recaptcha_response==='') {
+          verifyPasswordErrorDiv.textContent="You must solve the captcha to proceed.";
+        } else {
+          const register_request = await fetch("http://localhost:1234/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({username, password, recaptcha_response})}
+          ).then(async res => {
+            // server-side error checking
+            if(res.ok) {
+              const text = await res.text();
+              if (text.includes("\"code\":\"23505\"")) {
+                throw new Error("DUP"); // duplicate username error
+              } else usernameErrorDiv.textContent="";
+            }
+          });
+          verifyPasswordErrorDiv.textContent="Registered successfully. Please log in.";
+          verifyPasswordErrorDiv.className = "Register-error text-success";
+          console.log(register_request);
+        }
       } catch (err) {
         if(err.message==="DUP") usernameErrorDiv.textContent="This username already exists.";
         else if(err.message==="UNAME_WHITESPACE") usernameErrorDiv.textContent="Username cannot contain a space.";
@@ -95,13 +103,16 @@ function Register() {
                 <Form.Control value={verify_password} type="password" placeholder="Re-enter password" onChange={e => setVerifyPassword(e.target.value)} required/>
                 <div id="verifyPasswordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
-              {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Remember me" />
-              </Form.Group> */}
+              <div className="reCaptchaDiv">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={recaptcha_key}
+                />
+              </div>
               <center>
                 <Button className="Login-btn" variant="primary" type="submit">Register</Button>
                 <br/>
-                <Link to="/">Already have an account? Log in!</Link>
+                <a href="/">Already have an account? Log in!</a>
               </center>
             </Form>
             <a href="https://www.freepik.com/vectors/modern-texture" target="_blank" rel="noopener noreferrer" className="Background-attribution">Modern texture vector created by rawpixel.com - www.freepik.com</a>

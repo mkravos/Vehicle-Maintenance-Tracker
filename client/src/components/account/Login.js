@@ -1,46 +1,54 @@
 import React, { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
-import { Link } from "react-router-dom";
 import AppHeader from "../AppHeader";
+import ReCAPTCHA from 'react-google-recaptcha';
 
 function Login({setAuth}) {
+    const recaptchaRef = React.useRef();
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const passwordErrorDiv = document.getElementById('passwordErrorDiv');
+    const recaptcha_key = "6LeqHgghAAAAACivDNxoCr4VP7d3d9T9h5ewVKmk";
     var parseRes;
 
     const log_in = async e => {
       e.preventDefault();
       try {
-        const login_request = await fetch("http://localhost:1234/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({username, password})}
-        ).then(async res => {
-          // server-side error checking
-          if(res.ok) {
-            const text = await res.text();
-            if (text.includes("UNAME_NON_EXISTING")) {
-              throw new Error("UNAME_NON_EXISTING"); // invalid username error
-            } else usernameErrorDiv.textContent="";
-            if (text.includes("PWORD_INVALID")) {
-              throw new Error("PWORD_INVALID"); // invalid password error
-            } else {
-              passwordErrorDiv.textContent="";
-              parseRes = JSON.parse(text);
-            }
-          }
-        });
-
-        console.log(login_request);
-        if(parseRes.token) {
-          localStorage.setItem("token", parseRes.token);
-          setAuth(true);
-          console.log("Authentication passed.");
+        const recaptcha_response = await recaptchaRef.current.getValue();
+        recaptchaRef.current.reset();
+        if(recaptcha_response==='') {
+          passwordErrorDiv.textContent="You must solve the captcha to proceed.";
         } else {
-          setAuth(false);
-          console.log("Authentication failed.");
+          const login_request = await fetch("http://localhost:1234/", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({username, password, recaptcha_response})}
+          ).then(async res => {
+            // server-side error checking
+            if(res.ok) {
+              const text = await res.text();
+              if (text.includes("UNAME_NON_EXISTING")) {
+                throw new Error("UNAME_NON_EXISTING"); // invalid username error
+              } else usernameErrorDiv.textContent="";
+              if (text.includes("PWORD_INVALID")) {
+                throw new Error("PWORD_INVALID"); // invalid password error
+              } else {
+                passwordErrorDiv.textContent="";
+                parseRes = JSON.parse(text);
+              }
+            }
+          });
+
+          console.log(login_request);
+          if(parseRes.token) {
+            localStorage.setItem("token", parseRes.token);
+            setAuth(true);
+            console.log("Authentication passed.");
+          } else {
+            setAuth(false);
+            console.log("Authentication failed.");
+          }
         }
       } catch (err) {
         if(err.message==="UNAME_NON_EXISTING") usernameErrorDiv.textContent="Username does not exist.";
@@ -66,10 +74,16 @@ function Login({setAuth}) {
                 <Form.Control value={password} type="password" placeholder="Enter password" onChange={e => setPassword(e.target.value)} required/>
                 <div id="passwordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
+              <div className="reCaptchaDiv">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={recaptcha_key}
+                />
+              </div>
               <center>
                 <Button className="Login-btn" variant="primary" type="submit">Log In</Button>
                 <br/>
-                <Link to="/register">Don't have an account? Register!</Link>
+                <a href="/register">Don't have an account? Register!</a>
               </center>
             </Form>
             <a href="https://www.freepik.com/vectors/modern-texture" target="_blank" rel="noopener noreferrer" className="Background-attribution">Modern texture vector created by rawpixel.com - www.freepik.com</a>
