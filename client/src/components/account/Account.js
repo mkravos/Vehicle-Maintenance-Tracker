@@ -9,6 +9,7 @@ function Account({setAuth}) {
   const log_out = async () => {
     localStorage.removeItem("token");
     setAuth(false);
+    window.location.reload();
   }
 
   const [username, setUsername] = useState("");
