@@ -1,6 +1,6 @@
 function AppHeader() {
     return (
-        <h1>Garage: Maintenance Tracker</h1>
+        <h1 className="appHeader">Garage: Maintenance Tracker</h1>
     );
 }
 

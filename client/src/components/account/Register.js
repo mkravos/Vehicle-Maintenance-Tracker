@@ -10,7 +10,6 @@ function Register() {
     const [ password, setPassword ] = useState("");
     const [ verify_password, setVerifyPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
-    const passwordErrorDiv = document.getElementById('passwordErrorDiv');
     const verifyPasswordErrorDiv = document.getElementById('verifyPasswordErrorDiv');
     const recaptcha_key = "6LeqHgghAAAAACivDNxoCr4VP7d3d9T9h5ewVKmk";
 
@@ -21,7 +20,7 @@ function Register() {
         if(containsWhitespace(username) && containsWhitespace(password)) {
           throw new Error("ALL_WHITESPACE");
         } else {
-          passwordErrorDiv.textContent="";
+          verifyPasswordErrorDiv.textContent="";
           usernameErrorDiv.textContent="";
         }
         if(containsWhitespace(username)) { 
@@ -29,7 +28,7 @@ function Register() {
         } else usernameErrorDiv.textContent="";
         if(containsWhitespace(password)) {
           throw new Error("PWORD_WHITESPACE");
-        } else passwordErrorDiv.textContent="";
+        } else verifyPasswordErrorDiv.textContent="";
         if(containsSpecialChars(username)) { 
           throw new Error("UNAME_SPECIAL");
         } else usernameErrorDiv.textContent="";
@@ -68,10 +67,10 @@ function Register() {
       } catch (err) {
         if(err.message==="DUP") usernameErrorDiv.textContent="This username already exists.";
         else if(err.message==="UNAME_WHITESPACE") usernameErrorDiv.textContent="Username cannot contain a space.";
-        else if(err.message==="PWORD_WHITESPACE") passwordErrorDiv.textContent="Password cannot contain a space.";
+        else if(err.message==="PWORD_WHITESPACE") verifyPasswordErrorDiv.textContent="Password cannot contain a space.";
         else if(err.message==="ALL_WHITESPACE") {
           usernameErrorDiv.textContent="Username cannot contain a space.";
-          passwordErrorDiv.textContent="Password cannot contain a space.";
+          verifyPasswordErrorDiv.textContent="Password cannot contain a space.";
         }
         else if(err.message==="UNAME_SPECIAL") usernameErrorDiv.textContent="Username can't contain special characters.";
         else if(err.message==="PWORD_MISMATCH") verifyPasswordErrorDiv.textContent="Passwords do not match.";
@@ -86,20 +85,18 @@ function Register() {
         <header className="App-header">
           <AppHeader/>
           <p className="loginTitle">Welcome! Register an account.</p>
-          <div>
+          <div className="registerForm">
             <Form className="form-control-lg" onSubmit={registerNewAccount}>
               <Form.Group className="mb-3" controlId="formBasicUsername">
-                <Form.Label>Username</Form.Label>
+                <Form.Label className="usernameLabel">Username</Form.Label>
                 <Form.Control value={username} type="username" placeholder="Enter username" onChange={e => setUsername(e.target.value)} required/>
                 <div id="usernameErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control value={password} type="password" placeholder="Enter password" onChange={e => setPassword(e.target.value)} required/>
-                <div id="passwordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicPassword-2">
-                <Form.Label>Re-enter password</Form.Label>
                 <Form.Control value={verify_password} type="password" placeholder="Re-enter password" onChange={e => setVerifyPassword(e.target.value)} required/>
                 <div id="verifyPasswordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
@@ -112,11 +109,11 @@ function Register() {
               <center>
                 <Button className="Login-btn" variant="primary" type="submit">Register</Button>
                 <br/>
-                <a href="/">Already have an account? Log in!</a>
               </center>
             </Form>
             <a href="https://www.freepik.com/vectors/modern-texture" target="_blank" rel="noopener noreferrer" className="Background-attribution">Modern texture vector created by rawpixel.com - www.freepik.com</a>
           </div>
+          <p className="registerPrompt">Already have an account? <a href="/">Log in!</a></p>
         </header>
       </div>
     );

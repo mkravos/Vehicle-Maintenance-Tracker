@@ -120,7 +120,7 @@
 }
 
 .Register-error {
-  min-height: 25px;
+  height: 25px;
   font-size: 15px;
 }
 
@@ -132,6 +132,11 @@
   margin-bottom: 30px;
 }
 
+.registerPrompt {
+  margin-top: 30px;
+  font-size: 14px;
+}
+
 .nav-link {
   margin-left: 10px;
   margin-right: 10px;
@@ -139,4 +144,22 @@
 
 .reCaptchaDiv {
   height: 100px;
+}
+
+.loginForm {
+  background-color: white;
+  border-radius: 10px;
+  width: 340px;
+  height: 420px;
+}
+
+.registerForm {
+  background-color: white;
+  border-radius: 10px;
+  width: 340px;
+  height: 475px;
+}
+
+.usernameLabel {
+  margin-top: 15px;
 }

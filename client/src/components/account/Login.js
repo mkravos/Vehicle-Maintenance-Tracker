@@ -62,10 +62,10 @@ function Login({setAuth}) {
         <header className="App-header">
           <AppHeader/>
           <p className="loginTitle">Please log in to continue.</p>
-          <div>
+          <div className="loginForm">
             <Form className="form-control-lg" onSubmit={log_in}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Username</Form.Label>
+                <Form.Label className="usernameLabel">Username</Form.Label>
                 <Form.Control value={username} type="username" placeholder="Enter username" onChange={e => setUsername(e.target.value)} required/>
                 <div id="usernameErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
@@ -82,12 +82,11 @@ function Login({setAuth}) {
               </div>
               <center>
                 <Button className="Login-btn" variant="primary" type="submit">Log In</Button>
-                <br/>
-                <a href="/register">Don't have an account? Register!</a>
               </center>
             </Form>
             <a href="https://www.freepik.com/vectors/modern-texture" target="_blank" rel="noopener noreferrer" className="Background-attribution">Modern texture vector created by rawpixel.com - www.freepik.com</a>
           </div>
+          <p className="registerPrompt">Don't have an account? Register <a href="/register">here.</a></p>
         </header>
       </div>
     );
