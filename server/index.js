@@ -12,7 +12,52 @@ const recaptcha_secret = "6LeqHgghAAAAAMei7U_kcKKjrs4NDSL7ItH22NQQ";
 app.use(cors());
 app.use(express.json()); // req.body
 
-// ROUTES //
+// VEHICLE ROUTES //
+
+app.get("/get-vehicle-list/:uuid", async (req, res) => {
+  try {
+    // get user id from request
+    const uuid = req.params.uuid;
+    var results = [];
+
+    // get all vehicles for that user
+    const vehicle_query = await pool.query("SELECT vehicle_id FROM user_vehicle WHERE account_id=$1", [uuid]);
+
+    for(var i=0; i<vehicle_query.rows.length; i++) {
+      results.push((await pool.query("SELECT * FROM vehicle WHERE id=$1", [vehicle_query.rows[i].vehicle_id])).rows);
+    }
+
+    results = [].concat.apply([], results);
+
+    res.json(results);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+app.post("/add-vehicle", async (req, res) => {
+  try {
+    // destructure req.body
+    const { uuid, name, year, make, model, mileage, vin } = req.body;
+
+    // create vehicle
+    const vehicle_query = 
+    await pool.query("INSERT INTO vehicle(vehicle_name, model_year, make, model, mileage, vin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id", 
+    [name, year, make, model, mileage, vin]);
+
+    // get vehicle id from query result
+    const vehicle = vehicle_query.rows[0].id;
+
+    // associate vehicle with passed in user
+    await pool.query("INSERT INTO user_vehicle(account_id, vehicle_id) VALUES ($1, $2)", [uuid, vehicle]);
+
+    res.send("success");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// ACCOUNT ROUTES //
 
 // verify validity of token
 app.get("/verify", authorize, async (req, res) => {
