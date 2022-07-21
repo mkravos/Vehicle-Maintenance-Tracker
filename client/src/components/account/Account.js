@@ -12,8 +12,6 @@ function Account({setAuth}) {
     window.location.reload();
   }
 
-  const [username, setUsername] = useState("");
-
   const getUsername = async () => {
     try {
       const res = await fetch("http://localhost:1234/username", {
@@ -28,8 +26,9 @@ function Account({setAuth}) {
     }
   }
 
-  const p = getUsername();
-  p.then(value => {
+  const [username, setUsername] = useState();
+  getUsername()
+  .then(value => {
     setUsername(value.username);
   })
 

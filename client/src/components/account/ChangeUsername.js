@@ -42,7 +42,6 @@ function ChangeUsername() {
 
     const handleSubmit = async e => {
       e.preventDefault();
-
       try {
         // client-side error checking
         if(containsWhitespace(new_username)) { 
@@ -74,7 +73,6 @@ function ChangeUsername() {
             } else setPasswordErrors([""]);
           }
           handleClose();
-          window.location.reload();
         });
         console.log(change_username_request);
       } catch (err) {
