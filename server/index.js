@@ -36,6 +36,7 @@ app.get("/get-vehicle-list/:uuid", async (req, res) => {
 });
 
 app.post("/add-vehicle", async (req, res) => {
+  console.log(req.body);
   try {
     // destructure req.body
     const { uuid, name, year, make, model, mileage, vin } = req.body;
