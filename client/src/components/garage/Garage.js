@@ -44,7 +44,7 @@ function Garage() {
   }
 
   const [ vehicles, setVehicles ] = useState();
-  if(userId && !vehicles) {
+  if(userId) {
     getVehicles(userId)
     .then(value => {
       setVehicles(value);
