@@ -48,15 +48,12 @@ function Garage() {
   }
 
   const [ vehicles, setVehicles ] = useState();
-  useEffect(() => {
-    if(userId) {
-      getVehicles(userId)
-      .then(value => {
-        setVehicles(value);
-      });
-    }
-  }, [userId]);
-  console.log(vehicles);
+  if(userId && !vehicles) {
+    getVehicles(userId)
+    .then(value => {
+      setVehicles(value);
+    });
+  }
 
   return (
     <div className="Garage">
