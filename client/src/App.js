@@ -45,6 +45,7 @@ function App() {
           <Route exact path="/login" element={<Login setAuth={setAuth}/>}/>
           <Route exact path="/register" element={<Register/>}/>
         </Route>
+        <Route path="/" element={<Navigate to={"/login"} replace />}/>
         <Route path="*" element={<Navigate to={"/login"} replace />}/>
       </Routes>
     );
@@ -59,6 +60,7 @@ function App() {
         </Route>
         <Route path="/login" element={<Navigate to={"/dashboard"} replace />}/>
         <Route path="/register" element={<Navigate to={"/dashboard"} replace />}/>
+        <Route path="/" element={<Navigate to={"/dashboard"} replace />}/>
         <Route path="*" element={<Error404/>}/>
       </Routes>
     );
