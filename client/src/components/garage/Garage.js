@@ -71,7 +71,7 @@ function Garage() {
                   Last Service: 
                 </Card.Text>
                 <div className="Garage-dropdown-container">
-                  <DropdownButton id="dropdown-basic-button" title="Actions">
+                  <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
                     <UpdateMileage id={val.id}/>
                     <RecordServiceItem id={val.id}/>
                     <ViewServiceRecords id={val.id}/>

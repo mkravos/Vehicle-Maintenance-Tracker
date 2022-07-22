@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { containsSpecialChars, checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
 
 function AddVehicle() {
   const [ vehicleName, setVehicleName ] = useState("");
@@ -8,6 +9,7 @@ function AddVehicle() {
   const [ vehicleMake, setVehicleMake ] = useState("");
   const [ vehicleModel, setVehicleModel ] = useState("");
   const [ vehicleMileage, setVehicleMileage ] = useState("");
+  const [ errorDiv, setError ] = useState("");
   const [ VIN, setVIN ] = useState("");
   const [show, setShow] = useState(false);
 
@@ -34,23 +36,60 @@ function AddVehicle() {
     setUserId(value.id);
   });
 
-  const addVehicle = async () => {
+  const addVehicle = async e => {
+    e.preventDefault();
     try {
-      const newVehicle = {
-        uuid:userId, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:vehicleMileage, vin:VIN
+      // client-side error checking
+      if(!vehicleName || !vehicleYear || !vehicleMake || !vehicleModel) {
+        throw new Error("MISSING_REQ_FIELDS");
       }
-      const register_request = await fetch("http://localhost:1234/add-vehicle", {
+      if(!checkInteger(vehicleYear)) {
+        throw new Error("INVALID_YEAR");
+      }
+      if(vehicleMileage && !checkInteger(vehicleMileage)) {
+        throw new Error("INVALID_MILEAGE");
+      }
+      if(VIN && !checkAlphanumeric(VIN)) {
+        throw new Error("INVALID_VIN");
+      }
+      if(containsSpecialChars(vehicleName)) {
+        throw new Error("NAME_CHARS");
+      }
+      if(containsSpecialChars(vehicleMake)) {
+        throw new Error("MAKE_CHARS");
+      }
+      if(containsSpecialChars(vehicleModel)) {
+        throw new Error("MODEL_CHARS");
+      }
+
+      let newVehicle = {}
+      if(vehicleMileage) {
+        newVehicle = {
+          uuid:userId, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:vehicleMileage, vin:VIN
+        }
+      } else {
+        newVehicle = {
+          uuid:userId, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:0, vin:VIN
+        }
+      }
+      const request = await fetch("http://localhost:1234/add-vehicle", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newVehicle)
-      });
-      console.log(register_request);
+      })
+      console.log(request);
+      handleClose();
+      window.location.reload();
     } catch (err) {
-      console.log(err.message);
+      if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
+      if(err.message === "INVALID_YEAR") setError("Error: Year must be a number.");
+      if(err.message === "INVALID_MILEAGE") setError("Error: Mileage must be a number and contain no commas.");
+      if(err.message === "INVALID_VIN") setError("Error: VIN must be an alphanumeric value.");
+      if(err.message === "NAME_CHARS") setError("Error: Name can't contain special characters.");
+      if(err.message === "MAKE_CHARS") setError("Error: Make can't contain special characters.");
+      if(err.message === "MODEL_CHARS") setError("Error: Model can't contain special characters.");
+      else console.log(err.message);
     }
-
-    handleClose();
-    window.location.reload();
   }
 
   return (
@@ -68,21 +107,22 @@ function AddVehicle() {
           <Modal.Title>Add Vehicle</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <center><div className="modalErrorDiv">{errorDiv}</div></center>
           <Form className="form-control-lg">
             <Form.Group className="mb-3" controlId="add-name-box">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Name *</Form.Label>
               <Form.Control value={vehicleName} onChange={e => setVehicleName(e.target.value)} placeholder="Enter vehicle name (nickname)" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="add-year-box">
-              <Form.Label>Year</Form.Label>
+              <Form.Label>Year *</Form.Label>
               <Form.Control value={vehicleYear} onChange={e => setVehicleYear(e.target.value)} placeholder="Enter model year" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="add-make-box">
-              <Form.Label>Make</Form.Label>
+              <Form.Label>Make *</Form.Label>
               <Form.Control value={vehicleMake} onChange={e => setVehicleMake(e.target.value)} placeholder="Enter make (ex: Volkswagen)" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="add-model-box">
-              <Form.Label>Model</Form.Label>
+              <Form.Label>Model *</Form.Label>
               <Form.Control value={vehicleModel} onChange={e => setVehicleModel(e.target.value)} placeholder="Enter model (ex: Passat)" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="add-mileage-box">

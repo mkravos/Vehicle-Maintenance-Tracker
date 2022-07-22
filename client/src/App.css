@@ -168,3 +168,11 @@
 .addVehicle {
   margin-bottom: 50px;
 }
+
+.modalErrorDiv {
+  margin-left: 15px;
+  margin-bottom: 5px;
+  font-size: 18px;
+  height: 18px;
+  color: red;
+}

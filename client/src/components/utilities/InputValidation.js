@@ -4,6 +4,14 @@
     A package containing methods for validating user input.
 */
 
+export function checkInteger(str) {
+    return /^[0-9]*$/.test(str);
+}
+
+export function checkAlphanumeric(str) {
+    return /^[a-z0-9]+$/.test(str);
+}
+
 export function containsWhitespace(str) {
     return /\s/.test(str);
 }
