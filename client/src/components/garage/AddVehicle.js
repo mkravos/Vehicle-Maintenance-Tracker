@@ -55,6 +55,7 @@ function AddVehicle() {
     }
 
     handleClose();
+    window.location.reload();
   }
 
   return (

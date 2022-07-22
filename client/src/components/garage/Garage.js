@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import UpdateMileage from './UpdateMileage.js';
 import RecordServiceItem from './RecordServiceItem.js';
@@ -24,12 +24,16 @@ function Garage() {
     }
   }
 
-  const [ userId, setUserId ] = useState("");
-  getUserId()
-  .then(value => {
-    setUserId(value.id);
-  });
-
+  const [ userId, setUserId ] = useState();
+  useEffect(() => {
+    if(!userId) {
+      getUserId()
+      .then(value => {
+        setUserId(value.id);
+      });
+    }
+  }, []);
+  
   const getVehicles = async (uuid) => {
     try {
       const res = await fetch("http://localhost:1234/get-vehicle-list/" + uuid, {
@@ -44,12 +48,15 @@ function Garage() {
   }
 
   const [ vehicles, setVehicles ] = useState();
-  if(userId && !vehicles) {
-    getVehicles(userId)
-    .then(value => {
-      setVehicles(value);
-    });
-  }
+  useEffect(() => {
+    if(userId) {
+      getVehicles(userId)
+      .then(value => {
+        setVehicles(value);
+      });
+    }
+  }, [userId]);
+  console.log(vehicles);
 
   return (
     <div className="Garage">

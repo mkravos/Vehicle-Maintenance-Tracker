@@ -73,6 +73,7 @@ function ChangeUsername() {
             } else setPasswordErrors([""]);
           }
           handleClose();
+          window.location.reload();
         });
         console.log(change_username_request);
       } catch (err) {

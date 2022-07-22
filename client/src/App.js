@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes, Navigate, Outlet } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import './App.css';
 import Login from './components/account/Login.js';
 import Register from './components/account/Register.js';
@@ -8,10 +8,8 @@ import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
 import Error404 from './components/Error404.js';
 
-// protected routes: https://www.robinwieruch.de/react-router-private-routes/#:~:text=Private%20Routes%20in%20React%20Router,page%2C%20they%20cannot%20access%20it.
-
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState();
 
   const setAuth = boolean => {
     setIsAuthenticated(boolean);
@@ -40,36 +38,31 @@ function App() {
     isAuth();
   }, []);
 
-  const ProtectedRoute = () => {
-    if (!isAuthenticated) {
-      return <Navigate to={"/"} replace />;
-    } else {
-      return <Outlet/>;
-    }
-  };
-
-  const AuthenticationRoute = () => {
-    if (isAuthenticated) {
-      return <Navigate to={"/dashboard"} replace />;
-    } else {
-      return <Outlet/>;
-    }
+  if (isAuthenticated === false) {
+    return (
+      <Routes>
+        <Route>
+          <Route exact path="/login" element={<Login setAuth={setAuth}/>}/>
+          <Route exact path="/register" element={<Register/>}/>
+        </Route>
+        <Route path="*" element={<Navigate to={"/login"} replace />}/>
+      </Routes>
+    );
   }
-
-  return (
-    <Routes>
-      <Route element={<AuthenticationRoute/>}>
-        <Route exact path="/" element={<Login setAuth={setAuth}/>}/>
-        <Route exact path="/register" element={<Register/>}/>
-      </Route>
-      <Route element={<ProtectedRoute/>}>
-        <Route exact path="/dashboard" element={<Dashboard/>}/>
-        <Route exact path="/garage" element={<Garage/>}/>
-        <Route exact path="/account" element={<Account setAuth={setAuth}/>}/>
-      </Route>
-      <Route path="*" element={<Error404/>}/>
-    </Routes>
-  );
+  if (isAuthenticated === true) {
+    return (
+      <Routes>
+        <Route>
+          <Route exact path="/dashboard" element={<Dashboard/>}/>
+          <Route exact path="/garage" element={<Garage/>}/>
+          <Route exact path="/account" element={<Account setAuth={setAuth}/>}/>
+        </Route>
+        <Route path="/login" element={<Navigate to={"/dashboard"} replace />}/>
+        <Route path="/register" element={<Navigate to={"/dashboard"} replace />}/>
+        <Route path="*" element={<Error404/>}/>
+      </Routes>
+    );
+  }
 }
 
 export default App;

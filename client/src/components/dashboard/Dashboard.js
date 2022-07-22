@@ -14,7 +14,7 @@ function Dashboard() {
                 Don't Track This Item
               </Button>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="dashboardCardBody">
               <Card.Title>Year, Make, Model</Card.Title>
               <Card.Text className="Dashboard-card-text">
                 Your (service_item) needs to be serviced now. You are past due by: (mileage - interval_miles)/(date - interval_time).
@@ -28,7 +28,7 @@ function Dashboard() {
                 Don't Track This Item
               </Button>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="dashboardCardBody">
               <Card.Title>Year, Make, Model</Card.Title>
               <Card.Text className="Dashboard-card-text">
                 Your (service_item) needs to be serviced soon. Your next interval is: (mileage - interval_miles)/(date - interval_time).
@@ -42,7 +42,7 @@ function Dashboard() {
                 Don't Track This Item
               </Button>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="dashboardCardBody">
               <Card.Title>Year, Make, Model</Card.Title>
               <Card.Text className="Dashboard-card-text">
                 Your (service_item) does not need to be serviced yet.

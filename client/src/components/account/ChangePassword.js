@@ -44,7 +44,6 @@ function ChangePassword() {
 
     const handleSubmit = async e => {
       e.preventDefault();
-
       try {
         // client-side error checking
         if(containsWhitespace(new_password)) { 
