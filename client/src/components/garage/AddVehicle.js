@@ -43,13 +43,8 @@ function AddVehicle() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newVehicle)
-      }).then(async res => {
-          // server-side error checking
-          if(res.ok) {
-            const text = await res.text();
-          }
-        });
-        console.log(register_request);
+      });
+      console.log(register_request);
     } catch (err) {
       console.log(err.message);
     }

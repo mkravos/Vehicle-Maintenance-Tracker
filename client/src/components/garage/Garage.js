@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import UpdateMileage from './UpdateMileage.js';
 import RecordServiceItem from './RecordServiceItem.js';
@@ -25,14 +25,12 @@ function Garage() {
   }
 
   const [ userId, setUserId ] = useState();
-  useEffect(() => {
-    if(!userId) {
-      getUserId()
-      .then(value => {
-        setUserId(value.id);
-      });
-    }
-  }, []);
+  if(!userId) {
+    getUserId()
+    .then(value => {
+      setUserId(value.id);
+    });
+  }
   
   const getVehicles = async (uuid) => {
     try {
