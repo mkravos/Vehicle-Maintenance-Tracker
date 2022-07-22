@@ -35,6 +35,19 @@ app.get("/get-vehicle-list/:uuid", async (req, res) => {
   }
 });
 
+app.get("/get-vehicle/:id", async (req, res) => {
+  try {
+    // get vehicle id from request
+    const id = req.params.id;
+
+    result = await (await pool.query("SELECT * FROM vehicle WHERE id=$1", [id])).rows[0];
+
+    res.json(result);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
 app.post("/add-vehicle", async (req, res) => {
   console.log(req.body);
   try {
@@ -51,6 +64,26 @@ app.post("/add-vehicle", async (req, res) => {
 
     // associate vehicle with passed in user
     await pool.query("INSERT INTO user_vehicle(account_id, vehicle_id) VALUES ($1, $2)", [uuid, vehicle]);
+
+    res.send("success");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.post("/edit-vehicle", async (req, res) => {
+  console.log(req.body);
+  try {
+    // destructure req.body
+    const { id, name, year, make, model, mileage, vin } = req.body;
+
+    // UPDATE table_name
+    // SET column1 = value1, column2 = value2...., columnN = valueN
+    // WHERE [condition];
+
+    // update vehicle
+    await pool.query("UPDATE vehicle SET vehicle_name=$1, model_year=$2, make=$3, model=$4, mileage=$5, vin=$6) WHERE id=$7", 
+    [name, year, make, model, mileage, vin, id]);
 
     res.send("success");
   } catch (err) {
