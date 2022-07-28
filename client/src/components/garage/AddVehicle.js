@@ -63,13 +63,24 @@ function AddVehicle() {
       }
 
       let newVehicle = {}
-      if(vehicleMileage) {
+      if(vehicleMileage && VIN) {
         newVehicle = {
           uuid:userId, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:vehicleMileage, vin:VIN
         }
-      } else {
+      }
+      else if(vehicleMileage && !VIN) {
+        newVehicle = {
+          uuid:userId, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:vehicleMileage, vin:null
+        }
+      }
+      else if(!vehicleMileage && VIN) {
         newVehicle = {
           uuid:userId, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:0, vin:VIN
+        }
+      }
+      else if(!vehicleMileage && !VIN) {
+        newVehicle = {
+          uuid:userId, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:0, vin:null
         }
       }
       const request = await fetch("http://localhost:1234/add-vehicle", {

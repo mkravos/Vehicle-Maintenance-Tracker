@@ -64,11 +64,12 @@ function Garage() {
               <Card.Body>
                 <Card.Title>{val.model_year} {val.make} {val.model}</Card.Title>
                 <Card.Text className="Card-text">
-                  Name: {val.vehicle_name}
-                  <br/>
-                  Mileage: {val.mileage}
-                  <br/>
-                  Last Service: 
+                  <div><span className="vehicleItem">Name: </span>{val.vehicle_name}</div>
+                  <div><span className="vehicleItem">Mileage: </span> {val.mileage}</div>
+                  {
+                    val.vin ? <div><span className="vehicleItem">VIN: </span> {val.vin}</div> : null
+                  }
+                  <div><span className="vehicleItem">Last Service: </span>Not Implemented</div>
                 </Card.Text>
                 <div className="Garage-dropdown-container">
                   <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
