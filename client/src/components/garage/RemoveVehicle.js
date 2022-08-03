@@ -2,11 +2,27 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
 
-function RemoveVehicle() {
+function RemoveVehicle({id}) {
     const [show, setShow] = useState(false);
   
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const deleteVehicle = async e => {
+      e.preventDefault();
+      try {
+        const request = await fetch("http://localhost:1234/delete-vehicle", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({id:id})
+        })
+        console.log(request);
+        handleClose();
+        window.location.reload();
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
   
     return (
       <div className="Garage-modal">
@@ -21,7 +37,7 @@ function RemoveVehicle() {
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={handleClose}>
+            <Button variant="danger" onClick={deleteVehicle}>
               Delete
             </Button>
           </Modal.Footer>

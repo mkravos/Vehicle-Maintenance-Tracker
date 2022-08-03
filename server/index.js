@@ -91,6 +91,26 @@ app.post("/edit-vehicle", async (req, res) => {
   }
 });
 
+app.post("/delete-vehicle", async (req, res) => {
+  console.log(req.body);
+  try {
+    // destructure req.body
+    const { id } = req.body;
+
+    // delete vehicle from user account
+    await pool.query("DELETE FROM user_vehicle WHERE vehicle_id=$1", 
+    [id]);
+
+    // delete vehicle
+    await pool.query("DELETE FROM vehicle WHERE id=$1", 
+    [id]);
+
+    res.send("success");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // ACCOUNT ROUTES //
 
 // verify validity of token
