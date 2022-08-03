@@ -89,11 +89,11 @@ function DeleteAccount() {
             <Modal.Title>Delete Your Account</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <p className="accountDeletionPrompt">
+              Are you sure you would like to delete your account? This will also irreversibly remove all vehicles and maintenance records you have stored here.
+            </p>
             <Form id="delete-form" className="form-control-lg" onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="password-box">
-                  <Form.Label>
-                    Are you sure you would like to irreversibly delete your account? This will also remove all vehicles and maintenance records you have stored here.
-                  </Form.Label>
                   <Form.Control value={password} type="password" placeholder="Enter your current password*" onChange={e => setPassword(e.target.value)} required/>
                   <div id="passwordErrorDiv" className="Register-error text-danger">
                     {passwordErrors.map((error, ind) => (

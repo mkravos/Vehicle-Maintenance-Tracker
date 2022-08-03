@@ -143,22 +143,23 @@
   margin-right: 10px;
 }
 
-.reCaptchaDiv {
-  height: 100px;
-}
-
 .loginForm {
   background-color: white;
   border-radius: 10px;
   width: 340px;
-  height: 420px;
+  height: 320px;
 }
 
 .registerForm {
   background-color: white;
   border-radius: 10px;
   width: 340px;
-  height: 475px;
+  height: 375px;
+}
+
+.accountDeletionPrompt {
+  margin-left: 20px;
+  width: 400px;
 }
 
 .usernameLabel {

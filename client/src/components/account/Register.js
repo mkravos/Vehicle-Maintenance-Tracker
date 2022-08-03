@@ -11,7 +11,7 @@ function Register() {
     const [ verify_password, setVerifyPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const verifyPasswordErrorDiv = document.getElementById('verifyPasswordErrorDiv');
-    const recaptcha_key = "6LeqHgghAAAAACivDNxoCr4VP7d3d9T9h5ewVKmk";
+    const recaptcha_key = "6Lc45kUhAAAAAA9n1PNvrGv7B50oWXnIJVzwG5fV";
 
     const registerNewAccount = async e => {
       e.preventDefault();
@@ -42,7 +42,7 @@ function Register() {
           throw new Error("USERNAME_LENGTH");
         } else usernameErrorDiv.textContent="";
 
-        const recaptcha_response = await recaptchaRef.current.getValue();
+        const recaptcha_response = await recaptchaRef.current.executeAsync();
         recaptchaRef.current.reset();
         if(recaptcha_response==='') {
           verifyPasswordErrorDiv.textContent="You must solve the captcha to proceed.";
@@ -100,12 +100,11 @@ function Register() {
                 <Form.Control value={verify_password} type="password" placeholder="Re-enter password" onChange={e => setVerifyPassword(e.target.value)} required/>
                 <div id="verifyPasswordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
-              <div className="reCaptchaDiv">
-                <ReCAPTCHA
+              <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={recaptcha_key}
-                />
-              </div>
+                  size="invisible"
+              />
               <center>
                 <Button className="Login-btn" variant="primary" type="submit">Register</Button>
                 <br/>

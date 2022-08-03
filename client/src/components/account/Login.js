@@ -9,13 +9,13 @@ function Login({setAuth}) {
     const [ password, setPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const passwordErrorDiv = document.getElementById('passwordErrorDiv');
-    const recaptcha_key = "6LeqHgghAAAAACivDNxoCr4VP7d3d9T9h5ewVKmk";
+    const recaptcha_key = "6Lc45kUhAAAAAA9n1PNvrGv7B50oWXnIJVzwG5fV";
     var parseRes;
 
     const log_in = async e => {
       e.preventDefault();
       try {
-        const recaptcha_response = await recaptchaRef.current.getValue();
+        const recaptcha_response = await recaptchaRef.current.executeAsync();
         recaptchaRef.current.reset();
         if(recaptcha_response==='') {
           passwordErrorDiv.textContent="You must solve the captcha to proceed.";
@@ -74,12 +74,11 @@ function Login({setAuth}) {
                 <Form.Control value={password} type="password" placeholder="Enter password" onChange={e => setPassword(e.target.value)} required/>
                 <div id="passwordErrorDiv" className="Register-error text-danger"></div>
               </Form.Group>
-              <div className="reCaptchaDiv">
-                <ReCAPTCHA
+              <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={recaptcha_key}
-                />
-              </div>
+                  size="invisible"
+              />
               <center>
                 <Button className="Login-btn" variant="primary" type="submit">Log In</Button>
               </center>

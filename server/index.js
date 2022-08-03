@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const pool = require("./db.js");
 const jwtGenerator = require("./utils/jwtGenerator.js");
 const authorize = require("./middleware/authorize.js");
-const recaptcha_secret = "6LeqHgghAAAAAMei7U_kcKKjrs4NDSL7ItH22NQQ";
+const recaptcha_secret = "6Lc45kUhAAAAAArzKgVZmnyP6ugd0ZSlYF9-GTVG";
 
 // middleware
 app.use(cors());
