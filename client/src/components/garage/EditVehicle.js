@@ -24,7 +24,6 @@ function EditVehicle({id}) {
       setVehicle(value);
     });
   }
-  console.log(vehicle);
 
   const [ vehicleName, setVehicleName ] = useState("");
   const [ vehicleYear, setVehicleYear ] = useState("");
@@ -38,15 +37,14 @@ function EditVehicle({id}) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // infinite loop error
-  // if(vehicle) {
-  //   setVehicleName(vehicle.vehicle_name);
-  //   setVehicleYear(vehicle.model_year);
-  //   setVehicleMake(vehicle.make);
-  //   setVehicleModel(vehicle.model);
-  //   setVehicleMileage(vehicle.mileage);
-  //   setVIN(vehicle.vin);
-  // }
+  if(vehicle && !vehicleName) {
+    setVehicleName(vehicle.vehicle_name);
+    setVehicleYear(vehicle.model_year);
+    setVehicleMake(vehicle.make);
+    setVehicleModel(vehicle.model);
+    if(vehicle.mileage) setVehicleMileage(vehicle.mileage);
+    if(vehicle.vin) setVIN(vehicle.vin);
+  }
 
   const editVehicle = async e => {
     e.preventDefault();
@@ -77,14 +75,14 @@ function EditVehicle({id}) {
       let newVehicle = {}
       if(vehicleMileage) {
         newVehicle = {
-          name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:vehicleMileage, vin:VIN
+          id:id, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:vehicleMileage, vin:VIN
         }
       } else {
         newVehicle = {
-          name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:0, vin:VIN
+          id:id, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:0, vin:VIN
         }
       }
-      const request = await fetch("http://localhost:1234/add-vehicle", {
+      const request = await fetch("http://localhost:1234/edit-vehicle", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newVehicle)

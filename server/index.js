@@ -82,7 +82,7 @@ app.post("/edit-vehicle", async (req, res) => {
     // WHERE [condition];
 
     // update vehicle
-    await pool.query("UPDATE vehicle SET vehicle_name=$1, model_year=$2, make=$3, model=$4, mileage=$5, vin=$6) WHERE id=$7", 
+    await pool.query("UPDATE vehicle SET vehicle_name=$1, model_year=$2, make=$3, model=$4, mileage=$5, vin=$6 WHERE id=$7", 
     [name, year, make, model, mileage, vin, id]);
 
     res.send("success");
