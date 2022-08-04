@@ -22,7 +22,7 @@ function RecordServiceItem() {
                 <Form.Label>Name</Form.Label>
                 <div className="RSI-servicename">
                   <Form.Control className="servicenamebox" placeholder="Enter part name" />
-                  <DropdownButton variant="outline-secondary">
+                  <DropdownButton variant="outline-secondary" title="ExistingServiceItem">
                     <Dropdown.Item> Existing Service Item</Dropdown.Item>
                   </DropdownButton>
                 </div>
