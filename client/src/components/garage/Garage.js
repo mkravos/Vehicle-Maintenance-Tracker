@@ -72,7 +72,7 @@ function Garage() {
                   <div><span className="vehicleItem">Last Service: </span>Not Implemented</div>
                 </div>
                 <div className="Garage-dropdown-container">
-                  <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Action">
+                  <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
                     <UpdateMileage id={val.id}/>
                     <RecordServiceItem id={val.id}/>
                     <ViewServiceRecords id={val.id}/>
