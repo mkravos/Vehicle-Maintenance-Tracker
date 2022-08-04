@@ -25,19 +25,19 @@ function EditVehicle({id}) {
     });
   }
 
-  const [ vehicleName, setVehicleName ] = useState("");
-  const [ vehicleYear, setVehicleYear ] = useState("");
-  const [ vehicleMake, setVehicleMake ] = useState("");
-  const [ vehicleModel, setVehicleModel ] = useState("");
-  const [ vehicleMileage, setVehicleMileage ] = useState("");
-  const [ VIN, setVIN ] = useState("");
+  const [ vehicleName, setVehicleName ] = useState(undefined);
+  const [ vehicleYear, setVehicleYear ] = useState(undefined);
+  const [ vehicleMake, setVehicleMake ] = useState(undefined);
+  const [ vehicleModel, setVehicleModel ] = useState(undefined);
+  const [ vehicleMileage, setVehicleMileage ] = useState(undefined);
+  const [ VIN, setVIN ] = useState(undefined);
   const [ errorDiv, setError ] = useState("");
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  if(vehicle && !vehicleName) {
+  if(vehicle && vehicleName === undefined) {
     setVehicleName(vehicle.vehicle_name);
     setVehicleYear(vehicle.model_year);
     setVehicleMake(vehicle.make);

@@ -30,8 +30,8 @@ function UpdateMileage({id}) {
       setVehicleName(vehicle.vehicle_name);
     }
 
-    const [ vehicleMileage, setVehicleMileage ] = useState("");
-    if(vehicle && vehicleMileage === "") {
+    const [ vehicleMileage, setVehicleMileage ] = useState(undefined);
+    if(vehicle && vehicleMileage === undefined) {
       setVehicleMileage(vehicle.mileage);
     }
 
