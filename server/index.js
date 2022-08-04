@@ -91,6 +91,26 @@ app.post("/edit-vehicle", async (req, res) => {
   }
 });
 
+app.post("/update-vehicle-mileage", async (req, res) => {
+  console.log(req.body);
+  try {
+    // destructure req.body
+    const { id, mileage } = req.body;
+
+    // UPDATE table_name
+    // SET column1 = value1, column2 = value2...., columnN = valueN
+    // WHERE [condition];
+
+    // update vehicle
+    await pool.query("UPDATE vehicle SET mileage=$1 WHERE id=$2", 
+    [mileage, id]);
+
+    res.send("success");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 app.post("/delete-vehicle", async (req, res) => {
   console.log(req.body);
   try {
