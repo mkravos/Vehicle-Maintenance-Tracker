@@ -230,6 +230,14 @@ app.post("/delete-account", async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.rows[0].userkey);
     if(!validPassword) { throw new Error("PWORD_INVALID"); }
 
+    // delete user's vehicles
+    const vehicles = await pool.query("DELETE FROM user_vehicle WHERE account_id = $1 RETURNING vehicle_id", [user.rows[0].id]);
+      if(vehicles.rows.length !== 0) {
+        for(i=0; i<=user.rows.length; i++) {
+          await pool.query("DELETE FROM vehicle WHERE id = $1", [vehicles.rows[i].vehicle_id]);
+        }
+    }
+
     // delete account
     await pool.query("DELETE FROM user_account WHERE username = $1", [username]);
     res.send("SUCCESS");
