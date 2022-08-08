@@ -131,6 +131,117 @@ app.post("/delete-vehicle", async (req, res) => {
   }
 });
 
+// SERVICE_ITEM ROUTES //
+
+app.get("/get-service-item-list/:vehicle_id", async (req, res) => {
+  try {
+    // get vehicle id from request
+    const vehicle_id = req.params.vehicle_id;
+    var results = [];
+
+    // get all vehicles for that user
+    const maintenance_query = await pool.query("SELECT item_id FROM maintenance_record WHERE vehicle_id=$1", [vehicle_id]);
+
+    for(var i=0; i<maintenance_query.rows.length; i++) {
+      results.push((await pool.query("SELECT * FROM service_item WHERE id=$1", [maintenance_query.rows[i].item_id])).rows);
+    }
+
+    results = [].concat.apply([], results);
+
+    res.json(results);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+app.get("/get-service-item/:id", async (req, res) => {
+  try {
+    // get service_item id from request
+    const id = req.params.id;
+
+    result = await (await pool.query("SELECT * FROM service_item WHERE id=$1", [id])).rows[0];
+
+    res.json(result);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+app.post("/add-service-item", async (req, res) => {
+  console.log(req.body);
+  try {
+    // destructure req.body
+    const { vehicle_id, item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking } = req.body;
+
+    // create vehicle
+    const service_item_query = 
+    await pool.query("INSERT INTO service_item(item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id", 
+    [item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking]);
+
+    // get service item id from query result
+    const service_item = service_item_query.rows[0].id;
+
+    // associate service item with passed in user
+    await pool.query("INSERT INTO service_item(vehicle_id, item_id) VALUES ($1, $2)", [vehicle_id, service_item]);
+
+    res.send("success");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.post("/edit-service-item", async (req, res) => {
+  console.log(req.body);
+  try {
+    // destructure req.body
+    const { id, item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking } = req.body;
+
+    // update service item
+    await pool.query("UPDATE vehicle SET item_name=$1, service_date=$2, mileage=$3, interval_miles=$4, interval_time=$5, part_number=$6, cost=$7, receipt_image=$8, tracking=$9 WHERE id=$10", 
+    [item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking, id]);
+
+    res.send("success");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.post("/update-service-item-tracking", async (req, res) => {
+  console.log(req.body);
+  try {
+    // destructure req.body
+    const { id, tracking } = req.body;
+
+    // update service item
+    await pool.query("UPDATE service_item SET tracking=$1 WHERE id=$2",
+    [tracking, id]);
+
+    res.send("success");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.post("/delete-service-item", async (req, res) => {
+  console.log(req.body);
+  try {
+    // destructure req.body
+    const { id } = req.body;
+
+    // delete service item from maintenance records
+    await pool.query("DELETE FROM maintenance_record WHERE item_id=$1", 
+    [id]);
+
+    // delete service item
+    await pool.query("DELETE FROM service_item WHERE id=$1", 
+    [id]);
+
+    res.send("success");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // ACCOUNT ROUTES //
 
 // verify validity of token
