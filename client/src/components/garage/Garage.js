@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import UpdateMileage from './UpdateMileage.js';
 import RecordServiceItem from './RecordServiceItem.js';
-import ViewServiceRecords from './ViewServiceRecords';
 import GenerateReport from './GenerateReport.js';
 import AddVehicle from './AddVehicle.js';
 import EditVehicle from './EditVehicle.js';
 import RemoveVehicle from './RemoveVehicle.js';
-import { Card, DropdownButton } from 'react-bootstrap';
+import { Card, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Navigate } from 'react-router-dom';
 
 function Garage() {
   const getUserId = async () => {
@@ -75,7 +75,7 @@ function Garage() {
                   <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
                     <UpdateMileage id={val.id}/>
                     <RecordServiceItem id={val.id}/>
-                    <ViewServiceRecords id={val.id}/>
+                    <Dropdown.Item onClick={<Navigate to="/service-records" replace/>}>View Service Records</Dropdown.Item>
                     <GenerateReport id={val.id}/>
                   </DropdownButton>
                   <DropdownButton className="Vehicle-dropdown" variant="outline-primary" id="dropdown-basic-button" title="Vehicle">

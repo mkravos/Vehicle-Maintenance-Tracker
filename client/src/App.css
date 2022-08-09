@@ -95,6 +95,14 @@
 
 .Edit-service-item-button {
   margin-left: 5px;
+  margin-top: -7px;
+  width: 75px;
+  height: 40px;
+}
+
+.Tracking-service-item-btn {
+  width: 75px;
+  height: 40px;
 }
 
 .Dashboard-card-header {
