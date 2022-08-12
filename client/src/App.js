@@ -6,7 +6,6 @@ import Register from './components/account/Register.js';
 import Account from './components/account/Account.js';
 import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
-import ViewServiceRecords from './components/garage/ViewServiceRecords.js';
 import Error404 from './components/Error404.js';
 
 function App() {
@@ -57,7 +56,6 @@ function App() {
         <Route>
           <Route exact path="/dashboard" element={<Dashboard/>}/>
           <Route exact path="/garage" element={<Garage/>}/>
-          <Route exact path="/service-records" element={<ViewServiceRecords/>}/>
           <Route exact path="/account" element={<Account setAuth={setAuth}/>}/>
         </Route>
         <Route path="/login" element={<Navigate to={"/dashboard"} replace />}/>

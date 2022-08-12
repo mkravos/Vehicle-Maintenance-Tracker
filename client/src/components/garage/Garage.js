@@ -6,8 +6,8 @@ import GenerateReport from './GenerateReport.js';
 import AddVehicle from './AddVehicle.js';
 import EditVehicle from './EditVehicle.js';
 import RemoveVehicle from './RemoveVehicle.js';
-import { Card, DropdownButton, Dropdown } from 'react-bootstrap';
-import { Navigate } from 'react-router-dom';
+import ServiceRecords from './ServiceRecords.js';
+import { Card, DropdownButton } from 'react-bootstrap';
 
 function Garage() {
   const getUserId = async () => {
@@ -75,7 +75,6 @@ function Garage() {
                   <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
                     <UpdateMileage id={val.id}/>
                     <RecordServiceItem id={val.id}/>
-                    <Dropdown.Item onClick={<Navigate to="/service-records" replace/>}>View Service Records</Dropdown.Item>
                     <GenerateReport id={val.id}/>
                   </DropdownButton>
                   <DropdownButton className="Vehicle-dropdown" variant="outline-primary" id="dropdown-basic-button" title="Vehicle">
@@ -83,6 +82,7 @@ function Garage() {
                     <RemoveVehicle id={val.id}/>
                   </DropdownButton>
                 </div>
+                <ServiceRecords id={val.id}/>
               </Card.Body>
             </Card>
           )

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form } from 'react-bootstrap';
 
-function EditServiceItem() {
+function EditServiceItem({id}) {
     const [show, setShow] = useState(false);
   
     const handleClose = () => setShow(false);

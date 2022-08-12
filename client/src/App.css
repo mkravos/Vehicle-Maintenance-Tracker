@@ -72,6 +72,7 @@
 }
 
 .Garage-dropdown-container {
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
 }
@@ -95,7 +96,6 @@
 
 .Edit-service-item-button {
   margin-left: 5px;
-  margin-top: -7px;
   width: 75px;
   height: 40px;
 }
@@ -190,4 +190,18 @@
   color: blue;
   font-size: 16px;
   font-weight: 500;
+}
+
+.serviceRecordsAccordion {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.serviceRecordsAccordionBody {
+  font-size: 16px;
+  margin-bottom: -15px;
+}
+
+.service-records-card {
+  width: 100% !important;
 }
