@@ -15,6 +15,7 @@
 }
 
 .Garage-header {
+  background-image: url("./assets/background.png");
   background-color: #ffffff;
   min-height: 100vh;
   display: flex;
@@ -26,6 +27,9 @@
 
 .Card {
   margin-bottom: 15px;
+  border-radius: 25px !important;
+  border-color: black !important;
+  border-width: 1px !important;
   width: 450px;
 }
 
@@ -38,6 +42,7 @@
 }
 
 .Account-header {
+  background-image: url("./assets/background.png");
   background-color: #ffffff;
   min-height: 100vh;
   display: flex;
@@ -48,6 +53,7 @@
 }
 
 .Dashboard-header {
+  background-image: url("./assets/background.png");
   background-color: #ffffff;
   min-height: 100vh;
   display: flex;
@@ -112,6 +118,7 @@
 
 .Dashboard-card-header {
   display: flex;
+  border-radius: 25px !important;
   justify-content: space-between;
 }
 
@@ -199,7 +206,12 @@
 
 .serviceRecordsAccordion {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 25px;
+}
+
+.accordion-button {
+  height: 35px;
+  margin-bottom: 10px;
 }
 
 .serviceRecordsAccordionBody {
@@ -209,4 +221,8 @@
 
 .service-records-card {
   width: 100% !important;
+}
+
+.dontTrackBtn {
+  border-radius: 25px !important;
 }
