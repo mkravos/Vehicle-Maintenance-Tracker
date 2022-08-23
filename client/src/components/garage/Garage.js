@@ -69,7 +69,6 @@ function Garage() {
                     {
                       val.vin ? <div><span className="vehicleItem">VIN: </span> {val.vin}</div> : null
                     }
-                  <div><span className="vehicleItem">Last Service: </span>Not Implemented</div>
                 </div>
                 <div className="Garage-dropdown-container">
                   <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
