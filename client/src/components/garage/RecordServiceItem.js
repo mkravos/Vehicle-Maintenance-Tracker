@@ -40,10 +40,10 @@ function RecordServiceItem() {
               </Form.Group>
               <Form.Group className="mb-3" controlId="mileage-interval-box">
                 <Form.Label>Service Interval</Form.Label>
-                <Form.Control placeholder="Enter the next service interval (miles)" />
+                <Form.Control placeholder="Enter the next service deadline (miles)" />
               </Form.Group>
               <Form.Group className="mb-3" controlId="time-interval-box">
-                <Form.Control placeholder="Enter the next service interval (date)" />
+                <Form.Control placeholder="Enter the next service deadline (date)" />
               </Form.Group>
               <Form.Group className="mb-3 RSI-attach-file" controlId="attach-receipt-box">
                 <Button variant="outline-primary" className="Attach-btn">Attach Receipt</Button>
