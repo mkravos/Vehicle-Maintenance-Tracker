@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import EditServiceItem from './EditServiceItem';
 import { Card, Button, Accordion } from 'react-bootstrap';
 
-function ServiceRecords({id}) {
+function ServiceRecords({id, currMiles}) {
     const getServiceItems = async (vehicle_id) => {
         try {
         const res = await fetch("http://localhost:1234/get-service-item-list/" + vehicle_id, {
@@ -42,10 +42,10 @@ function ServiceRecords({id}) {
                                             </div>
                                         </div>
                                         <div className="Card-text">
-                                            <div><span className="vehicleItem">Serviced: </span>{val.service_date}, at {val.mileage} miles</div>
-                                            {val.interval_date && !val.interval_mileage ? <div><span className="vehicleItem">Next Service: </span>By {val.interval_date}</div> : null}
-                                            {!val.interval_date && val.interval_mileage ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_mileage} miles</div> : null}
-                                            {val.interval_date && val.interval_mileage ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_mileage} miles or by {val.interval_date}</div> : null}
+                                            <div><span className="vehicleItem">Serviced: </span>{new Date(val.service_date).toLocaleDateString()}, at {val.mileage} miles</div>
+                                            {val.interval_date && !val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>By {new Date(val.interval_date).toLocaleDateString()}</div> : null}
+                                            {!val.interval_date && val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles</div> : null}
+                                            {val.interval_date && val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles or by {new Date(val.interval_date).toLocaleDateString()}</div> : null}
                                             {val.part_number ? <div><span className="vehicleItem">Part Number: </span>{val.part_number}</div> : null}
                                             <div><span className="vehicleItem">Service Cost: </span>${val.cost}</div>
                                         </div>

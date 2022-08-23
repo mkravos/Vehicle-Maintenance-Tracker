@@ -82,7 +82,7 @@ function Garage() {
                     <RemoveVehicle id={val.id}/>
                   </DropdownButton>
                 </div>
-                <ServiceRecords id={val.id}/>
+                <ServiceRecords id={val.id} currMiles={val.mileage}/>
               </Card.Body>
             </Card>
           )
