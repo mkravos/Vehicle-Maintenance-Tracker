@@ -15,7 +15,7 @@
 }
 
 .Garage-header {
-  background-image: url("./assets/background.png");
+  /* background-image: url("./assets/background.png"); */
   background-color: #ffffff;
   min-height: 100vh;
   display: flex;
@@ -27,7 +27,7 @@
 
 .Card {
   margin-bottom: 15px;
-  border-radius: 25px !important;
+  border-radius: 10px !important;
   border-color: black !important;
   border-width: 1px !important;
   width: 450px;
@@ -42,7 +42,7 @@
 }
 
 .Account-header {
-  background-image: url("./assets/background.png");
+  /* background-image: url("./assets/background.png"); */
   background-color: #ffffff;
   min-height: 100vh;
   display: flex;
@@ -53,7 +53,7 @@
 }
 
 .Dashboard-header {
-  background-image: url("./assets/background.png");
+  /* background-image: url("./assets/background.png"); */
   background-color: #ffffff;
   min-height: 100vh;
   display: flex;
@@ -118,7 +118,7 @@
 
 .Dashboard-card-header {
   display: flex;
-  border-radius: 25px !important;
+  border-radius: 10px !important;
   justify-content: space-between;
 }
 
@@ -224,5 +224,5 @@
 }
 
 .dontTrackBtn {
-  border-radius: 25px !important;
+  border-radius: 10px !important;
 }

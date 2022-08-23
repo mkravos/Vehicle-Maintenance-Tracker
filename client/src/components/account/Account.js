@@ -50,7 +50,7 @@ function Account({setAuth}) {
               </DropdownButton>
             </Card.Body>
           </Card>
-          <Button variant="danger" className="Logout-btn" onClick={log_out}>Log Out</Button>
+          <Button variant="outline-danger" className="Logout-btn" onClick={log_out}>Log Out</Button>
       </header>
     </div>
   );
