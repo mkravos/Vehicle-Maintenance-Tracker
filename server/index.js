@@ -210,11 +210,18 @@ app.post("/update-service-item-tracking", async (req, res) => {
   console.log(req.body);
   try {
     // destructure req.body
-    const { id, tracking } = req.body;
+    const { id } = req.body;
 
-    // update service item
-    await pool.query("UPDATE service_item SET tracking=$1 WHERE id=$2",
-    [tracking, id]);
+    // get current value of 'tracking' column
+    const current_status = (await pool.query("SELECT tracking FROM service_item WHERE id=$1", [id])).rows[0].tracking;
+    
+    if(current_status === true) {
+      // toggle to false
+      await pool.query("UPDATE service_item SET tracking=false WHERE id=$1", [id]);
+    } else {
+      // toggle to true
+      await pool.query("UPDATE service_item SET tracking=true WHERE id=$1", [id]);
+    }
 
     res.send("success");
   } catch (err) {

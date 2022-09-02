@@ -3,6 +3,8 @@ import EditServiceItem from './EditServiceItem';
 import { Card, Button, Accordion } from 'react-bootstrap';
 
 function ServiceRecords({id, currMiles, vehicleName}) {
+    const [ serviceItemId, setServiceItemId ] = useState("");
+
     const getServiceItems = async (vehicle_id) => {
         try {
         const res = await fetch("http://localhost:1234/get-service-item-list/" + vehicle_id, {
@@ -24,6 +26,17 @@ function ServiceRecords({id, currMiles, vehicleName}) {
         });
     }
 
+    const updateServiceItemTracking = async e => {
+        e.preventDefault();
+        const request = await fetch("http://localhost:1234/update-service-item-tracking", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({id:serviceItemId})
+        })
+        console.log(request);
+        window.location.reload();
+    }
+
     return (
         <Accordion className="serviceRecordsAccordion" flush>
             <Accordion.Item eventKey="0">
@@ -31,13 +44,18 @@ function ServiceRecords({id, currMiles, vehicleName}) {
                 <Accordion.Body className="serviceRecordsAccordionBody">
                     <div className="service-records">
                         {service_items ? service_items.map((val, key) => {
+                            if(!serviceItemId) setServiceItemId(val.id);
                             return (
                                 <Card className="col-sm-8 Card service-records-card" key={key}>
                                     <Card.Body>
                                         <div className="VSR-card-title">
                                             <Card.Title>{val.item_name}</Card.Title>
                                             <div className="VSR-card-buttons">
-                                                <Button variant="outline-success" className="Tracking-service-item-btn btn-sm">Tracking</Button>
+                                                {val.tracking==true ? 
+                                                    <Button onClick={updateServiceItemTracking} variant="outline-success" className="Tracking-service-item-btn btn-sm">Track</Button>
+                                                 :
+                                                    <Button onClick={updateServiceItemTracking} variant="outline-danger" className="Tracking-service-item-btn btn-sm">Don't Track</Button>
+                                                }
                                                 <EditServiceItem id={val.id} vehicleName={vehicleName} serviceItem={val}/>
                                             </div>
                                         </div>

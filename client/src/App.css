@@ -103,7 +103,7 @@
 }
 
 .Tracking-service-item-btn {
-  width: 75px;
+  width: fit-content;
   height: 40px;
 }
 
