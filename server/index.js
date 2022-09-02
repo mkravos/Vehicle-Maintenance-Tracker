@@ -194,11 +194,11 @@ app.post("/edit-service-item", async (req, res) => {
   console.log(req.body);
   try {
     // destructure req.body
-    const { id, item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking } = req.body;
+    const { id, item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image } = req.body;
 
     // update service item
-    await pool.query("UPDATE vehicle SET item_name=$1, service_date=$2, mileage=$3, interval_miles=$4, interval_time=$5, part_number=$6, cost=$7, receipt_image=$8, tracking=$9 WHERE id=$10", 
-    [item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking, id]);
+    await pool.query("UPDATE service_item SET item_name=$1, service_date=$2, mileage=$3, interval_miles=$4, interval_time=$5, part_number=$6, cost=$7, receipt_image=$8 WHERE id=$9", 
+    [item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, id]);
 
     res.send("success");
   } catch (err) {
