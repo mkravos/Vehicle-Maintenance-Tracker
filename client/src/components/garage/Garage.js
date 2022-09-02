@@ -73,7 +73,7 @@ function Garage() {
                 <div className="Garage-dropdown-container">
                   <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
                     <UpdateMileage id={val.id}/>
-                    <RecordServiceItem id={val.id}/>
+                    <RecordServiceItem id={val.id} vehicleName={val.vehicle_name}/>
                     <GenerateReport id={val.id}/>
                   </DropdownButton>
                   <DropdownButton className="Vehicle-dropdown" variant="outline-primary" id="dropdown-basic-button" title="Vehicle">

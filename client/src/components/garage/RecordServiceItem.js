@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
 import { checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
 
-function RecordServiceItem({id}) {
+function RecordServiceItem({id, vehicleName}) {
     const [ itemName, setItemName ] = useState("");
     const [ serviceDate, setServiceDate ] = useState("");
     const [ mileage, setMileage ] = useState("");
@@ -83,7 +83,7 @@ function RecordServiceItem({id}) {
   
         <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>
-            <Modal.Title>Record Service Item for (Vehicle Name)</Modal.Title>
+            <Modal.Title>Record Service Item for {vehicleName}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <center><div className="modalErrorDiv">{errorDiv}</div></center>
