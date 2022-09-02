@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
-import { containsSpecialChars, checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
+import { checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
 
 function RecordServiceItem({id}) {
     const [ itemName, setItemName ] = useState("");
@@ -38,9 +38,6 @@ function RecordServiceItem({id}) {
         if(partNumber && !checkAlphanumeric(partNumber)) {
           throw new Error("INVALID_PART_NUMBER");
         }
-        if(containsSpecialChars(itemName)) {
-          throw new Error("NAME_CHARS");
-        }
 
         if(partNumber === '') {
           partNumber = null;
@@ -76,7 +73,6 @@ function RecordServiceItem({id}) {
         if(err.message === "INVALID_INTERVAL_MILES") setError("Error: Mileage service interval must be a number and contain no commas.");
         if(err.message === "INVALID_COST") setError("Error: Cost must be a number and contain no symbols or commas.");
         if(err.message === "INVALID_PART_NUMBER") setError("Error: Part number can only contain alphanumeric characters.");
-        if(err.message === "NAME_CHARS") setError("Error: Name can't contain special characters.");
         else console.log(err.message);
       }
     }
