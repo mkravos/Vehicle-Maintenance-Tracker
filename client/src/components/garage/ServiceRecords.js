@@ -47,7 +47,7 @@ function ServiceRecords({id, currMiles}) {
                                             {!val.interval_date && val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles</div> : null}
                                             {val.interval_date && val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles or by {new Date(val.interval_date).toLocaleDateString()}</div> : null}
                                             {val.part_number ? <div><span className="vehicleItem">Part Number: </span>{val.part_number}</div> : null}
-                                            <div><span className="vehicleItem">Service Cost: </span>${val.cost}</div>
+                                            {val.cost ? <div><span className="vehicleItem">Service Cost: </span>${val.cost}</div> : null}
                                         </div>
                                     </Card.Body>
                                 </Card>

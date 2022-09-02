@@ -67,15 +67,6 @@
   font-size: 20px;
 }
 
-.RSI-attach-file {
-  display: flex;
-  align-items: center;
-}
-
-.Attach-btn {
-  margin-top: 15px;
-}
-
 .Modal-filename {
   font-size: 12px;
   margin-left: 10px;

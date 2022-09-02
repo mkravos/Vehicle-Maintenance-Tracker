@@ -95,7 +95,7 @@ function AddVehicle() {
       if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
       if(err.message === "INVALID_YEAR") setError("Error: Year must be a number.");
       if(err.message === "INVALID_MILEAGE") setError("Error: Mileage must be a number and contain no commas.");
-      if(err.message === "INVALID_VIN") setError("Error: VIN must be an alphanumeric value.");
+      if(err.message === "INVALID_VIN") setError("Error: VIN can only contain alphanumeric characters.");
       if(err.message === "NAME_CHARS") setError("Error: Name can't contain special characters.");
       if(err.message === "MAKE_CHARS") setError("Error: Make can't contain special characters.");
       if(err.message === "MODEL_CHARS") setError("Error: Model can't contain special characters.");

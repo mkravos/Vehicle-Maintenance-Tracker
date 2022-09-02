@@ -171,18 +171,18 @@ app.post("/add-service-item", async (req, res) => {
   console.log(req.body);
   try {
     // destructure req.body
-    const { vehicle_id, item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking } = req.body;
+    const { vehicle_id, item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image } = req.body;
 
     // create vehicle
     const service_item_query = 
-    await pool.query("INSERT INTO service_item(item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id", 
-    [item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image, tracking]);
+    await pool.query("INSERT INTO service_item(item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id", 
+    [item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image]);
 
     // get service item id from query result
     const service_item = service_item_query.rows[0].id;
 
     // associate service item with passed in user
-    await pool.query("INSERT INTO service_item(vehicle_id, item_id) VALUES ($1, $2)", [vehicle_id, service_item]);
+    await pool.query("INSERT INTO maintenance_record(vehicle_id, item_id) VALUES ($1, $2)", [vehicle_id, service_item]);
 
     res.send("success");
   } catch (err) {
