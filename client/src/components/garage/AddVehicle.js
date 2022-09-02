@@ -126,7 +126,7 @@ function AddVehicle() {
             </Form.Group>
             <Form.Group className="mb-3" controlId="add-year-box">
               <Form.Label>Year *</Form.Label>
-              <Form.Control value={vehicleYear} onChange={e => setVehicleYear(e.target.value)} placeholder="Enter model year" />
+              <Form.Control type="number" value={vehicleYear} onChange={e => setVehicleYear(e.target.value)} placeholder="Enter model year" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="add-make-box">
               <Form.Label>Make *</Form.Label>
@@ -138,7 +138,7 @@ function AddVehicle() {
             </Form.Group>
             <Form.Group className="mb-3" controlId="add-mileage-box">
               <Form.Label>Mileage</Form.Label>
-              <Form.Control value={vehicleMileage} onChange={e => setVehicleMileage(e.target.value)} placeholder="Enter current mileage" />
+              <Form.Control type="number" value={vehicleMileage} onChange={e => setVehicleMileage(e.target.value)} placeholder="Enter current mileage" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="add-vin-box">
               <Form.Label>VIN</Form.Label>

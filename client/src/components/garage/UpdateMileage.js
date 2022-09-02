@@ -83,7 +83,7 @@ function UpdateMileage({id}) {
             <Form className="form-control-lg">
               <Form.Group className="mb-3" controlId="update-mileage-box">
                 <Form.Label>Mileage</Form.Label>
-                <Form.Control value={vehicleMileage} onChange={e => setVehicleMileage(e.target.value)} placeholder="Enter current mileage" />
+                <Form.Control type="number" value={vehicleMileage} onChange={e => setVehicleMileage(e.target.value)} placeholder="Enter current mileage" />
               </Form.Group>
             </Form>
           </Modal.Body>
