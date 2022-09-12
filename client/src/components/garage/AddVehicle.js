@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { containsSpecialChars, checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
 
-function AddVehicle() {
+function AddVehicle({setNewVehicle}) {
   const [ vehicleName, setVehicleName ] = useState("");
   const [ vehicleYear, setVehicleYear ] = useState("");
   const [ vehicleMake, setVehicleMake ] = useState("");
@@ -90,7 +90,8 @@ function AddVehicle() {
       })
       console.log(request);
       handleClose();
-      window.location.reload();
+      // window.location.reload();
+      setNewVehicle(true);
     } catch (err) {
       if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
       if(err.message === "INVALID_YEAR") setError("Error: Year must be a number.");

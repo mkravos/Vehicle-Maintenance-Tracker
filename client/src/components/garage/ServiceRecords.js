@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import EditServiceItem from './EditServiceItem';
 import { Card, Button, Accordion } from 'react-bootstrap';
 
-function ServiceRecords({id, currMiles, vehicleName}) {
+function ServiceRecords({vehicleId, currMiles, vehicleName}) {
     const [ serviceItemId, setServiceItemId ] = useState("");
 
     const getServiceItems = async (vehicle_id) => {
@@ -19,11 +19,14 @@ function ServiceRecords({id, currMiles, vehicleName}) {
     }
 
     const [ service_items, setServiceItems ] = useState();
-    if(id && !service_items) {
+    function getItems(id) {
         getServiceItems(id)
         .then(value => {
             setServiceItems(value);
         });
+    }
+    if(vehicleId && !service_items) {
+        getItems(vehicleId);
     }
 
     const updateServiceItemTracking = async e => {
@@ -34,7 +37,7 @@ function ServiceRecords({id, currMiles, vehicleName}) {
             body: JSON.stringify({id:serviceItemId})
         })
         console.log(request);
-        window.location.reload();
+        getItems(vehicleId);
     }
 
     return (

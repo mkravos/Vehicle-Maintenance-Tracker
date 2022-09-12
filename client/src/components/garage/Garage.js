@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import UpdateMileage from './UpdateMileage.js';
 import RecordServiceItem from './RecordServiceItem.js';
@@ -10,6 +10,12 @@ import ServiceRecords from './ServiceRecords.js';
 import { Card, DropdownButton } from 'react-bootstrap';
 
 function Garage() {
+  const [vehicleAdded, setVehicleAdded] = useState(false);
+
+  const setNewVehicle = boolean => {
+    setVehicleAdded(boolean);
+  };
+
   const getUserId = async () => {
     try {
       const res = await fetch("http://localhost:1234/uuid", {
@@ -46,12 +52,20 @@ function Garage() {
   }
 
   const [ vehicles, setVehicles ] = useState();
-  if(userId && !vehicles) {
-    getVehicles(userId)
+  function getVehicleList(id) {
+    getVehicles(id)
     .then(value => {
       setVehicles(value);
     });
   }
+  if(userId && !vehicles) {
+    getVehicleList(userId);
+  }
+
+  useEffect(() => {
+    setVehicleAdded(false);
+    getVehicleList(userId);
+  },[vehicleAdded]);
 
   return (
     <div className="Garage">
@@ -81,12 +95,12 @@ function Garage() {
                     <RemoveVehicle id={val.id}/>
                   </DropdownButton>
                 </div>
-                <ServiceRecords id={val.id} currMiles={val.mileage} vehicleName={val.vehicle_name}/>
+                <ServiceRecords vehicleId={val.id} currMiles={val.mileage} vehicleName={val.vehicle_name}/>
               </Card.Body>
             </Card>
           )
         }) : null}
-        <AddVehicle/>
+        <AddVehicle setNewVehicle={setNewVehicle}/>
       </header>
     </div>
   );
