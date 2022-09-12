@@ -9,8 +9,8 @@ function AddVehicle({setNewVehicle}) {
   const [ vehicleMake, setVehicleMake ] = useState("");
   const [ vehicleModel, setVehicleModel ] = useState("");
   const [ vehicleMileage, setVehicleMileage ] = useState("");
-  const [ errorDiv, setError ] = useState("");
   const [ VIN, setVIN ] = useState("");
+  const [ errorDiv, setError ] = useState("");
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -90,8 +90,14 @@ function AddVehicle({setNewVehicle}) {
       })
       console.log(request);
       handleClose();
-      // window.location.reload();
       setNewVehicle(true);
+      setVehicleName("");
+      setVehicleYear("");
+      setVehicleMake("");
+      setVehicleModel("");
+      setVehicleMileage("");
+      setVIN("");
+      setError("");
     } catch (err) {
       if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
       if(err.message === "INVALID_YEAR") setError("Error: Year must be a number.");

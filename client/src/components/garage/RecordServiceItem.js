@@ -67,6 +67,15 @@ function RecordServiceItem({id, vehicleName, recordedItem}) {
       console.log(request);
       handleClose();
       recordedItem(true);
+      setItemName("");
+      setServiceDate("");
+      setMileage("");
+      setPartNumber("");
+      setCost("");
+      setIntervalMiles("");
+      setIntervalTime("");
+      setReceiptImage("");
+      setError("");
     } catch (err) {
       if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
       if(err.message === "INVALID_MILEAGE") setError("Error: Mileage must be a number and contain no commas.");
