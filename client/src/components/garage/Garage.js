@@ -11,10 +11,32 @@ import { Card, DropdownButton } from 'react-bootstrap';
 
 function Garage() {
   const [vehicleAdded, setVehicleAdded] = useState(false);
+  const [vehicleEdited, setVehicleEdited] = useState(false);
+  const [vehicleRemoved, setVehicleRemoved] = useState(false);
+  const [mileageUpdated, setMileageUpdated] = useState(false);
+  const [itemRecorded, setItemRecorded] = useState(false);
 
   const setNewVehicle = boolean => {
     setVehicleAdded(boolean);
   };
+  const updatedMileage = boolean => {
+    setMileageUpdated(boolean);
+  };
+  const recordedItem = boolean => {
+    setItemRecorded(boolean);
+  };
+  // const generatedReport = boolean => {
+  //   setVehicleAdded(boolean);
+  // };
+  const editedVehicle = boolean => {
+    setVehicleEdited(boolean);
+  };
+  const removedVehicle = boolean => {
+    setVehicleRemoved(boolean);
+  };
+  // const setNewServiceRecord = boolean => {
+  //   setVehicleAdded(boolean);
+  // };
 
   const getUserId = async () => {
     try {
@@ -63,9 +85,36 @@ function Garage() {
   }
 
   useEffect(() => {
-    setVehicleAdded(false);
-    getVehicleList(userId);
+    if(userId) {
+      setVehicleAdded(false);
+      getVehicleList(userId);
+    }
   },[vehicleAdded]);
+  useEffect(() => {
+    if(userId) {
+      setVehicleEdited(false);
+      getVehicleList(userId);
+    }
+  },[vehicleEdited]);
+  useEffect(() => {
+    if(userId) {
+      setVehicleRemoved(false);
+      getVehicleList(userId);
+    }
+  },[vehicleRemoved]);
+  useEffect(() => {
+    if(userId) {
+      setMileageUpdated(false);
+      getVehicleList(userId);
+    }
+  },[mileageUpdated]);
+  useEffect(() => {
+    if(userId) {
+      setItemRecorded(false);
+      getVehicleList(userId);
+    }
+  },[itemRecorded]);
+  
 
   return (
     <div className="Garage">
@@ -86,16 +135,23 @@ function Garage() {
                 </div>
                 <div className="Garage-dropdown-container">
                   <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
-                    <UpdateMileage id={val.id}/>
-                    <RecordServiceItem id={val.id} vehicleName={val.vehicle_name}/>
-                    <GenerateReport id={val.id}/>
+                    <UpdateMileage id={val.id} updatedMileage={updatedMileage}/>
+                    <RecordServiceItem id={val.id} vehicleName={val.vehicle_name} recordedItem={recordedItem}/>
+                    <GenerateReport id={val.id} 
+                      // generatedReport={generatedReport}
+                    />
                   </DropdownButton>
                   <DropdownButton className="Vehicle-dropdown" variant="outline-primary" id="dropdown-basic-button" title="Vehicle">
-                    <EditVehicle id={val.id}/>
-                    <RemoveVehicle id={val.id}/>
+                    <EditVehicle id={val.id} editedVehicle={editedVehicle}/>
+                    <RemoveVehicle id={val.id} removedVehicle={removedVehicle}/>
                   </DropdownButton>
                 </div>
-                <ServiceRecords vehicleId={val.id} currMiles={val.mileage} vehicleName={val.vehicle_name}/>
+                <ServiceRecords 
+                  vehicleId={val.id} 
+                  currMiles={val.mileage} 
+                  vehicleName={val.vehicle_name} 
+                  // setNewServiceRecord={setNewServiceRecord}
+                />
               </Card.Body>
             </Card>
           )

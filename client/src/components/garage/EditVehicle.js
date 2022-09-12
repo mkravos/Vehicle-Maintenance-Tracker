@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form, Dropdown } from 'react-bootstrap';
 import { containsSpecialChars, checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
 
-function EditVehicle({id}) {
+function EditVehicle({id, editedVehicle}) {
   const getVehicle = async (id) => {
     try {
       const res = await fetch("http://localhost:1234/get-vehicle/" + id, {
@@ -89,7 +89,7 @@ function EditVehicle({id}) {
       })
       console.log(request);
       handleClose();
-      window.location.reload();
+      editedVehicle(true);
     } catch (err) {
       if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
       if(err.message === "INVALID_YEAR") setError("Error: Year must be a number.");

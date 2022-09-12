@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
 
-function RemoveVehicle({id}) {
+function RemoveVehicle({id, removedVehicle}) {
     const [show, setShow] = useState(false);
   
     const handleClose = () => setShow(false);
@@ -18,7 +18,7 @@ function RemoveVehicle({id}) {
         })
         console.log(request);
         handleClose();
-        window.location.reload();
+        removedVehicle(true);
       } catch (err) {
         console.log(err.message);
       }

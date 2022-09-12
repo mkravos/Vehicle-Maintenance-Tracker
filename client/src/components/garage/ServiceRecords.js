@@ -37,7 +37,7 @@ function ServiceRecords({vehicleId, currMiles, vehicleName}) {
             body: JSON.stringify({id:serviceItemId})
         })
         console.log(request);
-        getItems(vehicleId);
+        if(vehicleId) getItems(vehicleId);
     }
 
     return (

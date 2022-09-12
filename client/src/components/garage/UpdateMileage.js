@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
 import { checkInteger } from '../utilities/InputValidation';
 
-function UpdateMileage({id}) {
+function UpdateMileage({id, updatedMileage}) {
     const getVehicle = async (id) => {
       try {
         const res = await fetch("http://localhost:1234/get-vehicle/" + id, {
@@ -60,7 +60,7 @@ function UpdateMileage({id}) {
         })
         console.log(request);
         handleClose();
-        window.location.reload();
+        updatedMileage(true);
       } catch (err) {
         console.log(err.message);
       }
