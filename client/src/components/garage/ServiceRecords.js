@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EditServiceItem from './EditServiceItem';
 import { Card, Button, Accordion } from 'react-bootstrap';
 
-function ServiceRecords({vehicleId, currMiles, vehicleName}) {
+function ServiceRecords({vehicleId, currMiles, vehicleName, itemRecorded}) {
     const [ serviceItemId, setServiceItemId ] = useState("");
+    const [ itemEdited, setItemEdited ] = useState(false);
+
+    const editedServiceItem = boolean => {
+        setItemEdited(boolean);
+    };
 
     const getServiceItems = async (vehicle_id) => {
         try {
@@ -29,16 +34,28 @@ function ServiceRecords({vehicleId, currMiles, vehicleName}) {
         getItems(vehicleId);
     }
 
-    const updateServiceItemTracking = async e => {
+    const updateServiceItemTracking = id => async e => {
         e.preventDefault();
         const request = await fetch("http://localhost:1234/update-service-item-tracking", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({id:serviceItemId})
+            body: JSON.stringify({id:id})
         })
         console.log(request);
         if(vehicleId) getItems(vehicleId);
     }
+
+    useEffect(() => {
+        if(vehicleId) {
+            getItems(vehicleId);
+        }
+    },[itemRecorded]);
+    useEffect(() => {
+        if(vehicleId) {
+            setItemEdited(false);
+            getItems(vehicleId);
+        }
+    },[itemEdited]);
 
     return (
         <Accordion className="serviceRecordsAccordion" flush>
@@ -54,12 +71,12 @@ function ServiceRecords({vehicleId, currMiles, vehicleName}) {
                                         <div className="VSR-card-title">
                                             <Card.Title>{val.item_name}</Card.Title>
                                             <div className="VSR-card-buttons">
-                                                {val.tracking==true ? 
-                                                    <Button onClick={updateServiceItemTracking} variant="outline-success" className="Tracking-service-item-btn btn-sm">Track</Button>
+                                                {val.tracking===true ? 
+                                                    <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="Tracking-service-item-btn btn-sm">Don't Track</Button>
                                                  :
-                                                    <Button onClick={updateServiceItemTracking} variant="outline-danger" className="Tracking-service-item-btn btn-sm">Don't Track</Button>
+                                                    <Button onClick={updateServiceItemTracking(val.id)} variant="outline-success" className="Tracking-service-item-btn btn-sm">Track</Button>
                                                 }
-                                                <EditServiceItem id={val.id} vehicleName={vehicleName} serviceItem={val}/>
+                                                <EditServiceItem id={val.id} vehicleName={vehicleName} serviceItem={val} editedServiceItem={editedServiceItem}/>
                                             </div>
                                         </div>
                                         <div className="Card-text">

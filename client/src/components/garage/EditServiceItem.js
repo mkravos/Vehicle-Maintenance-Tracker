@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
 
-function EditServiceItem({id, vehicleName, serviceItem}) {
+function EditServiceItem({id, vehicleName, serviceItem, editedServiceItem}) {
   const [ itemName, setItemName ] = useState(serviceItem.item_name);
   const [ serviceDate, setServiceDate ] = useState(new Date(serviceItem.service_date).toISOString().split('T')[0]);
   const [ mileage, setMileage ] = useState(serviceItem.mileage);
@@ -67,7 +67,7 @@ function EditServiceItem({id, vehicleName, serviceItem}) {
       })
       console.log(request);
       handleClose();
-      window.location.reload();
+      editedServiceItem(true);
     } catch (err) {
       if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
       if(err.message === "INVALID_MILEAGE") setError("Error: Mileage must be a number and contain no commas.");
@@ -88,7 +88,7 @@ function EditServiceItem({id, vehicleName, serviceItem}) {
       })
       console.log(request);
       handleClose();
-      window.location.reload();
+      editedServiceItem(true);
     } else {
       setDeleteBtnText("Confirm: Delete Record");
     }

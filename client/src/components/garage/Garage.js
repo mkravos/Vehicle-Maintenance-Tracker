@@ -16,27 +16,21 @@ function Garage() {
   const [mileageUpdated, setMileageUpdated] = useState(false);
   const [itemRecorded, setItemRecorded] = useState(false);
 
+  const recordedItem = boolean => {
+    setItemRecorded(boolean);
+  };
   const setNewVehicle = boolean => {
     setVehicleAdded(boolean);
   };
   const updatedMileage = boolean => {
     setMileageUpdated(boolean);
   };
-  const recordedItem = boolean => {
-    setItemRecorded(boolean);
-  };
-  // const generatedReport = boolean => {
-  //   setVehicleAdded(boolean);
-  // };
   const editedVehicle = boolean => {
     setVehicleEdited(boolean);
   };
   const removedVehicle = boolean => {
     setVehicleRemoved(boolean);
   };
-  // const setNewServiceRecord = boolean => {
-  //   setVehicleAdded(boolean);
-  // };
 
   const getUserId = async () => {
     try {
@@ -109,13 +103,9 @@ function Garage() {
     }
   },[mileageUpdated]);
   useEffect(() => {
-    if(userId) {
-      setItemRecorded(false);
-      getVehicleList(userId);
-    }
+    setItemRecorded(false);
   },[itemRecorded]);
   
-
   return (
     <div className="Garage">
       <BootstrapNavbar/>
@@ -137,9 +127,7 @@ function Garage() {
                   <DropdownButton className="Actions-dropdown" variant="primary" id="dropdown-basic-button" title="Actions">
                     <UpdateMileage id={val.id} updatedMileage={updatedMileage}/>
                     <RecordServiceItem id={val.id} vehicleName={val.vehicle_name} recordedItem={recordedItem}/>
-                    <GenerateReport id={val.id} 
-                      // generatedReport={generatedReport}
-                    />
+                    <GenerateReport id={val.id}/>
                   </DropdownButton>
                   <DropdownButton className="Vehicle-dropdown" variant="outline-primary" id="dropdown-basic-button" title="Vehicle">
                     <EditVehicle id={val.id} editedVehicle={editedVehicle}/>
@@ -150,7 +138,7 @@ function Garage() {
                   vehicleId={val.id} 
                   currMiles={val.mileage} 
                   vehicleName={val.vehicle_name} 
-                  // setNewServiceRecord={setNewServiceRecord}
+                  itemRecorded={itemRecorded}
                 />
               </Card.Body>
             </Card>

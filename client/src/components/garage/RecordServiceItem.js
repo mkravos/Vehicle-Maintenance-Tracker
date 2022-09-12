@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
 import { checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
 
-function RecordServiceItem({id, vehicleName}) {
+function RecordServiceItem({id, vehicleName, recordedItem}) {
   const [ itemName, setItemName ] = useState("");
   const [ serviceDate, setServiceDate ] = useState("");
   const [ mileage, setMileage ] = useState("");
@@ -66,7 +66,7 @@ function RecordServiceItem({id, vehicleName}) {
       })
       console.log(request);
       handleClose();
-      window.location.reload();
+      recordedItem(true);
     } catch (err) {
       if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
       if(err.message === "INVALID_MILEAGE") setError("Error: Mileage must be a number and contain no commas.");
