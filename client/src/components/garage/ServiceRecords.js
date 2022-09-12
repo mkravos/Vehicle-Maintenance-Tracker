@@ -49,13 +49,13 @@ function ServiceRecords({vehicleId, currMiles, vehicleName, itemRecorded}) {
         if(vehicleId) {
             getItems(vehicleId);
         }
-    },[itemRecorded]);
+    },[itemRecorded, vehicleId]);
     useEffect(() => {
         if(vehicleId) {
             setItemEdited(false);
             getItems(vehicleId);
         }
-    },[itemEdited]);
+    },[itemEdited, vehicleId]);
 
     return (
         <Accordion className="serviceRecordsAccordion" flush>

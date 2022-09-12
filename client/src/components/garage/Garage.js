@@ -83,25 +83,25 @@ function Garage() {
       setVehicleAdded(false);
       getVehicleList(userId);
     }
-  },[vehicleAdded]);
+  },[vehicleAdded, userId]);
   useEffect(() => {
     if(userId) {
       setVehicleEdited(false);
       getVehicleList(userId);
     }
-  },[vehicleEdited]);
+  },[vehicleEdited, userId]);
   useEffect(() => {
     if(userId) {
       setVehicleRemoved(false);
       getVehicleList(userId);
     }
-  },[vehicleRemoved]);
+  },[vehicleRemoved, userId]);
   useEffect(() => {
     if(userId) {
       setMileageUpdated(false);
       getVehicleList(userId);
     }
-  },[mileageUpdated]);
+  },[mileageUpdated, userId]);
   useEffect(() => {
     setItemRecorded(false);
   },[itemRecorded]);
