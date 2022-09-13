@@ -81,7 +81,7 @@ function ServiceRecords({vehicleId, currMiles, vehicleName, itemRecorded}) {
                                         </div>
                                         <div className="Card-text">
                                             <div><span className="vehicleItem">Serviced: </span>{new Date(val.service_date).toLocaleDateString()}, at {val.mileage} miles</div>
-                                            {val.interval_time && !val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>By {new Date(val.interval_date).toLocaleDateString()}</div> : null}
+                                            {val.interval_time && !val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>By {new Date(val.interval_time).toLocaleDateString()}</div> : null}
                                             {!val.interval_time && val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles</div> : null}
                                             {val.interval_time && val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles or by {new Date(val.interval_time).toLocaleDateString()}</div> : null}
                                             {val.part_number ? <div><span className="vehicleItem">Part Number: </span>{val.part_number}</div> : null}

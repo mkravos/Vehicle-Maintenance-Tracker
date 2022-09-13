@@ -64,7 +64,7 @@
 }
 
 .Dashboard-card-text {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .Modal-filename {
@@ -111,6 +111,11 @@
   display: flex;
   border-radius: 10px !important;
   justify-content: space-between;
+}
+
+.dashboardServicedText {
+  font-size: 14px;
+  margin-top: -8px;
 }
 
 .Generate-report-body {
