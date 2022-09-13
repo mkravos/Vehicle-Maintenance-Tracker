@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import { Card, Button } from 'react-bootstrap';
 
@@ -120,31 +120,27 @@ function Dashboard() {
     getVehicleList(userId);
   }
 
-  const [ service_items, setServiceItems ] = useState(undefined);
-  const getServiceItems = async (vehicle_id) => {
+  const getCategorizedServiceItems = async (uuid) => {
     try {
-    const res = await fetch("http://localhost:1234/get-service-item-list/" + vehicle_id, {
+      const res = await fetch("http://localhost:1234/get-categorized-service-items/" + uuid, {
         method: "GET"
-    });
-    const parseRes = await res.json();
-    return parseRes;
+      });
+
+      const parseRes = await res.json();
+      return parseRes;
     } catch (err) {
       console.error(err.message);
     }
   }
-  function getItems(id) {
-    getServiceItems(id)
+  const [ service_items, setServiceItems ] = useState();
+  function getServiceItemList(id) {
+    getCategorizedServiceItems(id)
     .then(value => {
-      // this doesn't quite work because service_items is invisible to .then function
-      service_items ? setServiceItems(service_items => [...service_items, ...value]) : setServiceItems(value);
+      setServiceItems(value);
     });
   }
-  if(vehicles) {
-    for(let i=0; i<vehicles.length; i++) {
-      if(vehicles[i].id && !service_items) {
-          getItems(vehicles[i].id);
-      }
-    }
+  if(userId && !vehicles) {
+    getServiceItemList(userId);
   }
 
   console.log(service_items);

@@ -249,6 +249,38 @@ app.post("/delete-service-item", async (req, res) => {
   }
 });
 
+// DASHBOARD ROUTES //
+
+// gets all of a user's service items categorized by vehicle
+app.get("/get-categorized-service-items/:uuid", async (req, res) => {
+  try {
+    // get user id from request
+    const uuid = req.params.uuid;
+
+    var results = [];
+    var service_items = new Object();
+
+    // get all vehicles for that user
+    const vehicle_query = await pool.query("SELECT vehicle_id FROM user_vehicle WHERE account_id=$1", [uuid]);
+    for(var i=0; i<vehicle_query.rows.length; i++) {
+      // get all service items for that vehicle
+      const maintenance_query = await pool.query("SELECT item_id FROM maintenance_record WHERE vehicle_id=$1", [vehicle_query.rows[i].vehicle_id]);
+      var items = [];
+
+      // categorize each service item by vehicle id
+      for(var j=0; j<maintenance_query.rows.length; j++) {
+        items.push((await pool.query("SELECT * FROM service_item WHERE id=$1", [maintenance_query.rows[j].item_id])).rows);
+      }
+      service_items[vehicle_query.rows[i].vehicle_id] = [].concat.apply([], items);
+    }
+
+    results.push(service_items);
+    res.json(results);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
 // ACCOUNT ROUTES //
 
 // verify validity of token
