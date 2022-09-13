@@ -3,79 +3,6 @@ import BootstrapNavbar from '../BootstrapNavbar.js';
 import { Card, Button } from 'react-bootstrap';
 
 function Dashboard() {
-  function RedNotification() {
-    return (
-      <Card border='danger' key='Danger' className="col-sm-8 Card">
-        <Card.Header className='Dashboard-card-header text-danger'>
-          <div>PAST DUE</div>
-          <Button variant="outline-danger" className="btn-sm dontTrackBtn">
-            Don't Track This Item
-          </Button>
-        </Card.Header>
-        <Card.Body className="dashboardCardBody">
-          <Card.Title>Year, Make, Model: Item Name</Card.Title>
-          <Card.Text className="Dashboard-card-text">
-            Needs servicing now. You are past due by: (mileage - interval_miles)/(date - interval_time).
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    );
-  }
-  function YellowNotification() {
-    return (
-      <Card border='warning' key='Warning' className="col-sm-8 Card">
-        <Card.Header className='Dashboard-card-header text-warning'>
-          <div>COMING UP</div>
-          <Button variant="outline-danger" className="btn-sm dontTrackBtn">
-            Don't Track This Item
-          </Button>
-        </Card.Header>
-        <Card.Body className="dashboardCardBody">
-          <Card.Title>Year, Make, Model: Item Name</Card.Title>
-          <Card.Text className="Dashboard-card-text">
-            Needs servicing soon. Your next interval is: (mileage - interval_miles)/(date - interval_time).
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    );
-  }
-  function GreenNotification() {
-    return (
-      <Card border='success' key='Success' className="col-sm-8 Card">
-        <Card.Header className='Dashboard-card-header text-success'>
-          <div>OK</div>
-          <Button variant="outline-danger" className="btn-sm dontTrackBtn">
-            Don't Track This Item
-          </Button>
-        </Card.Header>
-        <Card.Body className="dashboardCardBody">
-          <Card.Title>Year, Make, Model: Item Name</Card.Title>
-          <Card.Text className="Dashboard-card-text">
-            All good! You do not need to worry about this yet.
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    );
-  }
-  function GrayNotification() {
-    return (
-      <Card border='secondary' key='Secondary' className="col-sm-8 Card">
-        <Card.Header className='Dashboard-card-header text-secondary'>
-          <div>NO DATA</div>
-          <Button variant="outline-danger" className="btn-sm dontTrackBtn">
-            Don't Track This Item
-          </Button>
-        </Card.Header>
-        <Card.Body className="dashboardCardBody">
-          <Card.Title>Year, Make, Model: Item Name</Card.Title>
-          <Card.Text className="Dashboard-card-text">
-            Please provide the service interval information if you would like to track this item.
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    );
-  }
-
   const getUserId = async () => {
     try {
       const res = await fetch("http://localhost:1234/uuid", {
@@ -152,10 +79,66 @@ function Dashboard() {
       <BootstrapNavbar/>
       <header className="Dashboard-header">
         <p className="Page-title">Dashboard</p>
-        {RedNotification()}
-        {YellowNotification()}
-        {GreenNotification()}
-        {GrayNotification()}
+        {/* red notification */}
+        <Card border='danger' key='Danger' className="col-sm-8 Card">
+          <Card.Header className='Dashboard-card-header text-danger'>
+            <div>PAST DUE</div>
+            <Button variant="outline-danger" className="btn-sm dontTrackBtn">
+              Don't Track This Item
+            </Button>
+          </Card.Header>
+          <Card.Body className="dashboardCardBody">
+            <Card.Title>Year, Make, Model: Item Name</Card.Title>
+            <Card.Text className="Dashboard-card-text">
+              Needs servicing now. You are past due by: (mileage - interval_miles)/(date - interval_time).
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        {/* yellow notification */}
+        <Card border='warning' key='Warning' className="col-sm-8 Card">
+          <Card.Header className='Dashboard-card-header text-warning'>
+            <div>COMING UP</div>
+            <Button variant="outline-danger" className="btn-sm dontTrackBtn">
+              Don't Track This Item
+            </Button>
+          </Card.Header>
+          <Card.Body className="dashboardCardBody">
+            <Card.Title>Year, Make, Model: Item Name</Card.Title>
+            <Card.Text className="Dashboard-card-text">
+              Needs servicing soon. Your next interval is: (mileage - interval_miles)/(date - interval_time).
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        {/* green notification */}
+        <Card border='success' key='Success' className="col-sm-8 Card">
+          <Card.Header className='Dashboard-card-header text-success'>
+            <div>OK</div>
+            <Button variant="outline-danger" className="btn-sm dontTrackBtn">
+              Don't Track This Item
+            </Button>
+          </Card.Header>
+          <Card.Body className="dashboardCardBody">
+            <Card.Title>Year, Make, Model: Item Name</Card.Title>
+            <Card.Text className="Dashboard-card-text">
+              All good! You do not need to worry about this yet.
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        {/* gray notification */}
+        <Card border='secondary' key='Secondary' className="col-sm-8 Card">
+          <Card.Header className='Dashboard-card-header text-secondary'>
+            <div>NO DATA</div>
+            <Button variant="outline-danger" className="btn-sm dontTrackBtn">
+              Don't Track This Item
+            </Button>
+          </Card.Header>
+          <Card.Body className="dashboardCardBody">
+            <Card.Title>Year, Make, Model: Item Name</Card.Title>
+            <Card.Text className="Dashboard-card-text">
+              Please provide the service interval information if you would like to track this item.
+            </Card.Text>
+          </Card.Body>
+        </Card>
       </header>
     </div>
   );
