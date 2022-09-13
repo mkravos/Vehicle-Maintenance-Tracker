@@ -143,7 +143,9 @@ function Dashboard() {
     getServiceItemList(userId);
   }
 
-  console.log(service_items);
+  if(service_items) {
+    console.log(service_items);
+  }
 
   return (
     <div className="Dashboard">

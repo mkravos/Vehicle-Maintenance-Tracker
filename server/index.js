@@ -257,8 +257,7 @@ app.get("/get-categorized-service-items/:uuid", async (req, res) => {
     // get user id from request
     const uuid = req.params.uuid;
 
-    var results = [];
-    var service_items = new Object();
+    var results = new Object();
 
     // get all vehicles for that user
     const vehicle_query = await pool.query("SELECT vehicle_id FROM user_vehicle WHERE account_id=$1", [uuid]);
@@ -271,10 +270,9 @@ app.get("/get-categorized-service-items/:uuid", async (req, res) => {
       for(var j=0; j<maintenance_query.rows.length; j++) {
         items.push((await pool.query("SELECT * FROM service_item WHERE id=$1", [maintenance_query.rows[j].item_id])).rows);
       }
-      service_items[vehicle_query.rows[i].vehicle_id] = [].concat.apply([], items);
+      results[vehicle_query.rows[i].vehicle_id] = [].concat.apply([], items);
     }
 
-    results.push(service_items);
     res.json(results);
   } catch (err) {
     console.log(err.message);
