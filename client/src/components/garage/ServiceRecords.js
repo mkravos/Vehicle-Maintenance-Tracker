@@ -65,6 +65,16 @@ function ServiceRecords({vehicleId, currMiles, vehicleName, itemRecorded}) {
                     <div className="service-records">
                         {service_items ? service_items.map((val, key) => {
                             if(!serviceItemId) setServiceItemId(val.id);
+                            let today = new Date();
+                            let interval_date = new Date();
+                            let days_difference = undefined;
+
+                            if(val.interval_time) {
+                                interval_date = new Date(val.interval_time);
+                                // get difference (in days) between today and last service date (interval_date)
+                                days_difference = Math.floor((today-interval_date)/(1000*60*60*24));
+                            }
+                            
                             return (
                                 <Card className="col-sm-8 Card service-records-card" key={key}>
                                     <Card.Body>
@@ -81,9 +91,12 @@ function ServiceRecords({vehicleId, currMiles, vehicleName, itemRecorded}) {
                                         </div>
                                         <div className="Card-text">
                                             <div><span className="vehicleItem">Serviced: </span>{new Date(val.service_date).toLocaleDateString()}, at {val.mileage} miles</div>
-                                            {val.interval_time && !val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>By {new Date(val.interval_time).toLocaleDateString()}</div> : null}
-                                            {!val.interval_time && val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles</div> : null}
-                                            {val.interval_time && val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles or by {new Date(val.interval_time).toLocaleDateString()}</div> : null}
+                                            {val.interval_time && days_difference < 0 && !val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>By {new Date(val.interval_time).toLocaleDateString()}</div> : null}
+                                            {val.interval_time && days_difference > 0 && !val.interval_miles ? <div><span className="vehicleItem">Next Service: </span>Overdue by {days_difference} days</div> : null}
+                                            {!val.interval_time && val.interval_miles && val.interval_miles - currMiles > 0 ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles</div> : null}
+                                            {val.interval_time && val.interval_miles && val.interval_miles - currMiles > 0 ? <div><span className="vehicleItem">Next Service: </span>In {val.interval_miles - currMiles} miles or by {new Date(val.interval_time).toLocaleDateString()}</div> : null}
+                                            {!val.interval_time && val.interval_miles && val.interval_miles - currMiles < 0 ? <div><span className="vehicleItem">Next Service: </span>Overdue by {(val.interval_miles - currMiles) * -1} miles</div> : null}
+                                            {val.interval_time && days_difference > 0 && val.interval_miles && val.interval_miles - currMiles < 0 ? <div><span className="vehicleItem">Next Service: </span>Overdue by {(val.interval_miles - currMiles) * -1} miles and {days_difference} days</div> : null}
                                             {val.part_number ? <div><span className="vehicleItem">Part Number: </span>{val.part_number}</div> : null}
                                             {val.cost ? <div><span className="vehicleItem">Service Cost: </span>${val.cost}</div> : null}
                                         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import { Card, Button } from 'react-bootstrap';
 
@@ -94,7 +94,7 @@ function Dashboard() {
 
             let today = new Date();
             let interval_date = new Date();
-            let days_difference = 0;
+            let days_difference = undefined;
 
             if(val.interval_time) {
               interval_date = new Date(val.interval_time);
@@ -102,7 +102,34 @@ function Dashboard() {
               days_difference = Math.floor((today-interval_date)/(1000*60*60*24));
             }
 
-            if(val.tracking && val.interval_miles && ((val.interval_miles - vehicle.mileage) < 0) || days_difference > 0) {
+            if(!vehicle) {
+              return null;
+            }
+
+            if(val.tracking && val.interval_miles && val.days_difference && (val.interval_miles - vehicle.mileage) < 0 && days_difference > 0) {
+              return(
+                <Card border='danger' key={key} className="col-sm-8 Card">
+                  {console.log("both present")}
+                  <Card.Header className='Dashboard-card-header text-danger'>
+                    <div>PAST DUE</div>
+                    <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="btn-sm dontTrackBtn">
+                      Don't Track This Item
+                    </Button>
+                  </Card.Header>
+                  <Card.Body className="dashboardCardBody">
+                    <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
+                    <Card.Text className="Dashboard-card-text">
+                      {days_difference === 1 && val.interval_miles - vehicle.mileage === -1 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} mile and {days_difference} day.</> : null}
+                      {days_difference > 1 && val.interval_miles - vehicle.mileage < 0 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} miles and {days_difference} days.</> : null}
+                      {days_difference === 1 && val.interval_miles - vehicle.mileage === -1 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} mile and {days_difference} day.</> : null}
+                    </Card.Text>
+                    <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
+                  </Card.Body>
+                </Card>
+              );
+            }
+            // if interval_miles not present
+            if(val.tracking && days_difference && !val.interval_miles && days_difference > 0) {
               return(
                 <Card border='danger' key={key} className="col-sm-8 Card">
                   <Card.Header className='Dashboard-card-header text-danger'>
@@ -114,17 +141,37 @@ function Dashboard() {
                   <Card.Body className="dashboardCardBody">
                     <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
                     <Card.Text className="Dashboard-card-text">
-                      {days_difference == 1 && !val.interval_miles ? <>Needs servicing now. You are past due by {days_difference} day.</> : null}
-                      {days_difference > 1 && !val.interval_miles ? <>Needs servicing now. You are past due by {days_difference} days.</> : null}
-                      {days_difference <= 0 && val.interval_miles ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} miles.</> : null}
-                      {days_difference == 1 && val.interval_miles ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} miles and {days_difference} day.</> : null}
-                      {days_difference > 1 && val.interval_miles ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} miles and {days_difference} days.</> : null}
+                      {days_difference === 1 ? <>Needs servicing now. You are past due by {days_difference} day.</> : null}
+                      {days_difference > 0 ? <>Needs servicing now. You are past due by {days_difference} days.</> : null}
                     </Card.Text>
                     <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
                   </Card.Body>
                 </Card>
               );
             }
+            // if days_difference not present
+            if(val.tracking && val.interval_miles && !days_difference && ((val.interval_miles - vehicle.mileage) < 0)) {
+              return(
+                <Card border='danger' key={key} className="col-sm-8 Card">
+                  {console.log("days_difference not present")}
+                  <Card.Header className='Dashboard-card-header text-danger'>
+                    <div>PAST DUE</div>
+                    <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="btn-sm dontTrackBtn">
+                      Don't Track This Item
+                    </Button>
+                  </Card.Header>
+                  <Card.Body className="dashboardCardBody">
+                    <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
+                    <Card.Text className="Dashboard-card-text">
+                      {val.interval_miles - vehicle.mileage === -1 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} mile.</> : null}
+                      {val.interval_miles - vehicle.mileage < -1 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} miles.</> : null}
+                    </Card.Text>
+                    <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
+                  </Card.Body>
+                </Card>
+              );
+            }
+            return null;
           })
           : null
         }
@@ -157,7 +204,7 @@ function Dashboard() {
                   <Card.Body className="dashboardCardBody">
                     <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
                     <Card.Text className="Dashboard-card-text">
-                      {days_difference == 1 ? <>Needs servicing soon. Your next interval is in {days_difference*-1} days.</> : null}
+                      {days_difference === 1 ? <>Needs servicing soon. Your next interval is in {days_difference*-1} day.</> : null}
                       {days_difference < 1 ? <>Needs servicing soon. Your next interval is in {days_difference*-1} days.</> : null}
                     </Card.Text>
                     <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
@@ -178,13 +225,37 @@ function Dashboard() {
                   <Card.Body className="dashboardCardBody">
                     <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
                     <Card.Text className="Dashboard-card-text">
-                      Needs servicing soon. Your next interval is: (mileage - interval_miles)/(date - interval_time).
-                      <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
+                      {days_difference === 1 && vehicle.mileage-val.interval_miles < 1 ? <>Needs servicing soon. Your next interval is in {(vehicle.mileage-val.interval_miles)*-1} miles or {days_difference*-1} day.</> : null}
+                      {days_difference === 1 && vehicle.mileage-val.interval_miles === 1 ? <>Needs servicing soon. Your next interval is in {(vehicle.mileage-val.interval_miles)*-1} mile or {days_difference*-1} day.</> : null}
+                      {days_difference < 1 && vehicle.mileage-val.interval_miles === 1 ? <>Needs servicing soon. Your next interval is in {(vehicle.mileage-val.interval_miles)*-1} mile or {days_difference*-1} days.</> : null}
                     </Card.Text>
+                    <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
                   </Card.Body>
                 </Card>
               );
             }
+            // if days_difference is not present
+            if(val.tracking && !days_difference && ((val.interval_miles - vehicle.mileage) <= 200) && ((val.interval_miles - vehicle.mileage) > 0)) {
+              return (
+                <Card border='warning' key={key} className="col-sm-8 Card">
+                  <Card.Header className='Dashboard-card-header text-warning'>
+                    <div>COMING UP</div>
+                    <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="btn-sm dontTrackBtn">
+                      Don't Track This Item
+                    </Button>
+                  </Card.Header>
+                  <Card.Body className="dashboardCardBody">
+                    <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
+                    <Card.Text className="Dashboard-card-text">
+                      {vehicle.mileage-val.interval_miles < 1 ? <>Needs servicing soon. Your next interval is in {(vehicle.mileage-val.interval_miles)*-1} miles.</> : null}
+                      {vehicle.mileage-val.interval_miles === 1 ? <>Needs servicing soon. Your next interval is in {(vehicle.mileage-val.interval_miles)*-1} mile.</> : null}
+                    </Card.Text>
+                    <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
+                  </Card.Body>
+                </Card>
+              );
+            }
+            return null;
           })
           : null
         }
@@ -205,12 +276,12 @@ function Dashboard() {
               }
 
               // if interval_miles is not present
-              if(val.tracking && !val.interval_miles && (days_difference < 0 && days_difference < -14)) {
+              if(val.tracking && !val.interval_miles && days_difference < -14) {
                 return (
                   <Card border='success' key={key} className="col-sm-8 Card">
                     <Card.Header className='Dashboard-card-header text-success'>
                       <div>OK</div>
-                      <Button variant="outline-danger" className="btn-sm dontTrackBtn">
+                      <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="btn-sm dontTrackBtn">
                         Don't Track This Item
                       </Button>
                     </Card.Header>
@@ -219,17 +290,18 @@ function Dashboard() {
                       <Card.Text className="Dashboard-card-text">
                         All good! You do not need to worry about this yet.
                       </Card.Text>
+                      <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
                     </Card.Body>
                   </Card>
                 );
               }
               // if interval_miles is present
-              if(val.tracking && val.interval_miles && ((val.interval_miles - vehicle.mileage) < 200) && ((val.interval_miles - vehicle.mileage) > 0) && (days_difference < 0 && days_difference < -14)) {
+              if(val.tracking && val.interval_miles && ((val.interval_miles - vehicle.mileage) > 200) && days_difference < -14) {
                 return (
                   <Card border='success' key={key} className="col-sm-8 Card">
                     <Card.Header className='Dashboard-card-header text-success'>
                       <div>OK</div>
-                      <Button variant="outline-danger" className="btn-sm dontTrackBtn">
+                      <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="btn-sm dontTrackBtn">
                         Don't Track This Item
                       </Button>
                     </Card.Header>
@@ -238,29 +310,65 @@ function Dashboard() {
                       <Card.Text className="Dashboard-card-text">
                         All good! You do not need to worry about this yet.
                       </Card.Text>
+                      <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
                     </Card.Body>
                   </Card>
                 );
               }
+              // if interval_time is not present
+              if(val.tracking && !days_difference && ((val.interval_miles - vehicle.mileage) > 200)) {
+                return (
+                  <Card border='success' key={key} className="col-sm-8 Card">
+                    <Card.Header className='Dashboard-card-header text-success'>
+                      <div>OK</div>
+                      <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="btn-sm dontTrackBtn">
+                        Don't Track This Item
+                      </Button>
+                    </Card.Header>
+                    <Card.Body className="dashboardCardBody">
+                      <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
+                      <Card.Text className="Dashboard-card-text">
+                        All good! You do not need to worry about this yet.
+                      </Card.Text>
+                      <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
+                    </Card.Body>
+                  </Card>
+                );
+              }
+              return null;
             })
           :
           null
         }
         {/* gray notification */}
-        {/* <Card border='secondary' key={key} className="col-sm-8 Card">
-          <Card.Header className='Dashboard-card-header text-secondary'>
-            <div>NO DATA</div>
-            <Button variant="outline-danger" className="btn-sm dontTrackBtn">
-              Don't Track This Item
-            </Button>
-          </Card.Header>
-          <Card.Body className="dashboardCardBody">
-            <Card.Title>Year, Make, Model: Item Name</Card.Title>
-            <Card.Text className="Dashboard-card-text">
-              Please provide the service interval information if you would like to track this item.
-            </Card.Text>
-          </Card.Body>
-        </Card> */}
+        {
+          service_items ?
+          service_items.map((val, key) => {
+            let vehicle = vehicles.find(o => o.id === val.vehicle_id);
+
+            if(val.tracking && !val.interval_miles && !val.interval_time) {
+              return (
+                <Card border='secondary' key={key} className="col-sm-8 Card">
+                  <Card.Header className='Dashboard-card-header text-secondary'>
+                    <div>NO DATA</div>
+                    <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="btn-sm dontTrackBtn">
+                      Don't Track This Item
+                    </Button>
+                  </Card.Header>
+                  <Card.Body className="dashboardCardBody">
+                    <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
+                    <Card.Text className="Dashboard-card-text">
+                      Please provide the service interval information if you would like to track this item.
+                    </Card.Text>
+                    <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
+                  </Card.Body>
+                </Card>
+              );
+            }
+            return null;
+          })
+          : null
+        }
       </header>
     </div>
   );
