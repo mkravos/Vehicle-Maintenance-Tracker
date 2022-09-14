@@ -119,8 +119,8 @@ function Dashboard() {
                     <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
                     <Card.Text className="Dashboard-card-text">
                       {days_difference === 1 && val.interval_miles - vehicle.mileage === -1 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} mile and {days_difference} day.</> : null}
-                      {days_difference > 1 && val.interval_miles - vehicle.mileage < 0 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} miles and {days_difference} days.</> : null}
-                      {days_difference === 1 && val.interval_miles - vehicle.mileage === -1 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} mile and {days_difference} day.</> : null}
+                      {days_difference > 1 && val.interval_miles - vehicle.mileage < -1 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} miles and {days_difference} days.</> : null}
+                      {days_difference === 1 && val.interval_miles - vehicle.mileage < -1 ? <>Needs servicing now. You are past due by {(val.interval_miles - vehicle.mileage)*-1} miles and {days_difference} day.</> : null}
                     </Card.Text>
                     <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
                   </Card.Body>
