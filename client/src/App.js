@@ -3,7 +3,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import './App.css';
 import Login from './components/account/Login.js';
 import Register from './components/account/Register.js';
-import Account from './components/account/Account.js';
+import Settings from './components/settings/Settings.js';
 import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
 import Error404 from './components/Error404.js';
@@ -56,7 +56,7 @@ function App() {
         <Route>
           <Route exact path="/dashboard" element={<Dashboard/>}/>
           <Route exact path="/garage" element={<Garage/>}/>
-          <Route exact path="/account" element={<Account setAuth={setAuth}/>}/>
+          <Route exact path="/settings" element={<Settings setAuth={setAuth}/>}/>
         </Route>
         <Route path="/login" element={<Navigate to={"/dashboard"} replace />}/>
         <Route path="/register" element={<Navigate to={"/dashboard"} replace />}/>

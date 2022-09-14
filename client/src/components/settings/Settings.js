@@ -5,7 +5,7 @@ import ChangeUsername from './ChangeUsername.js'
 import ChangePassword from './ChangePassword.js';
 import DeleteAccount from './DeleteAccount.js';
 
-function Account({setAuth}) {
+function Settings({setAuth}) {
   const log_out = async () => {
     localStorage.removeItem("token");
     setAuth(false);
@@ -36,7 +36,7 @@ function Account({setAuth}) {
     <div className="Account">
       <BootstrapNavbar/>
       <header className="Account-header">
-        <p className="Page-title">Account Settings</p>
+        <p className="Page-title">Application Settings</p>
         <Card className="col-sm-8 Card">
             <Card.Body>
               <Card.Title>Account information for {username}</Card.Title>
@@ -56,4 +56,4 @@ function Account({setAuth}) {
   );
 }
 
-export default Account;
+export default Settings;
