@@ -142,7 +142,7 @@ function Dashboard() {
                     <Card.Title>{vehicle.model_year} {vehicle.make} {vehicle.model} ({vehicle.vehicle_name}): {val.item_name}</Card.Title>
                     <Card.Text className="Dashboard-card-text">
                       {days_difference === 1 ? <>Needs servicing now. You are past due by {days_difference} day.</> : null}
-                      {days_difference > 0 ? <>Needs servicing now. You are past due by {days_difference} days.</> : null}
+                      {days_difference > 1 ? <>Needs servicing now. You are past due by {days_difference} days.</> : null}
                     </Card.Text>
                     <div className="dashboardServicedText">Serviced: {new Date(val.service_date).toLocaleDateString()} at {val.mileage} miles.</div>
                   </Card.Body>
