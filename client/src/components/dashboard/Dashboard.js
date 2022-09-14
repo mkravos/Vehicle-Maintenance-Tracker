@@ -106,10 +106,9 @@ function Dashboard() {
               return null;
             }
 
-            if(val.tracking && val.interval_miles && val.days_difference && (val.interval_miles - vehicle.mileage) < 0 && days_difference > 0) {
+            if(val.tracking && val.interval_miles && days_difference && (val.interval_miles - vehicle.mileage) < 0 && days_difference > 0) {
               return(
                 <Card border='danger' key={key} className="col-sm-8 Card">
-                  {console.log("both present")}
                   <Card.Header className='Dashboard-card-header text-danger'>
                     <div>PAST DUE</div>
                     <Button onClick={updateServiceItemTracking(val.id)} variant="outline-danger" className="btn-sm dontTrackBtn">
