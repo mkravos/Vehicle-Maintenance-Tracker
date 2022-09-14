@@ -90,7 +90,13 @@ function Dashboard() {
         { 
           service_items ?
           service_items.map((val, key) => {
-            let vehicle = vehicles.find(o => o.id === val.vehicle_id);
+            let vehicle = undefined;
+
+            if(vehicles) {
+              vehicle = vehicles.find(o => o.id === val.vehicle_id);
+            } else {
+              return null;
+            }
 
             let today = new Date();
             let interval_date = new Date();
@@ -100,10 +106,6 @@ function Dashboard() {
               interval_date = new Date(val.interval_time);
               // get difference (in days) between today and last service date (interval_date)
               days_difference = Math.floor((today-interval_date)/(1000*60*60*24));
-            }
-
-            if(!vehicle) {
-              return null;
             }
 
             if(val.tracking && val.interval_miles && days_difference && (val.interval_miles - vehicle.mileage) < 0 && days_difference > 0) {
