@@ -1,9 +1,9 @@
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import { Card, DropdownButton, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import ChangeUsername from './ChangeUsername.js'
-import ChangePassword from './ChangePassword.js';
-import DeleteAccount from './DeleteAccount.js';
+import ChangeUsername from '../account/ChangeUsername.js'
+import ChangePassword from '../account/ChangePassword.js';
+import DeleteAccount from '../account/DeleteAccount.js';
 
 function Settings({setAuth}) {
   const log_out = async () => {
