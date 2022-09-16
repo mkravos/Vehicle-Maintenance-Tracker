@@ -1,5 +1,10 @@
 const express = require("express");
 const app = express();
+const AWS = require('aws-sdk');
+const fs = require('fs');
+const fileType = require('file-type');
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const axios = require('axios');
 const cors = require("cors");
 const bcrypt = require("bcrypt");
@@ -11,6 +16,18 @@ const recaptcha_secret = process.env.RECAPTCHA_SECRET;
 // middleware
 app.use(cors());
 app.use(express.json()); // req.body
+
+// AWS S3 // https://medium.com/@lakshmanLD/upload-file-to-s3-using-lambda-the-pre-signed-url-way-158f074cda6c
+// https://stackoverflow.com/questions/17930204/simple-file-upload-to-s3-using-aws-sdk-and-node-express
+
+const bucketName = process.env.AWS_BUCKET_NAME;
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+
+const s3 = new AWS.S3({
+  accessKeyId: accessKeyId,
+  secretAccessKey: secretAccessKey,
+});
 
 // VEHICLE ROUTES //
 
@@ -167,16 +184,45 @@ app.get("/get-service-item/:id", async (req, res) => {
   }
 });
 
-app.post("/add-service-item", async (req, res) => {
+app.post("/add-service-item", upload.single('file'), async (req, res) => {
   console.log(req.body);
   try {
     // destructure req.body
     const { vehicle_id, item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image } = req.body;
+    let s3_image_url = "";
+
+    if(receipt_image) {
+      try {
+        const uploadImage=(file)=>{
+          const fileStream = fs.createReadStream(file.path);
+
+          const params = {
+              Bucket: bucketName,
+              Key: file.originalname,
+              Body: fileStream
+          };
+
+          s3.upload(params, function (err, data) {
+              console.log(data);
+              if (err) {
+                  throw err;
+              }
+              console.log(`File uploaded successfully. ${data.Location}`);
+          });
+
+          return s3.getSignedUrl('getItems', {Bucket: bucketName, Key: file.originalname})
+        }
+        s3_image_url = uploadImage(receipt_image);
+        console.log(s3_image_url);
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
 
     // create vehicle
     const service_item_query = 
     await pool.query("INSERT INTO service_item(item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id", 
-    [item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, receipt_image]);
+    [item_name, service_date, mileage, interval_miles, interval_time, part_number, cost, s3_image_url != "" ? s3_image_url : null]);
 
     // get service item id from query result
     const service_item = service_item_query.rows[0].id;

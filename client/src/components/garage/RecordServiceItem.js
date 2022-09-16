@@ -11,7 +11,7 @@ function RecordServiceItem({id, vehicleName, recordedItem}) {
   let [ cost, setCost ] = useState("");
   let [ intervalMiles, setIntervalMiles ] = useState("");
   let [ intervalTime, setIntervalTime ] = useState("");
-  let [ receiptImage, setReceiptImage ] = useState("");
+  let [ receiptImage, setReceiptImage ] = useState(undefined);
   const [ errorDiv, setError ] = useState("");
 
   const [show, setShow] = useState(false);
@@ -21,6 +21,7 @@ function RecordServiceItem({id, vehicleName, recordedItem}) {
 
   const addServiceItem = async e => {
     e.preventDefault();
+
     try {
       // client-side error checking
       if(!itemName || !serviceDate || !mileage) {
@@ -55,9 +56,13 @@ function RecordServiceItem({id, vehicleName, recordedItem}) {
         receiptImage = null;
       }
 
+      let formData = new FormData();
+      if(receiptImage) {
+        formData.append('file', receiptImage);
+      }
       let newServiceItem = {
         vehicle_id:id, item_name:itemName, service_date:serviceDate, mileage:parseInt(mileage), interval_miles:parseInt(intervalMiles), interval_time:intervalTime, part_number:partNumber, 
-        cost:parseInt(cost), receipt_image:receiptImage
+        cost:parseInt(cost), receipt_image:formData
       }
       const request = await fetch("http://localhost:1234/add-service-item", {
             method: "POST",
