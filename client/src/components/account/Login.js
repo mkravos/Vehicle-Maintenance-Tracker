@@ -9,7 +9,7 @@ function Login({setAuth}) {
     const [ password, setPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const passwordErrorDiv = document.getElementById('passwordErrorDiv');
-    const recaptcha_key = "6Lc45kUhAAAAAA9n1PNvrGv7B50oWXnIJVzwG5fV";
+    const recaptcha_key = "6LfsHBEiAAAAAG6BBexsqvVUe1lb8dBQaNFsfplQ";
     var parseRes;
 
     const log_in = async e => {

@@ -11,7 +11,7 @@ function Register() {
     const [ verify_password, setVerifyPassword ] = useState("");
     const usernameErrorDiv = document.getElementById('usernameErrorDiv');
     const verifyPasswordErrorDiv = document.getElementById('verifyPasswordErrorDiv');
-    const recaptcha_key = "6Lc45kUhAAAAAA9n1PNvrGv7B50oWXnIJVzwG5fV";
+    const recaptcha_key = "6LfsHBEiAAAAAG6BBexsqvVUe1lb8dBQaNFsfplQ";
 
     const registerNewAccount = async e => {
       e.preventDefault();
