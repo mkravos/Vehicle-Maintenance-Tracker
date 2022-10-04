@@ -180,7 +180,13 @@ function Dashboard() {
         {
           service_items ?
           service_items.map((val, key) => {
-            let vehicle = vehicles.find(o => o.id === val.vehicle_id);
+            let vehicle = undefined;
+
+            if(vehicles) {
+              vehicle = vehicles.find(o => o.id === val.vehicle_id);
+            } else {
+              return null;
+            }
 
             let today = new Date();
             let interval_date = new Date();
@@ -264,7 +270,13 @@ function Dashboard() {
         {
           service_items ?
           service_items.map((val, key) => {
-              let vehicle = vehicles.find(o => o.id === val.vehicle_id);
+            let vehicle = undefined;
+
+            if(vehicles) {
+              vehicle = vehicles.find(o => o.id === val.vehicle_id);
+            } else {
+              return null;
+            }
 
               let today = new Date();
               let interval_date = new Date();
@@ -345,7 +357,13 @@ function Dashboard() {
         {
           service_items ?
           service_items.map((val, key) => {
-            let vehicle = vehicles.find(o => o.id === val.vehicle_id);
+            let vehicle = undefined;
+
+            if(vehicles) {
+              vehicle = vehicles.find(o => o.id === val.vehicle_id);
+            } else {
+              return null;
+            }
 
             if(val.tracking && !val.interval_miles && !val.interval_time) {
               return (
