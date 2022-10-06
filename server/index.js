@@ -295,6 +295,45 @@ app.post("/delete-service-item", async (req, res) => {
   }
 });
 
+// FILE ROUTES //
+
+app.post("add-receipt-image", upload.single('file'), async(req, res) => {
+  const { id, receipt_image } = req.body;
+  let s3_image_url = "";
+
+  try {
+    const uploadImage=(file)=>{
+      const fileStream = fs.createReadStream(file.path);
+
+      const params = {
+          Bucket: bucketName,
+          Key: file.originalname,
+          Body: fileStream
+      };
+
+      s3.upload(params, function (err, data) {
+          console.log(data);
+          if (err) {
+              throw err;
+          }
+          console.log(`File uploaded successfully. ${data.Location}`);
+      });
+
+      return s3.getSignedUrl('getItems', {Bucket: bucketName, Key: file.originalname})
+    }
+    s3_image_url = uploadImage(receipt_image);
+    console.log(s3_image_url);
+
+    // // update service item
+    // await pool.query("UPDATE service_item SET receipt_image=$1 WHERE id=$2", 
+    // [s3_image_url, id]);
+
+    res.send("success");
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
 // DASHBOARD ROUTES //
 
 // gets all of a user's service items categorized by vehicle

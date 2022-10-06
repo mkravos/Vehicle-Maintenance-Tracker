@@ -56,20 +56,35 @@ function RecordServiceItem({id, vehicleName, recordedItem}) {
         receiptImage = null;
       }
 
-      let formData = new FormData();
-      if(receiptImage) {
-        formData.append('file', receiptImage);
-      }
       let newServiceItem = {
         vehicle_id:id, item_name:itemName, service_date:serviceDate, mileage:parseInt(mileage), interval_miles:parseInt(intervalMiles), interval_time:intervalTime, part_number:partNumber, 
-        cost:parseInt(cost), receipt_image:formData
+        cost:parseInt(cost), receipt_image:null
       }
-      const request = await fetch("http://localhost:1234/add-service-item", {
+
+      await fetch("http://localhost:1234/add-service-item", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newServiceItem)
-      })
-      console.log(request);
+      });
+
+      // need new api route to handle file upload separately and update the service record with the receipt image
+      let formData = new FormData();
+      let imageToUpload = {};
+      if(receiptImage) {
+        formData.append('file', receiptImage);
+        // need to append service item id
+        imageToUpload = { receipt_image: formData }
+        for(var pair of formData.entries()) {
+          console.log(`${pair[0]}: ${pair[1]}`);
+        }
+      }
+
+      // await fetch("http://localhost:1234/add-receipt-image", {
+      //       method: "POST",
+      //       headers: { "Content-Type": "multipart/form-data" },
+      //       body: imageToUpload
+      // });
+
       handleClose();
       recordedItem(true);
       setItemName("");
@@ -131,7 +146,7 @@ function RecordServiceItem({id, vehicleName, recordedItem}) {
             </Form.Group>
             <Form.Group className="mb-3 RSI-attach-file" controlId="attach-receipt-box">
               <Form.Label>Receipt Image</Form.Label>
-              <Form.Control type="file" className="Attach-btn"/>
+              <Form.Control type="file" className="Attach-btn" onChange={e => setReceiptImage(e.target.value)}/>
             </Form.Group>
           </Form>
         </Modal.Body>
