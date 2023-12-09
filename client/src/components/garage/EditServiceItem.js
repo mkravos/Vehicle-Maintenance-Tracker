@@ -3,17 +3,17 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
 
-function EditServiceItem({id, vehicleName, serviceItem, editedServiceItem}) {
-  const [ itemName, setItemName ] = useState(serviceItem.item_name);
-  const [ serviceDate, setServiceDate ] = useState(new Date(serviceItem.service_date).toISOString().split('T')[0]);
-  const [ mileage, setMileage ] = useState(serviceItem.mileage);
-  let [ partNumber, setPartNumber ] = useState(serviceItem.part_number ? serviceItem.part_number : "");
-  let [ cost, setCost ] = useState(serviceItem.cost ? serviceItem.cost : "");
-  let [ intervalMiles, setIntervalMiles ] = useState(serviceItem.interval_miles ? serviceItem.interval_miles : "");
-  let [ intervalTime, setIntervalTime ] = useState(serviceItem.interval_time ? new Date(serviceItem.interval_time).toISOString().split('T')[0] : "");
-  let [ receiptImage, setReceiptImage ] = useState(serviceItem.receipt_image ? serviceItem.receipt_image : "");
-  const [ deleteBtnText, setDeleteBtnText ] = useState("Delete Record");
-  const [ errorDiv, setError ] = useState("");
+function EditServiceItem({ id, vehicleName, serviceItem, editedServiceItem }) {
+  const [itemName, setItemName] = useState(serviceItem.item_name);
+  const [serviceDate, setServiceDate] = useState(new Date(serviceItem.service_date).toISOString().split('T')[0]);
+  const [mileage, setMileage] = useState(serviceItem.mileage);
+  let [partNumber, setPartNumber] = useState(serviceItem.part_number ? serviceItem.part_number : "");
+  let [cost, setCost] = useState(serviceItem.cost ? serviceItem.cost : "");
+  let [intervalMiles, setIntervalMiles] = useState(serviceItem.interval_miles ? serviceItem.interval_miles : "");
+  let [intervalTime, setIntervalTime] = useState(serviceItem.interval_time ? new Date(serviceItem.interval_time).toISOString().split('T')[0] : "");
+  let [receiptImage, setReceiptImage] = useState(serviceItem.receipt_image ? serviceItem.receipt_image : "");
+  const [deleteBtnText, setDeleteBtnText] = useState("Delete Record");
+  const [errorDiv, setError] = useState("");
 
   const [show, setShow] = useState(false);
 
@@ -24,67 +24,67 @@ function EditServiceItem({id, vehicleName, serviceItem, editedServiceItem}) {
     e.preventDefault();
     try {
       // client-side error checking
-      if(!itemName || !serviceDate || !mileage) {
+      if (!itemName || !serviceDate || !mileage) {
         throw new Error("MISSING_REQ_FIELDS");
       }
-      if(!checkInteger(mileage)) {
+      if (!checkInteger(mileage)) {
         throw new Error("INVALID_MILEAGE");
       }
-      if(cost && !checkInteger(cost)) {
+      if (cost && !checkInteger(cost)) {
         throw new Error("INVALID_COST");
       }
-      if(intervalMiles && !checkInteger(intervalMiles)) {
+      if (intervalMiles && !checkInteger(intervalMiles)) {
         throw new Error("INVALID_INTERVAL_MILES");
       }
-      if(partNumber && !checkAlphanumeric(partNumber)) {
+      if (partNumber && !checkAlphanumeric(partNumber)) {
         throw new Error("INVALID_PART_NUMBER");
       }
 
-      if(partNumber === '') {
+      if (partNumber === '') {
         partNumber = null;
       }
-      if(cost === '') {
+      if (cost === '') {
         cost = null;
       }
-      if(intervalMiles === '') {
+      if (intervalMiles === '') {
         intervalMiles = null;
       }
-      if(intervalTime === '') {
+      if (intervalTime === '') {
         intervalTime = null;
       }
-      if(receiptImage === '') {
+      if (receiptImage === '') {
         receiptImage = null;
       }
 
       let newServiceItem = {
-        id:id, item_name:itemName, service_date:serviceDate, mileage:parseInt(mileage), interval_miles:parseInt(intervalMiles), interval_time:intervalTime, part_number:partNumber, 
-        cost:parseInt(cost), receipt_image:receiptImage
+        id: id, item_name: itemName, service_date: serviceDate, mileage: parseInt(mileage), interval_miles: parseInt(intervalMiles), interval_time: intervalTime, part_number: partNumber,
+        cost: parseInt(cost), receipt_image: receiptImage
       }
       const request = await fetch("http://localhost:1234/edit-service-item", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newServiceItem)
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newServiceItem)
       })
       console.log(request);
       handleClose();
       editedServiceItem(true);
     } catch (err) {
-      if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
-      if(err.message === "INVALID_MILEAGE") setError("Error: Mileage must be a number and contain no commas.");
-      if(err.message === "INVALID_INTERVAL_MILES") setError("Error: Mileage service interval must be a number and contain no commas.");
-      if(err.message === "INVALID_COST") setError("Error: Cost must be a number and contain no symbols or commas.");
-      if(err.message === "INVALID_PART_NUMBER") setError("Error: Part number can only contain alphanumeric characters.");
+      if (err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
+      if (err.message === "INVALID_MILEAGE") setError("Error: Mileage must be a number and contain no commas.");
+      if (err.message === "INVALID_INTERVAL_MILES") setError("Error: Mileage service interval must be a number and contain no commas.");
+      if (err.message === "INVALID_COST") setError("Error: Cost must be a number and contain no symbols or commas.");
+      if (err.message === "INVALID_PART_NUMBER") setError("Error: Part number can only contain alphanumeric characters.");
       else console.log(err.message);
     }
   }
 
   const deleteServiceItem = async e => {
     e.preventDefault();
-    if(deleteBtnText!=="Delete Record") {
+    if (deleteBtnText !== "Delete Record") {
       const request = await fetch("http://localhost:1234/delete-service-item", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({id:id})
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id })
       })
       console.log(request);
       handleClose();
@@ -132,10 +132,10 @@ function EditServiceItem({id, vehicleName, serviceItem, editedServiceItem}) {
             <Form.Group className="mb-3" controlId="time-interval-box">
               <Form.Control type="date" value={intervalTime} onChange={e => setIntervalTime(e.target.value)} placeholder="Enter the next service deadline (date)" />
             </Form.Group>
-            <Form.Group className="mb-3 RSI-attach-file" controlId="attach-receipt-box">
+            {/* <Form.Group className="mb-3 RSI-attach-file" controlId="attach-receipt-box">
               <Form.Label>Receipt Image</Form.Label>
               <Form.Control type="file" className="Attach-btn"/>
-            </Form.Group>
+            </Form.Group> */}
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -153,5 +153,5 @@ function EditServiceItem({id, vehicleName, serviceItem, editedServiceItem}) {
     </div>
   )
 }
-  
+
 export default EditServiceItem;
