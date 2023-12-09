@@ -5,7 +5,7 @@ An application for tracking vehicle maintenance items such as oil changes, filte
 Node.js and PostgreSQL installed
 
 ## Database
-Use the database.sql script in /server to generate the necessary database and tables for PosgreSQL
+Use the database.sql script in /server to generate the necessary database and tables for PosgreSQL. The server assumes PSQL is running on localhost:5432.
 
 ## Client
 ```
@@ -17,6 +17,7 @@ npm install
 ```
 npm start
 ```
+Application will start at localhost:3000
 
 ## Server
 ```
@@ -25,3 +26,4 @@ cd server
 ```
 node index.js
 ```
+Application will start at localhost:1234
