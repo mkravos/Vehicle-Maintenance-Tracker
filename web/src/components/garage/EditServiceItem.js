@@ -7,11 +7,11 @@ function EditServiceItem({ id, vehicleName, serviceItem, editedServiceItem }) {
   const [itemName, setItemName] = useState(serviceItem.item_name);
   const [serviceDate, setServiceDate] = useState(new Date(serviceItem.service_date).toISOString().split('T')[0]);
   const [mileage, setMileage] = useState(serviceItem.mileage);
-  let [partNumber, setPartNumber] = useState(serviceItem.part_number ? serviceItem.part_number : "");
-  let [cost, setCost] = useState(serviceItem.cost ? serviceItem.cost : "");
-  let [intervalMiles, setIntervalMiles] = useState(serviceItem.interval_miles ? serviceItem.interval_miles : "");
-  let [intervalTime, setIntervalTime] = useState(serviceItem.interval_time ? new Date(serviceItem.interval_time).toISOString().split('T')[0] : "");
-  let [receiptImage, setReceiptImage] = useState(serviceItem.receipt_image ? serviceItem.receipt_image : "");
+  const [partNumber, setPartNumber] = useState(serviceItem.part_number ? serviceItem.part_number : "");
+  const [cost, setCost] = useState(serviceItem.cost ? serviceItem.cost : "");
+  const [intervalMiles, setIntervalMiles] = useState(serviceItem.interval_miles ? serviceItem.interval_miles : "");
+  const [intervalTime, setIntervalTime] = useState(serviceItem.interval_time ? new Date(serviceItem.interval_time).toISOString().split('T')[0] : "");
+  const [receiptImage, setReceiptImage] = useState(serviceItem.receipt_image ? serviceItem.receipt_image : "");
   const [deleteBtnText, setDeleteBtnText] = useState("Delete Record");
   const [errorDiv, setError] = useState("");
 
