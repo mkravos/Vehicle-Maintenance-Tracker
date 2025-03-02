@@ -1,39 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button, Form } from 'react-bootstrap';
 import AppHeader from "../AppHeader";
 import ReCAPTCHA from 'react-google-recaptcha';
 import { login } from "../../rest/userREST";
 
 function Login({ setAuth }) {
-  const recaptchaRef = React.useRef();
+  const recaptchaRef = useRef();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const errorDiv = document.getElementById('errorDiv');
   const recaptcha_key = "6LfsHBEiAAAAAG6BBexsqvVUe1lb8dBQaNFsfplQ";
 
-  // TODO: add back recaptcha
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // const recaptcha_response = await recaptchaRef.current.executeAsync();
-    // recaptchaRef.current.reset();
-    // if (recaptcha_response === '') {
-    //   errorDiv.textContent = "You must solve the captcha to proceed.";
-    // } else {
-    login(username, password).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
-        localStorage.setItem("token", res.data);
-        setAuth(true);
-      } else {
+    const recaptcha_response = await recaptchaRef.current.executeAsync();
+    recaptchaRef.current.reset();
+    if (recaptcha_response === '') {
+      errorDiv.textContent = "You must solve the captcha to proceed.";
+    } else {
+      login(username, password, recaptcha_response).then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          localStorage.setItem("token", res.data);
+          setAuth(true);
+        } else {
+          setAuth(false);
+          errorDiv.textContent = "Invalid username or password.";
+        }
+      }).catch((err) => {
+        console.log(err);
         setAuth(false);
-        errorDiv.textContent = "Invalid username or password.";
-      }
-    }).catch((err) => {
-      console.log(err);
-      setAuth(false);
-      errorDiv.textContent = "An error occurred. Please try again.";
-    });
-    // }
+        errorDiv.textContent = "An error occurred. Please try again.";
+      });
+    }
   }
 
   return (
@@ -51,11 +50,11 @@ function Login({ setAuth }) {
               <Form.Control value={password} type="password" placeholder="Enter password" onChange={e => setPassword(e.target.value)} required />
               <div id="errorDiv" className="Register-error text-danger"></div>
             </Form.Group>
-            {/* <ReCAPTCHA
+            <ReCAPTCHA
               ref={recaptchaRef}
               sitekey={recaptcha_key}
               size="invisible"
-            /> */}
+            />
             <center>
               <Button className="Login-btn" variant="primary" type="submit">Log In</Button>
             </center>

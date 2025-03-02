@@ -14,30 +14,30 @@ function Register() {
   const recaptcha_key = "6LfsHBEiAAAAAG6BBexsqvVUe1lb8dBQaNFsfplQ";
 
   // TODO: add back recaptcha
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     validateInput();
 
-    // const recaptcha_response = await recaptchaRef.current.executeAsync();
-    // recaptchaRef.current.reset();
-    // if(recaptcha_response==='') {
-    //   verifyerrorDiv.textContent="You must solve the captcha to proceed.";
-    // } else {
-    register(username, password).then((res) => {
-      console.log(res);
-      if (res.status === 201) {
-        errorDiv.textContent = "Registered successfully. Please log in using the login page.";
-        errorDiv.className = "Register-error text-success";
-      } else {
+    const recaptcha_response = await recaptchaRef.current.executeAsync();
+    recaptchaRef.current.reset();
+    if (recaptcha_response === '') {
+      errorDiv.textContent = "You must solve the captcha to proceed.";
+    } else {
+      register(username, password, recaptcha_response).then((res) => {
+        console.log(res);
+        if (res.status === 201) {
+          errorDiv.textContent = "Registered successfully. Please log in using the login page.";
+          errorDiv.className = "Register-error text-success";
+        } else {
+          errorDiv.textContent = "An error occurred. Please try again.";
+          errorDiv.className = "Register-error text-danger";
+        }
+      }).catch(err => {
+        console.error(err);
         errorDiv.textContent = "An error occurred. Please try again.";
         errorDiv.className = "Register-error text-danger";
-      }
-    }).catch(err => {
-      console.error(err);
-      errorDiv.textContent = "An error occurred. Please try again.";
-      errorDiv.className = "Register-error text-danger";
-    });
-    // }
+      });
+    }
   }
 
   const validateInput = () => {
@@ -70,11 +70,11 @@ function Register() {
               <Form.Control value={verify_password} type="password" placeholder="Re-enter password" onChange={e => setVerifyPassword(e.target.value)} required />
               <div id="verifyerrorDiv" className="Register-error text-danger"></div>
             </Form.Group>
-            {/* <ReCAPTCHA
+            <ReCAPTCHA
               ref={recaptchaRef}
               sitekey={recaptcha_key}
               size="invisible"
-            /> */}
+            />
             <center>
               <Button className="Login-btn" variant="primary" type="submit">Register</Button>
               <br />
