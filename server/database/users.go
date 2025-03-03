@@ -13,6 +13,23 @@ func AddUser(username string, password string) error {
 		return fmt.Errorf("failed to hash password: %v", err)
 	}
 
+	exists := false
+	err = db.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte(usersBucket))
+		if b == nil {
+			return fmt.Errorf("bucket %s not found", usersBucket)
+		}
+
+		exists = b.Get([]byte(username)) != nil
+		return nil
+	})
+	if err != nil {
+		return fmt.Errorf("error checking if user exists: %v", err)
+	}
+	if exists {
+		return fmt.Errorf("user %s already exists", username)
+	}
+
 	return db.Update(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte(usersBucket))
 		if b == nil {
