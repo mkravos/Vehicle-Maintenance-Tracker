@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Form } from 'react-bootstrap';
 import AppHeader from "../AppHeader";
 import { validateUsername, validatePassword } from '../utilities/InputValidation';
@@ -6,14 +6,19 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { register } from "../../rest/userREST";
 
 function Register() {
-  const recaptchaRef = React.useRef();
+  const recaptchaRef = useRef();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [verify_password, setVerifyPassword] = useState("");
   const errorDiv = document.getElementById('verifyerrorDiv');
-  const recaptcha_key = "6LfsHBEiAAAAAG6BBexsqvVUe1lb8dBQaNFsfplQ";
+  const [recaptcha_key, setRecaptchaKey] = useState("");
 
-  // TODO: add back recaptcha
+  useEffect(() => {
+    const key = process.env.REACT_APP_RECAPTCHA_KEY;
+    if (key)
+      setRecaptchaKey(key);
+  }, []);
+
   const handleRegister = async (e) => {
     e.preventDefault();
     validateInput();

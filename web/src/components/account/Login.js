@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Form } from 'react-bootstrap';
 import AppHeader from "../AppHeader";
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -9,7 +9,13 @@ function Login({ setAuth }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const errorDiv = document.getElementById('errorDiv');
-  const recaptcha_key = "6LfsHBEiAAAAAG6BBexsqvVUe1lb8dBQaNFsfplQ";
+  const [recaptcha_key, setRecaptchaKey] = useState("");
+
+  useEffect(() => {
+    const key = process.env.REACT_APP_RECAPTCHA_KEY;
+    if (key)
+      setRecaptchaKey(key);
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,6 +28,7 @@ function Login({ setAuth }) {
         console.log(res);
         if (res.status === 200) {
           localStorage.setItem("token", res.data);
+          localStorage.setItem("username", username)
           setAuth(true);
         } else {
           setAuth(false);

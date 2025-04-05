@@ -7,6 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// AddUser creates a new user account with the given username and password
 func AddUser(username string, password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -31,6 +32,7 @@ func AddUser(username string, password string) error {
 	return err
 }
 
+// VerifyPassword checks if the provided password matches the stored hash for the given username
 func VerifyPassword(username, providedPassword string) error {
 	hashedPassword, err := getUserKey(username)
 	if err != nil {
@@ -40,6 +42,7 @@ func VerifyPassword(username, providedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(providedPassword))
 }
 
+// getUserKey retrieves the hashed password for a given username from the database
 func getUserKey(username string) (string, error) {
 	var hashedPassword string
 

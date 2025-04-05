@@ -17,8 +17,13 @@ const (
 	migrations = "migrations.sql"
 )
 
+// GetDB returns the database instance
+func GetDB() *sql.DB {
+	return database
+}
+
 // InitDB initializes the SQLite database
-func InitDB(dbPath string) error {
+func initDB(dbPath string) error {
 	var err error
 
 	database, err = sql.Open("sqlite3", dbPath)
@@ -34,19 +39,15 @@ func InitDB(dbPath string) error {
 	create := string(sqlBytes)
 	_, err = database.Exec(create)
 	if strings.Contains(err.Error(), "already exists") {
-		err = nil // ignore the error if the database has already been created
+		err = nil // prevents fatal error from no-op if the database has already been created
 	}
 
 	return err
 }
 
-// GetDB returns the database instance
-func GetDB() *sql.DB {
-	return database
-}
-
 func init() {
-	err := InitDB(mainDB)
+	// Initialize the database, exiting the program if there is any error
+	err := initDB(mainDB)
 	if err != nil {
 		log.Fatal(err)
 	}
