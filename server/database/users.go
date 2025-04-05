@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 
-	"go.etcd.io/bbolt"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -13,35 +13,26 @@ func AddUser(username string, password string) error {
 		return fmt.Errorf("failed to hash password: %v", err)
 	}
 
-	exists := false
-	err = db.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte(usersBucket))
-		if b == nil {
-			return fmt.Errorf("bucket %s not found", usersBucket)
-		}
-
-		exists = b.Get([]byte(username)) != nil
-		return nil
-	})
+	userExists := 0
+	err = database.QueryRow("SELECT EXISTS(SELECT 1 FROM user_account WHERE username = ?)", username).Scan(&userExists)
 	if err != nil {
 		return fmt.Errorf("error checking if user exists: %v", err)
 	}
-	if exists {
+	if userExists == 1 {
 		return fmt.Errorf("user %s already exists", username)
 	}
 
-	return db.Update(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte(usersBucket))
-		if b == nil {
-			return fmt.Errorf("bucket %s not found", usersBucket)
-		}
+	_, err = database.Exec("INSERT INTO user_account (id, username, userkey) VALUES (?, ?, ?)",
+		uuid.New().String(), username, string(hashedPassword))
+	if err != nil {
+		return fmt.Errorf("failed to add user to database: %v", err)
+	}
 
-		return b.Put([]byte(username), hashedPassword)
-	})
+	return err
 }
 
 func VerifyPassword(username, providedPassword string) error {
-	hashedPassword, err := getUser(username)
+	hashedPassword, err := getUserKey(username)
 	if err != nil {
 		return err
 	}
@@ -49,19 +40,16 @@ func VerifyPassword(username, providedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(providedPassword))
 }
 
-func getUser(username string) (string, error) {
+func getUserKey(username string) (string, error) {
 	var hashedPassword string
-	err := db.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte(usersBucket))
-		if b == nil {
-			return fmt.Errorf("bucket %s not found", usersBucket)
-		}
 
-		hashedPassword = string(b.Get([]byte(username)))
-		return nil
-	})
+	err := database.QueryRow("SELECT userkey FROM user_account WHERE username = ?", username).Scan(&hashedPassword)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error querying user: %v", err)
+	}
+
+	if hashedPassword == "" {
+		return "", fmt.Errorf("user %s not found", username)
 	}
 
 	return hashedPassword, nil
