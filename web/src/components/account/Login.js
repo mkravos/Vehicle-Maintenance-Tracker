@@ -9,13 +9,6 @@ function Login({ setAuth }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const errorDiv = document.getElementById('errorDiv');
-  const [recaptcha_key, setRecaptchaKey] = useState("");
-
-  useEffect(() => {
-    const key = process.env.REACT_APP_RECAPTCHA_KEY;
-    if (key)
-      setRecaptchaKey(key);
-  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -59,7 +52,7 @@ function Login({ setAuth }) {
             </Form.Group>
             <ReCAPTCHA
               ref={recaptchaRef}
-              sitekey={recaptcha_key}
+              sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
               size="invisible"
             />
             <center>

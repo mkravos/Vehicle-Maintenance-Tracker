@@ -11,13 +11,6 @@ function Register() {
   const [password, setPassword] = useState("");
   const [verify_password, setVerifyPassword] = useState("");
   const errorDiv = document.getElementById('verifyerrorDiv');
-  const [recaptcha_key, setRecaptchaKey] = useState("");
-
-  useEffect(() => {
-    const key = process.env.REACT_APP_RECAPTCHA_KEY;
-    if (key)
-      setRecaptchaKey(key);
-  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -77,7 +70,7 @@ function Register() {
             </Form.Group>
             <ReCAPTCHA
               ref={recaptchaRef}
-              sitekey={recaptcha_key}
+              sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
               size="invisible"
             />
             <center>
