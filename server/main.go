@@ -28,6 +28,7 @@ func RegisterUserAPI(mux *http.ServeMux) {
 	mux.HandleFunc("/api/user/login", api.LoginHandler)
 	mux.HandleFunc("/api/user/register", api.RegistrationHandler)
 	mux.HandleFunc("/api/user/verify", api.VerifyHandler)
+	mux.HandleFunc("/api/user/getId", api.AuthenticatedHandler(api.GetUserIdHandler))
 }
 
 func main() {

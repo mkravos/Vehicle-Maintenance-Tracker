@@ -1,5 +1,18 @@
 import instance from './instance';
 
+export const getUserId = async (username) => {
+    return instance.get('/api/user/getId?username=' + encodeURIComponent(username))
+        .then((res) => {
+            return res;
+        })
+        .catch((err) => {
+            if (err.response && err.response.status === 401) {
+                return err.response;
+            }
+            throw err;
+        })
+}
+
 export const login = async (username, password, recaptchaToken) => {
     return instance.post('/api/user/login', { username: username, password: password, recaptchaToken: recaptchaToken })
         .then((res) => {
@@ -19,6 +32,9 @@ export const register = async (username, password, recaptchaToken) => {
             return res;
         })
         .catch((err) => {
+            if (err.response && err.response.status === 401) {
+                return err.response;
+            }
             throw err;
         });
 }
@@ -29,6 +45,9 @@ export const verify = async (token) => {
             return res;
         })
         .catch((err) => {
+            if (err.response && err.response.status === 401) {
+                return err.response;
+            }
             throw err;
         });
 }

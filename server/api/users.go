@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/mkravos/Vehicle-Maintenance-Tracker/database"
 )
 
 // User represents a user account with username, password, and recaptcha token for authentication
 type User struct {
+	Id             string `json:"id"`
 	Username       string `json:"username"`
 	Password       string `json:"password"`
 	RecaptchaToken string `json:"recaptchaToken"`
@@ -28,14 +28,42 @@ type VerifyRecaptchaResponse struct {
 	ErrorCodes []string  `json:"error-codes"`
 }
 
-// Fetches the JWT secret from the Go environment
-func getJwtSecret() []byte {
-	return []byte(os.Getenv("JWT_SECRET"))
-}
-
 // Fetches the Recaptcha secret from the Go environment
 func getRecaptchaSecret() string {
 	return os.Getenv("RECAPTCHA_SECRET")
+}
+
+// GetUserIdHandler retrieves the ID of a given user by providing their username
+func GetUserIdHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "Must use GET request")
+		return
+	}
+
+	username := r.URL.Query().Get("username")
+	if username == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "Required URL parameter 'username' was not provided in request")
+		return
+	}
+
+	type UserIDResponse struct {
+		Id string `json:"id"`
+	}
+
+	if userId, err := database.GetUserId(username); err == nil {
+		user := UserIDResponse{
+			Id: userId,
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(user)
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintf(w, "User not found: %v", err)
+	}
 }
 
 // RegistrationHandler creates a new user account after validating the recaptcha token
@@ -73,6 +101,7 @@ func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // LoginHandler authenticates a user and returns a JWT token if credentials are valid
+// after validating the recaptcha token.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -111,7 +140,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// VerifyHandler checks if a JWT token is valid and returns a 200 OK status if it is
+// VerifyHandler checks if a JWT token is valid and returns a 200 OK status if it is.
+// Used only for checking user access to private section on frontend.
 func VerifyHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -121,56 +151,14 @@ func VerifyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenString := r.Header.Get("Authorization")
-	if tokenString == "" {
+	if err := verifyToken(r.Header.Get("Authorization")); err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprint(w, "Missing authorization header")
-		return
-	}
-	tokenString = tokenString[len("Bearer "):]
-
-	err := verifyToken(tokenString)
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprint(w, "Invalid token")
+		fmt.Fprint(w, "Authorization token invalid or missing")
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "Token is valid")
-}
-
-// createToken generates a JWT token for the given username with a 24-hour expiration
-func createToken(username string) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
-		jwt.MapClaims{
-			"username": username,
-			"exp":      time.Now().Add(time.Hour * 24).Unix(),
-		})
-
-	tokenString, err := token.SignedString(getJwtSecret())
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
-}
-
-// verifyToken checks if a JWT token is valid by parsing and validating it with the secret key
-func verifyToken(tokenString string) error {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
-		return getJwtSecret(), nil
-	})
-
-	if err != nil {
-		return err
-	}
-
-	if !token.Valid {
-		return fmt.Errorf("invalid token")
-	}
-
-	return nil
 }
 
 // verifyRecaptchaResponse validates a reCAPTCHA token by sending it to Google's verification API

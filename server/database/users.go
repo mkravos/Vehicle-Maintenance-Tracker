@@ -7,6 +7,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func GetUserId(username string) (id string, err error) {
+	err = database.QueryRow("SELECT id FROM user_account WHERE username = ?", username).Scan(&id)
+	if err != nil {
+		return "", fmt.Errorf("error querying user id: %v", err)
+	}
+
+	return id, err
+}
+
 // AddUser creates a new user account with the given username and password
 func AddUser(username string, password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
