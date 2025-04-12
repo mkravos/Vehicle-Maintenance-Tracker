@@ -7,12 +7,15 @@ import Settings from './components/settings/Settings.js';
 import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
 import Error404 from './components/Error404.js';
-import { verify } from './rest/userREST.js';
+import { getUserId, verify } from './rest/userREST.js';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState('');
+  const props = { userId }; // props for child components
 
-  const setAuth = boolean => {
+  // auth callback for login page
+  const setAuth = (boolean) => {
     setIsAuthenticated(boolean);
   };
 
@@ -37,7 +40,39 @@ function App() {
     }
   }, []);
 
-  if (isAuthenticated === false) {
+  // fetch user ID and update the state
+  useEffect(() => {
+    if (isAuthenticated && userId.trim() === '') {
+      const username = localStorage.getItem('username');
+      getUserId(username)
+        .then((res) => {
+          if (res.data && res.data.id) {
+            setUserId(res.data.id);
+          } else {
+            console.log("Error getting user ID:", res);
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting user ID:", err);
+        });
+    }
+  }, [isAuthenticated, userId])
+
+  if (isAuthenticated) {
+    return (
+      <Routes>
+        <Route>
+          <Route exact path="/dashboard" element={<Dashboard {...props} />} />
+          <Route exact path="/garage" element={<Garage />} />
+          <Route exact path="/settings" element={<Settings setAuth={setAuth} />} />
+        </Route>
+        <Route path="/login" element={<Navigate to={"/dashboard"} replace />} />
+        <Route path="/register" element={<Navigate to={"/dashboard"} replace />} />
+        <Route path="/" element={<Navigate to={"/dashboard"} replace />} />
+        <Route path="*" element={<Error404 />} />
+      </Routes>
+    );
+  } else {
     return (
       <Routes>
         <Route>
@@ -48,29 +83,7 @@ function App() {
         <Route path="*" element={<Navigate to={"/login"} replace />} />
       </Routes>
     );
-  } else if (isAuthenticated === true) {
-    return (
-      <Routes>
-        <Route>
-          <Route exact path="/dashboard" element={<Dashboard />} />
-          <Route exact path="/garage" element={<Garage />} />
-          <Route exact path="/settings" element={<Settings setAuth={setAuth} />} />
-        </Route>
-        <Route path="/login" element={<Navigate to={"/dashboard"} replace />} />
-        <Route path="/register" element={<Navigate to={"/dashboard"} replace />} />
-        <Route path="/" element={<Navigate to={"/dashboard"} replace />} />
-        <Route path="*" element={<Error404 />} />
-      </Routes>
-    );
   }
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>Loading...</p>
-      </header>
-    </div>
-  );
 }
 
 export default App;

@@ -1,30 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import { Card, Button } from 'react-bootstrap';
-import { getUserId } from '../../rest/userREST.js';
 
-function Dashboard() {
-  const [userId, setUserId] = useState('');
-
-  useEffect(() => {
-    if (userId.trim() === '') {
-      const username = localStorage.getItem('username');
-      getUserId(username)
-        .then((res) => {
-          if (res.data && res.data.id) {
-            setUserId(res.data.id);
-          } else {
-            console.log("Error getting user ID:", res);
-          }
-        })
-        .catch((err) => {
-          console.log("Error getting user ID:", err);
-        });
-    }
-  }, [userId, setUserId])
+function Dashboard(props) {
+  const { userId } = props;
+  console.log("User ID:", userId)
 
   // TODO: add new vehicles API, replace calls with useEffect hooks
-
   const getVehicles = async (uuid) => {
     try {
       const res = await fetch("http://localhost:1234/get-vehicle-list/" + uuid, {
