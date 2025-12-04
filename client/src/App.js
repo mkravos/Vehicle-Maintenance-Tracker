@@ -7,7 +7,7 @@ import Settings from './components/settings/Settings.js';
 import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
 import Error404 from './components/Error404.js';
-import { getUserId, verify } from './rest/userREST.js';
+import { getUserId, logout, verify } from './rest/userREST.js';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,8 +15,11 @@ function App() {
   const props = { userId }; // props for child components
 
   // auth callback for login page
-  const setAuth = (boolean) => {
-    setIsAuthenticated(boolean);
+  const setAuth = (isAuthed) => {
+    setIsAuthenticated(isAuthed);
+    if (!isAuthed) {
+      logout();
+    }
   };
 
   // check if user is authenticated

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -21,8 +22,12 @@ func getJwtSecret() []byte {
 func AuthenticatedHandler(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := verifyToken(r.Header.Get("Authorization")); err != nil {
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusUnauthorized)
-			fmt.Fprint(w, "Authorization token invalid or missing")
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: "Authorization token invalid or missing",
+			})
 			return
 		}
 

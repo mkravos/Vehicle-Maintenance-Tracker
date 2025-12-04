@@ -3,6 +3,5 @@ An application for tracking vehicle maintenance items such as oil changes, filte
 
 ## Project Revamp
 1. Replace Express.js backend with Golang server.
-2. Frontend styling redesign and rebranding.
-3. Mobile version.
-4. Add further integrations.
+2. Revamp frontend with new styling and more modern frameworks.
+3. Dockerize the app.

@@ -33,134 +33,6 @@ func getRecaptchaSecret() string {
 	return os.Getenv("RECAPTCHA_SECRET")
 }
 
-// GetUserIdHandler retrieves the ID of a given user by providing their username
-func GetUserIdHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprint(w, "Must use GET request")
-		return
-	}
-
-	username := r.URL.Query().Get("username")
-	if username == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Required URL parameter 'username' was not provided in request")
-		return
-	}
-
-	type UserIDResponse struct {
-		Id string `json:"id"`
-	}
-
-	if userId, err := database.GetUserId(username); err == nil {
-		user := UserIDResponse{
-			Id: userId,
-		}
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(user)
-	} else {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, "User not found: %v", err)
-	}
-}
-
-// RegistrationHandler creates a new user account after validating the recaptcha token
-func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprint(w, "Must use POST request")
-		return
-	}
-
-	var u User
-	err := json.NewDecoder(r.Body).Decode(&u)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Could not decode user JSON")
-		return
-	}
-
-	if _, err := verifyRecaptchaResponse(getRecaptchaSecret(), u.RecaptchaToken, nil); err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprint(w, "Invalid recaptcha response", err)
-		return
-	}
-
-	if err := database.AddUser(u.Username, u.Password); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprint(w, "Error creating user")
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
-	fmt.Fprint(w, "User created")
-}
-
-// LoginHandler authenticates a user and returns a JWT token if credentials are valid
-// after validating the recaptcha token.
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprint(w, "Must use POST request")
-		return
-	}
-
-	var u User
-	err := json.NewDecoder(r.Body).Decode(&u)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Could not decode user JSON")
-		return
-	}
-
-	if _, err := verifyRecaptchaResponse(getRecaptchaSecret(), u.RecaptchaToken, nil); err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprint(w, "Invalid recaptcha response", err)
-		return
-	}
-
-	if err := database.VerifyPassword(u.Username, u.Password); err == nil {
-		tokenString, err := createToken(u.Username)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprint(w, "Error creating token")
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, tokenString)
-	} else {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprint(w, "Invalid credentials")
-	}
-}
-
-// VerifyHandler checks if a JWT token is valid and returns a 200 OK status if it is.
-// Used only for checking user access to private section on frontend.
-func VerifyHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprint(w, "Must use POST request")
-		return
-	}
-
-	if err := verifyToken(r.Header.Get("Authorization")); err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprint(w, "Authorization token invalid or missing")
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "Token is valid")
-}
-
 // verifyRecaptchaResponse validates a reCAPTCHA token by sending it to Google's verification API
 func verifyRecaptchaResponse(secret string, responseToken string, remoteIP *string) (*VerifyRecaptchaResponse, error) {
 	data := url.Values{}
@@ -187,4 +59,342 @@ func verifyRecaptchaResponse(secret string, responseToken string, remoteIP *stri
 	}
 
 	return &response, nil
+}
+
+// HandleLoginUser authenticates a user and returns a JWT token if credentials are valid
+// after validating the recaptcha token.
+func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrMustUsePOSTRequest,
+		})
+		return
+	}
+
+	var u User
+	err := json.NewDecoder(r.Body).Decode(&u)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrCouldNotDecodeJSON,
+		})
+		return
+	}
+
+	if _, err := verifyRecaptchaResponse(getRecaptchaSecret(), u.RecaptchaToken, nil); err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrInvalidRecaptcha,
+		})
+		return
+	}
+
+	if err := database.VerifyPassword(u.Username, u.Password); err == nil {
+		tokenString, err := createToken(u.Username)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: ErrCreatingJWTToken,
+			})
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, tokenString)
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrInvalidUsernameOrPass,
+		})
+	}
+}
+
+// HandleRegisterUser creates a new user account after validating the recaptcha token
+func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrMustUsePOSTRequest,
+		})
+		return
+	}
+
+	var u User
+	err := json.NewDecoder(r.Body).Decode(&u)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrCouldNotDecodeJSON,
+		})
+		return
+	}
+
+	if _, err := verifyRecaptchaResponse(getRecaptchaSecret(), u.RecaptchaToken, nil); err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrInvalidRecaptcha,
+		})
+		return
+	}
+
+	if err := database.AddUser(u.Username, u.Password); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: fmt.Sprintf("Error creating user: %v", err),
+		})
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(GenericResponse{
+		Success: true,
+		Message: "User account created successfully",
+	})
+}
+
+// HandleVerifyUser checks if a JWT token is valid and returns a 200 OK status if it is.
+// Used only for checking user access to private section on frontend.
+func HandleVerifyUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrMustUsePOSTRequest,
+		})
+		return
+	}
+
+	if err := verifyToken(r.Header.Get("Authorization")); err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrInvalidOrExpiredToken,
+		})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(GenericResponse{
+		Success: true,
+		Message: "LGTM",
+	})
+}
+
+func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method != http.MethodPut {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrMustUsePUTRequest,
+		})
+		return
+	}
+
+	action := r.URL.Query().Get("action")
+	if action == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrParamActionMissing,
+		})
+		return
+	}
+
+	username := r.URL.Query().Get("username")
+	if username == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrParamUsernameMissing,
+		})
+		return
+	}
+
+	password := r.URL.Query().Get("password")
+	if password == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrParamPasswordMissing,
+		})
+		return
+	}
+
+	var err error
+	switch action {
+	case "changeUsername":
+		newUsername := r.URL.Query().Get("newUsername")
+		if newUsername == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: ErrParamNewUsernameMissing,
+			})
+			return
+		}
+		if err = database.ChangeUsername(username, password, newUsername); err == nil {
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: true,
+				Message: "Username updated",
+			})
+		} else {
+			err = fmt.Errorf("error updating username: %v", err)
+		}
+	case "changePassword":
+		newPassword := r.URL.Query().Get("newPassword")
+		if newPassword == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: ErrParamNewPasswordMissing,
+			})
+			return
+		}
+		if err = database.ChangePassword(username, password, newPassword); err == nil {
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: true,
+				Message: "Password updated",
+			})
+		} else {
+			err = fmt.Errorf("error updating password: %v", err)
+		}
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrInvalidAction,
+		})
+	}
+
+	if err != nil {
+		if strings.Contains(err.Error(), ErrInvalidUsernameOrPass) {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: ErrInvalidUsernameOrPass,
+			})
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: err.Error(),
+			})
+		}
+	}
+}
+
+func HandleDeleteUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method != http.MethodDelete {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrMustUseDELETERequest,
+		})
+		return
+	}
+
+	username := r.URL.Query().Get("username")
+	if username == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrParamUsernameMissing,
+		})
+		return
+	}
+
+	password := r.URL.Query().Get("password")
+	if password == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrParamPasswordMissing,
+		})
+		return
+	}
+
+	if err := database.DeleteAccount(username, password); err == nil {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: true,
+			Message: "User account deleted successfully",
+		})
+	} else {
+		if strings.Contains(err.Error(), ErrInvalidUsernameOrPass) {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: ErrInvalidUsernameOrPass,
+			})
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: fmt.Sprintf("Error deleting user account: %v", err),
+			})
+		}
+	}
+}
+
+// HandleGetUserId retrieves the ID of a given user by providing their username
+func HandleGetUserId(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrMustUseGETRequest,
+		})
+		return
+	}
+
+	username := r.URL.Query().Get("username")
+	if username == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrParamUsernameMissing,
+		})
+		return
+	}
+
+	type UserIDResponse struct {
+		Id string `json:"id"`
+	}
+
+	if userId, err := database.GetUserId(username); err == nil {
+		user := UserIDResponse{
+			Id: userId,
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(user)
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: fmt.Sprintf("Error retrieving user ID: %v", err),
+		})
+	}
 }
