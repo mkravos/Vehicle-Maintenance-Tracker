@@ -7,11 +7,13 @@ import (
 	"github.com/mkravos/Vehicle-Maintenance-Tracker/database"
 )
 
+// VehicleRequestBody represents the expected request body for vehicle creation and updates
 type VehicleRequestBody struct {
 	UserId string `json:"userId"`
 	database.Vehicle
 }
 
+// HandleAddVehicle handles the addition of a new vehicle for a user
 func HandleAddVehicle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -52,6 +54,7 @@ func HandleAddVehicle(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// HandleListVehicles handles listing all vehicles for a user
 func HandleListVehicles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -88,6 +91,7 @@ func HandleListVehicles(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(vehicles)
 }
 
+// HandleUpdateVehicle handles updating an existing vehicle for a user
 func HandleUpdateVehicle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -128,6 +132,7 @@ func HandleUpdateVehicle(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// HandleUpdateVehicle handles updating an existing vehicle for a user
 func HandleDeleteVehicle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
