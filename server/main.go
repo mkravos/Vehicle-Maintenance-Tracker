@@ -33,6 +33,14 @@ func RegisterUserAPI(mux *http.ServeMux) {
 	mux.HandleFunc("/api/user/getId", api.AuthenticatedHandler(api.HandleGetUserId))
 }
 
+// RegisterVehicleAPI sets up the API endpoints for vehicle retrieval and management
+func RegisterVehicleAPI(mux *http.ServeMux) {
+	mux.HandleFunc("/api/vehicle/add", api.AuthenticatedHandler(api.HandleAddVehicle))
+	mux.HandleFunc("/api/vehicle/list", api.AuthenticatedHandler(api.HandleListVehicles))
+	mux.HandleFunc("/api/vehicle/update", api.AuthenticatedHandler(api.HandleUpdateVehicle))
+	mux.HandleFunc("/api/vehicle/delete", api.AuthenticatedHandler(api.HandleDeleteVehicle))
+}
+
 func main() {
 	err := godotenv.Load() // loads the .env file into the Go environment
 	if err != nil {
@@ -50,6 +58,7 @@ func main() {
 
 	// Register endpoints
 	RegisterUserAPI(mux)
+	RegisterVehicleAPI(mux)
 
 	// Start the server
 	log.Println("Server is running on port 8080")

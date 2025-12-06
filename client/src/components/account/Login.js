@@ -20,7 +20,7 @@ function Login({ setAuth }) {
       login(username, password, recaptcha_response).then((res) => {
         console.log(res);
         if (res.status === 200) {
-          localStorage.setItem("token", res.data);
+          localStorage.setItem("token", res.data.token);
           localStorage.setItem("username", username)
           setAuth(true);
         } else {

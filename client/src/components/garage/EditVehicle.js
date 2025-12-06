@@ -1,105 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form, Dropdown } from 'react-bootstrap';
 import { containsSpecialChars, checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
+import { updateVehicle } from '../../rest/vehicleREST';
 
-function EditVehicle({id, editedVehicle}) {
-  const getVehicle = async (id) => {
-    try {
-      const res = await fetch("http://localhost:1234/get-vehicle/" + id, {
-        method: "GET"
-      });
-
-      const parseRes = await res.json();
-      return parseRes;
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
-  const [ vehicle, setVehicle ] = useState();
-  if(!vehicle) {
-    getVehicle(id)
-    .then(value => {
-      setVehicle(value);
-    });
-  }
-
-  const [ vehicleName, setVehicleName ] = useState(undefined);
-  const [ vehicleYear, setVehicleYear ] = useState(undefined);
-  const [ vehicleMake, setVehicleMake ] = useState(undefined);
-  const [ vehicleModel, setVehicleModel ] = useState(undefined);
-  const [ vehicleMileage, setVehicleMileage ] = useState(undefined);
-  const [ VIN, setVIN ] = useState(undefined);
-  const [ errorDiv, setError ] = useState("");
+function EditVehicle({ editedVehicle, vehicle }) {
+  const [vehicleName, setVehicleName] = useState(vehicle?.vehicle_name ?? "");
+  const [vehicleYear, setVehicleYear] = useState(vehicle?.model_year ?? "");
+  const [vehicleMake, setVehicleMake] = useState(vehicle?.make ?? "");
+  const [vehicleModel, setVehicleModel] = useState(vehicle?.model ?? "");
+  const [vehicleMileage, setVehicleMileage] = useState(vehicle?.mileage ?? "");
+  const [VIN, setVIN] = useState(vehicle?.vin ?? "");
+  const [errorDiv, setError] = useState("");
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  if(vehicle && vehicleName === undefined) {
-    setVehicleName(vehicle.vehicle_name);
-    setVehicleYear(vehicle.model_year);
-    setVehicleMake(vehicle.make);
-    setVehicleModel(vehicle.model);
-    if(vehicle.mileage) setVehicleMileage(vehicle.mileage);
-    if(vehicle.vin) setVIN(vehicle.vin);
-  }
-
-  const editVehicle = async e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    try {
-      // client-side error checking
-      if(!vehicleName || !vehicleYear || !vehicleMake || !vehicleModel) {
-        throw new Error("MISSING_REQ_FIELDS");
-      }
-      if(!checkInteger(vehicleYear)) {
-        throw new Error("INVALID_YEAR");
-      }
-      if(vehicleMileage && !checkInteger(vehicleMileage)) {
-        throw new Error("INVALID_MILEAGE");
-      }
-      if(VIN && !checkAlphanumeric(VIN)) {
-        throw new Error("INVALID_VIN");
-      }
-      if(containsSpecialChars(vehicleName)) {
-        throw new Error("NAME_CHARS");
-      }
-      if(containsSpecialChars(vehicleMake)) {
-        throw new Error("MAKE_CHARS");
-      }
-      if(containsSpecialChars(vehicleModel)) {
-        throw new Error("MODEL_CHARS");
-      }
-
-      let newVehicle = {}
-      if(vehicleMileage) {
-        newVehicle = {
-          id:id, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:vehicleMileage, vin:VIN
-        }
+    updateVehicle(undefined, {
+      id: vehicle.id,
+      vehicle_name: vehicleName,
+      model_year: parseInt(vehicleYear, 10),
+      make: vehicleMake,
+      model: vehicleModel,
+      mileage: vehicleMileage !== undefined ? parseInt(vehicleMileage, 10) : undefined,
+      vin: VIN !== undefined ? VIN : undefined
+    }).then((res) => {
+      if (res.status === 200) {
+        editedVehicle(true);
       } else {
-        newVehicle = {
-          id:id, name:vehicleName, year:vehicleYear, make:vehicleMake, model:vehicleModel, mileage:0, vin:VIN
-        }
+        console.error('Failed to edit vehicle. Response:', res);
       }
-      const request = await fetch("http://localhost:1234/edit-vehicle", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newVehicle)
-      })
-      console.log(request);
+    }).catch((err) => {
+      console.error('Error editing vehicle:', err);
+    }).finally(() => {
       handleClose();
-      editedVehicle(true);
-    } catch (err) {
-      if(err.message === "MISSING_REQ_FIELDS") setError("Error: Please fill in all required fields (*).");
-      if(err.message === "INVALID_YEAR") setError("Error: Year must be a number.");
-      if(err.message === "INVALID_MILEAGE") setError("Error: Mileage must be a number and contain no commas.");
-      if(err.message === "INVALID_VIN") setError("Error: VIN must be an alphanumeric value.");
-      if(err.message === "NAME_CHARS") setError("Error: Name can't contain special characters.");
-      if(err.message === "MAKE_CHARS") setError("Error: Make can't contain special characters.");
-      if(err.message === "MODEL_CHARS") setError("Error: Model can't contain special characters.");
-      else console.log(err.message);
-    }
+    });
   }
 
   return (
@@ -143,7 +81,7 @@ function EditVehicle({id, editedVehicle}) {
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={editVehicle}>
+          <Button variant="primary" onClick={handleSubmit}>
             Save
           </Button>
         </Modal.Footer>
@@ -151,5 +89,5 @@ function EditVehicle({id, editedVehicle}) {
     </div>
   )
 }
-  
+
 export default EditVehicle;

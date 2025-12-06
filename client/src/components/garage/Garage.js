@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import BootstrapNavbar from '../BootstrapNavbar.js';
 import UpdateMileage from './UpdateMileage.js';
 import RecordServiceItem from './RecordServiceItem.js';
@@ -7,8 +7,12 @@ import EditVehicle from './EditVehicle.js';
 import RemoveVehicle from './RemoveVehicle.js';
 import ServiceRecords from './ServiceRecords.js';
 import { Card, DropdownButton } from 'react-bootstrap';
+import { listVehicles } from '../../rest/vehicleREST.js';
 
-function Garage() {
+function Garage(props) {
+  const { userId } = props;
+
+  const [vehicles, setVehicles] = useState();
   const [vehicleAdded, setVehicleAdded] = useState(false);
   const [vehicleEdited, setVehicleEdited] = useState(false);
   const [vehicleRemoved, setVehicleRemoved] = useState(false);
@@ -31,79 +35,18 @@ function Garage() {
     setVehicleRemoved(boolean);
   };
 
-  const getUserId = async () => {
-    try {
-      const res = await fetch("http://localhost:1234/uuid", {
-        method: "GET",
-        headers: { jwt_token: localStorage.token }
+  useEffect(() => {
+    listVehicles(userId)
+      .then((res) => {
+        if (res.status === 200) {
+          setVehicles(res.data);
+        } else {
+          console.error('Failed to fetch vehicle list. Response:', res);
+        }
+      }).catch((err) => {
+        console.error('Error fetching vehicle list:', err);
       });
-
-      const parseRes = await res.json();
-      return parseRes;
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
-  const [userId, setUserId] = useState();
-  if (!userId) {
-    getUserId()
-      .then(value => {
-        setUserId(value.id);
-      });
-  }
-
-  const getVehicles = async (uuid) => {
-    try {
-      const res = await fetch("http://localhost:1234/get-vehicle-list/" + uuid, {
-        method: "GET"
-      });
-
-      const parseRes = await res.json();
-      return parseRes;
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
-  const [vehicles, setVehicles] = useState();
-  function getVehicleList(id) {
-    getVehicles(id)
-      .then(value => {
-        setVehicles(value);
-      });
-  }
-  if (userId && !vehicles) {
-    getVehicleList(userId);
-  }
-
-  useEffect(() => {
-    if (userId) {
-      setVehicleAdded(false);
-      getVehicleList(userId);
-    }
-  }, [vehicleAdded, userId]);
-  useEffect(() => {
-    if (userId) {
-      setVehicleEdited(false);
-      getVehicleList(userId);
-    }
-  }, [vehicleEdited, userId]);
-  useEffect(() => {
-    if (userId) {
-      setVehicleRemoved(false);
-      getVehicleList(userId);
-    }
-  }, [vehicleRemoved, userId]);
-  useEffect(() => {
-    if (userId) {
-      setMileageUpdated(false);
-      getVehicleList(userId);
-    }
-  }, [mileageUpdated, userId]);
-  useEffect(() => {
-    setItemRecorded(false);
-  }, [itemRecorded]);
+  }, [userId, vehicleAdded, vehicleEdited, vehicleRemoved, mileageUpdated]);
 
   return (
     <div className="Garage">
@@ -129,7 +72,7 @@ function Garage() {
                     {/* <GenerateReport id={val.id} /> */}
                   </DropdownButton>
                   <DropdownButton className="Vehicle-dropdown" variant="outline-primary" id="dropdown-basic-button" title="Vehicle">
-                    <EditVehicle id={val.id} editedVehicle={editedVehicle} />
+                    <EditVehicle editedVehicle={editedVehicle} vehicle={val} />
                     <RemoveVehicle id={val.id} removedVehicle={removedVehicle} />
                   </DropdownButton>
                 </div>
@@ -143,7 +86,7 @@ function Garage() {
             </Card>
           )
         }) : null}
-        <AddVehicle setNewVehicle={setNewVehicle} />
+        <AddVehicle setNewVehicle={setNewVehicle} userId={userId} />
       </header>
     </div>
   );

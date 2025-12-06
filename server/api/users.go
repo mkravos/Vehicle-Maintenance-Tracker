@@ -28,6 +28,11 @@ type VerifyRecaptchaResponse struct {
 	ErrorCodes []string  `json:"error-codes"`
 }
 
+// LoginResponse represents the response structure for a successful login containing the JWT token
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
 // Fetches the Recaptcha secret from the Go environment
 func getRecaptchaSecret() string {
 	return os.Getenv("RECAPTCHA_SECRET")
@@ -106,7 +111,9 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, tokenString)
+		json.NewEncoder(w).Encode(LoginResponse{
+			Token: tokenString,
+		})
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(GenericResponse{

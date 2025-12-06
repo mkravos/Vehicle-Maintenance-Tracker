@@ -66,8 +66,8 @@ function App() {
       <Routes>
         <Route>
           <Route exact path="/dashboard" element={<Dashboard {...props} />} />
-          <Route exact path="/garage" element={<Garage />} />
-          <Route exact path="/settings" element={<Settings setAuth={setAuth} />} />
+          <Route exact path="/garage" element={<Garage {...props} />} />
+          <Route exact path="/settings" element={<Settings setAuth={setAuth} {...props} />} />
         </Route>
         <Route path="/login" element={<Navigate to={"/dashboard"} replace />} />
         <Route path="/register" element={<Navigate to={"/dashboard"} replace />} />

@@ -4,7 +4,6 @@ import { Card, Button } from 'react-bootstrap';
 
 function Dashboard(props) {
   const { userId } = props;
-  console.log("User ID:", userId)
 
   // TODO: add new vehicles API, replace calls with useEffect hooks
   const getVehicles = async (uuid) => {

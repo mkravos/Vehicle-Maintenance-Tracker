@@ -22,5 +22,7 @@ const (
 	ErrParamPasswordMissing    = "Required URL parameter 'password' was not provided in request"
 	ErrParamNewUsernameMissing = "Required URL parameter 'newUsername' was not provided in request"
 	ErrParamNewPasswordMissing = "Required URL parameter 'newPassword' was not provided in request"
+	ErrParamUserIdMissing      = "Required URL parameter 'userId' was not provided in request"
+	ErrParamVehicleIdMissing   = "Required URL parameter 'vehicleId' was not provided in request"
 	ErrInvalidAction           = "Invalid action specified, must be either 'changeUsername' or 'changePassword'"
 )

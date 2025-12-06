@@ -93,7 +93,7 @@ func ChangeUsername(username, password, newUsername string) error {
 }
 
 // DeleteAccount removes the user account after verifying the password
-// TODO: also need to delete all vehicles and service items owned by the user
+// TODO: need to implement vehicle deletion associated with the user
 func DeleteAccount(username, password string) error {
 	return errors.New("account deletion not complete yet")
 
@@ -101,9 +101,6 @@ func DeleteAccount(username, password string) error {
 	if err != nil {
 		return errors.New(ErrInvalidUsernameOrPass)
 	}
-
-	// need to delete all vehicles and service items owned by the user,
-	// vehicle/service item db operations not implemented yet
 
 	_, err = database.Exec("DELETE FROM user_account WHERE username=$1",
 		username)
