@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ErrInvalidUsernameOrPass = "Invalid credentials provided"
+	ErrInvalidUsernameOrPass = "invalid credentials provided"
 )
 
 func GetUserId(username string) (id string, err error) {
@@ -93,13 +93,15 @@ func ChangeUsername(username, password, newUsername string) error {
 }
 
 // DeleteAccount removes the user account after verifying the password
-// TODO: need to implement vehicle deletion associated with the user
 func DeleteAccount(username, password string) error {
-	return errors.New("account deletion not complete yet")
-
 	err := VerifyPassword(username, password)
 	if err != nil {
 		return errors.New(ErrInvalidUsernameOrPass)
+	}
+
+	err = DeleteAllUserVehicles(username)
+	if err != nil {
+		return fmt.Errorf("failed to delete all user vehicles: %v", err)
 	}
 
 	_, err = database.Exec("DELETE FROM user_account WHERE username=$1",

@@ -1,8 +1,6 @@
 module github.com/mkravos/Vehicle-Maintenance-Tracker
 
-go 1.23
-
-toolchain go1.23.6
+go 1.25
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.1

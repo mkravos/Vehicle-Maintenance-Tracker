@@ -3,7 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import AppHeader from "../AppHeader";
 import { validateUsername, validatePassword } from '../utilities/InputValidation';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { register } from "../../rest/userREST";
+import { register } from "../../rest/user";
 
 function Register() {
   const recaptchaRef = useRef();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
-import { deleteVehicle } from '../../rest/vehicleREST';
+import { deleteVehicle } from '../../rest/vehicle';
 
 function RemoveVehicle({ id, removedVehicle }) {
   const [show, setShow] = useState(false);

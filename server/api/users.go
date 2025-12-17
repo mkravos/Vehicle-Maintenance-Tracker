@@ -202,6 +202,8 @@ func HandleVerifyUser(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// HandleUpdateUser updates a user's username or password based on the provided action parameter
+// TODO: replace URL params with JSON body for better security
 func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -309,6 +311,7 @@ func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// HandleDeleteUser deletes a user account after verifying the username and password
 func HandleDeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 

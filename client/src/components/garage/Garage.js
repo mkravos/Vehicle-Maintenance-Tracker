@@ -7,7 +7,7 @@ import EditVehicle from './EditVehicle.js';
 import RemoveVehicle from './RemoveVehicle.js';
 import ServiceRecords from './ServiceRecords.js';
 import { Card, DropdownButton } from 'react-bootstrap';
-import { listVehicles } from '../../rest/vehicleREST.js';
+import { listVehicles } from '../../rest/vehicle.js';
 
 function Garage(props) {
   const { userId } = props;

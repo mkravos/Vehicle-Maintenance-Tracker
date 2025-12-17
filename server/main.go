@@ -41,6 +41,14 @@ func RegisterVehicleAPI(mux *http.ServeMux) {
 	mux.HandleFunc("/api/vehicle/delete", api.AuthenticatedHandler(api.HandleDeleteVehicle))
 }
 
+// RegisterMaintenanceAPI sets up the API endpoints for maintenance item retrieval and management
+func RegisterMaintenanceAPI(mux *http.ServeMux) {
+	mux.HandleFunc("/api/maintenance/add", api.AuthenticatedHandler(api.HandleAddServiceItem))
+	mux.HandleFunc("/api/maintenance/list", api.AuthenticatedHandler(api.HandleListServiceItems))
+	mux.HandleFunc("/api/maintenance/update", api.AuthenticatedHandler(api.HandleUpdateServiceItem))
+	mux.HandleFunc("/api/maintenance/delete", api.AuthenticatedHandler(api.HandleDeleteServiceItem))
+}
+
 func main() {
 	err := godotenv.Load() // loads the .env file into the Go environment
 	if err != nil {

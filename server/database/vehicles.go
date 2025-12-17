@@ -1,7 +1,6 @@
 package database
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -111,17 +110,55 @@ func UpdateVehicle(userID string, vehicle Vehicle) error {
 }
 
 // DeleteVehicle removes a vehicle from the database for the specified user
-// TODO: need to implement service item deletion associated with the vehicle
 func DeleteVehicle(userID string, vehicleID string) error {
-	return errors.New("vehicle deletion not complete yet")
+	err := DeleteAllServiceItemsForVehicle(vehicleID)
+	if err != nil {
+		return fmt.Errorf("failed to delete all service items for vehicle: %v", err)
+	}
 
-	_, err := database.Exec(
+	_, err = database.Exec(
 		`DELETE FROM vehicle WHERE id=$1 AND account_id=$2`,
 		vehicleID, userID,
 	)
-
 	if err != nil {
 		return fmt.Errorf("failed to delete vehicle: %v", err)
+	}
+
+	return nil
+}
+
+// DeleteAllUserVehicles removes all vehicles associated with the specified user
+func DeleteAllUserVehicles(userID string) error {
+	rows, err := database.Query(
+		`SELECT vehicle_id FROM user_vehicle WHERE account_id=$1`,
+		userID,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to get vehicles for user %s: %v", userID, err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var vehicleID string
+		err := rows.Scan(&vehicleID)
+		if err != nil {
+			return fmt.Errorf("failed to scan vehicle id: %v", err)
+		}
+
+		err = DeleteAllServiceItemsForVehicle(vehicleID)
+		if err != nil {
+			return fmt.Errorf("failed to delete all service items for vehicle %s: %v", vehicleID, err)
+		}
+	}
+
+	_, err = database.Exec(
+		`DELETE FROM vehicle WHERE id IN (
+			SELECT vehicle_id FROM user_vehicle WHERE account_id=$1
+		)`,
+		userID,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to delete vehicles for user %s: %v", userID, err)
 	}
 
 	return nil
