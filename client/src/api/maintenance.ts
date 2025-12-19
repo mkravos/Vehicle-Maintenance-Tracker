@@ -29,7 +29,7 @@ export const addServiceItem = async (serviceItem: ServiceItem): Promise<AxiosRes
 }
 
 export const listServiceItems = async (vehicleId: string): Promise<AxiosResponse<ServiceItem[] | GenericResponse>> => {
-    return instance.get<ServiceItem[]>('/api/maintenance/list?vehicle_id=' + encodeURIComponent(vehicleId))
+    return instance.get<ServiceItem[] | GenericResponse>('/api/maintenance/list?vehicle_id=' + encodeURIComponent(vehicleId))
         .then((res) => {
             return res;
         })

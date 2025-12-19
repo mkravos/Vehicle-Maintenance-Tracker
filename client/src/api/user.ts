@@ -14,7 +14,7 @@ export const login = async (
     password: string, 
     recaptchaToken: string
 ): Promise<AxiosResponse<LoginResponse | GenericResponse>> => {
-    return instance.post<LoginResponse>('/api/user/login', { username: username, password: password, recaptchaToken: recaptchaToken })
+    return instance.post<LoginResponse | GenericResponse>('/api/user/login', { username: username, password: password, recaptchaToken: recaptchaToken })
         .then((res) => {
             return res;
         })
@@ -121,7 +121,7 @@ export const deleteUser = async (
 }
 
 export const getUserId = async (username: string): Promise<AxiosResponse<UserIdResponse | GenericResponse>> => {
-    return instance.get<UserIdResponse>('/api/user/getId?username=' + encodeURIComponent(username))
+    return instance.get<UserIdResponse | GenericResponse>('/api/user/getId?username=' + encodeURIComponent(username))
         .then((res) => {
             return res;
         })
