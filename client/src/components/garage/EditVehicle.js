@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form, Dropdown } from 'react-bootstrap';
 import { containsSpecialChars, checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
-import { updateVehicle } from '../../rest/vehicle';
+import { updateVehicle } from '../../api/vehicle';
 
 function EditVehicle({ editedVehicle, vehicle }) {
   const [vehicleName, setVehicleName] = useState(vehicle?.vehicle_name ?? "");

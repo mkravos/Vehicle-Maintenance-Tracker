@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { containsSpecialChars, checkInteger, checkAlphanumeric } from '../utilities/InputValidation';
-import { addVehicle } from '../../rest/vehicle';
+import { addVehicle } from '../../api/vehicle';
 
 function AddVehicle({ setNewVehicle, userId }) {
   const [vehicleName, setVehicleName] = useState("");

@@ -7,7 +7,7 @@ import Settings from './components/settings/Settings.js';
 import Dashboard from './components/dashboard/Dashboard.js';
 import Garage from './components/garage/Garage.js';
 import Error404 from './components/Error404.js';
-import { getUserId, logout, verify } from './rest/user.js';
+import { getUserId, logout, verify } from './api/user.js';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

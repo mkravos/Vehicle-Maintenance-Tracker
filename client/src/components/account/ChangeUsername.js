@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Dropdown, Button, Modal, Form } from 'react-bootstrap';
 import { containsSpecialChars, containsWhitespace, checkUsernameLength } from '../utilities/InputValidation';
-import { updateUser } from '../../rest/user';
+import { updateUser } from '../../api/user';
 
 function ChangeUsername() {
   const [show, setShow] = useState(false);

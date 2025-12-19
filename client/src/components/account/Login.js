@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button, Form } from 'react-bootstrap';
 import AppHeader from "../AppHeader";
 import ReCAPTCHA from 'react-google-recaptcha';
-import { login } from "../../rest/user";
+import { login } from "../../api/user";
 
 function Login({ setAuth }) {
   const recaptchaRef = useRef();

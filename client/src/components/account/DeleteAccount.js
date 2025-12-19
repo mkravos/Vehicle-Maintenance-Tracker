@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, Modal, Dropdown, Form } from 'react-bootstrap';
-import { deleteUser } from '../../rest/user';
+import { deleteUser } from '../../api/user';
 
 function DeleteAccount() {
   const [show, setShow] = useState(false);
