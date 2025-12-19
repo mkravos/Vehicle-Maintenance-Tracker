@@ -20,6 +20,13 @@ type User struct {
 	RecaptchaToken string `json:"recaptchaToken"`
 }
 
+type UpdateUserRequestBody struct {
+	Username    string `json:"username"`
+	Password    string `json:"password,omitempty"`
+	NewPassword string `json:"newPassword,omitempty"`
+	NewUsername string `json:"newUsername,omitempty"`
+}
+
 // VerifyRecaptchaResponse represents the response structure from Google's reCAPTCHA verification API
 type VerifyRecaptchaResponse struct {
 	Success    bool      `json:"success"`
@@ -203,7 +210,6 @@ func HandleVerifyUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // HandleUpdateUser updates a user's username or password based on the provided action parameter
-// TODO: replace URL params with JSON body for better security
 func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -226,39 +232,42 @@ func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	username := r.URL.Query().Get("username")
-	if username == "" {
+	var u UpdateUserRequestBody
+	err := json.NewDecoder(r.Body).Decode(&u)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrCouldNotDecodeJSON,
+		})
+	}
+
+	if u.Username == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GenericResponse{
 			Success: false,
 			Message: ErrParamUsernameMissing,
 		})
-		return
 	}
 
-	password := r.URL.Query().Get("password")
-	if password == "" {
+	if u.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GenericResponse{
 			Success: false,
 			Message: ErrParamPasswordMissing,
 		})
-		return
 	}
 
-	var err error
 	switch action {
 	case "changeUsername":
-		newUsername := r.URL.Query().Get("newUsername")
-		if newUsername == "" {
+		if u.NewUsername == "" {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(GenericResponse{
 				Success: false,
 				Message: ErrParamNewUsernameMissing,
 			})
-			return
 		}
-		if err = database.ChangeUsername(username, password, newUsername); err == nil {
+		if err = database.ChangeUsername(u.Username, u.Password, u.NewUsername); err == nil {
 			w.WriteHeader(http.StatusOK)
 			json.NewEncoder(w).Encode(GenericResponse{
 				Success: true,
@@ -268,16 +277,14 @@ func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
 			err = fmt.Errorf("error updating username: %v", err)
 		}
 	case "changePassword":
-		newPassword := r.URL.Query().Get("newPassword")
-		if newPassword == "" {
+		if u.NewPassword == "" {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(GenericResponse{
 				Success: false,
 				Message: ErrParamNewPasswordMissing,
 			})
-			return
 		}
-		if err = database.ChangePassword(username, password, newPassword); err == nil {
+		if err = database.ChangePassword(u.Username, u.Password, u.NewPassword); err == nil {
 			w.WriteHeader(http.StatusOK)
 			json.NewEncoder(w).Encode(GenericResponse{
 				Success: true,

@@ -46,16 +46,29 @@ export const verify = async (token) => {
 }
 
 export const updateUser = async (action, username, password, newValue) => {
-    let url = `/api/user/update?action=${encodeURIComponent(action)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+    let url = `/api/user/update?action=${encodeURIComponent(action)}`;
+    let body = {};
 
-    // Add the appropriate parameter based on action
-    if (action === 'changeUsername') {
-        url += `&newUsername=${encodeURIComponent(newValue)}`;
-    } else if (action === 'changePassword') {
-        url += `&newPassword=${encodeURIComponent(newValue)}`;
+    switch (action) {
+        case 'changeUsername':
+            body = {
+                username: username,
+                password: password,
+                newUsername: newValue
+            };
+            break;
+        case 'changePassword':
+            body = {
+                username: username,
+                password: password,
+                newPassword: newValue
+            };
+            break;
+        default:
+            throw new Error("invalid action supplied to updateUser call, must be: 'changePassword' or 'changeUsername'");
     }
 
-    return instance.put(url)
+    return instance.put(url, body)
         .then((res) => {
             return res;
         })

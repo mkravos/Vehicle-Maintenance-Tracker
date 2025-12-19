@@ -15,7 +15,16 @@ const instance = axios.create({
     }
 });
 
-const token = localStorage.getItem("token");
-token && (instance.defaults.headers.common['Authorization'] = `Bearer ${token}`);
+// Request interceptor - attach token to every request
+instance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 export default instance;

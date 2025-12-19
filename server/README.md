@@ -219,6 +219,20 @@ Updates user account settings. Supports changing username or password.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `action` | string | Yes | Either `"changeUsername"` or `"changePassword"` |
+
+**Request Body:**
+```json
+{
+  "username": "string",
+  "password": "string",
+  "newUsername": "string",
+  "newPassword": "string"
+}
+```
+
+**Parameters:**
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
 | `username` | string | Yes | The current username |
 | `password` | string | Yes | The current password (for verification) |
 | `newUsername` | string | Conditional | New username (required if action is `"changeUsername"`) |
@@ -228,12 +242,30 @@ Updates user account settings. Supports changing username or password.
 
 Change Username:
 ```
-PUT /api/user/update?action=changeUsername&username=john_doe&password=oldpass&newUsername=jane_doe
+PUT /api/user/update?action=changeUsername
 ```
 
 Change Password:
 ```
-PUT /api/user/update?action=changePassword&username=john_doe&password=oldpass&newPassword=newpass
+PUT /api/user/update?action=changePassword
+```
+
+**Request Body Example (Change Username):**
+```json
+{
+  "username": "john_doe",
+  "password": "oldpass",
+  "newUsername": "jane_doe"
+}
+```
+
+**Request Body Example (Change Password):**
+```json
+{
+  "username": "john_doe",
+  "password": "oldpass",
+  "newPassword": "newpass"
+}
 ```
 
 **Response (Success - 200):**
@@ -253,7 +285,8 @@ PUT /api/user/update?action=changePassword&username=john_doe&password=oldpass&ne
 ```
 
 **Possible Errors:**
-- Missing required parameters
+- Missing required `action` query parameter
+- Missing required fields in request body (username, password)
 - Invalid action value
 - Invalid username or password
 - Database error
