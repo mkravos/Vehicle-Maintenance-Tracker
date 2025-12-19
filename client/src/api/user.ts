@@ -1,7 +1,20 @@
-import instance from './instance';
+import type { AxiosResponse } from 'axios';
+import instance, { type GenericResponse } from './instance';
 
-export const login = async (username, password, recaptchaToken) => {
-    return instance.post('/api/user/login', { username: username, password: password, recaptchaToken: recaptchaToken })
+export type LoginResponse = {
+    token: string;
+};
+
+export type UserIdResponse = {
+    id: string;
+};
+
+export const login = async (
+    username: string, 
+    password: string, 
+    recaptchaToken: string
+): Promise<AxiosResponse<LoginResponse | GenericResponse>> => {
+    return instance.post<LoginResponse>('/api/user/login', { username: username, password: password, recaptchaToken: recaptchaToken })
         .then((res) => {
             return res;
         })
@@ -19,8 +32,12 @@ export const logout = () => {
     localStorage.removeItem("username");
 }
 
-export const register = async (username, password, recaptchaToken) => {
-    return instance.post('/api/user/register', { username: username, password: password, recaptchaToken: recaptchaToken })
+export const register = async (
+    username: string, 
+    password: string, 
+    recaptchaToken: string
+): Promise<AxiosResponse<GenericResponse>> => {
+    return instance.post<GenericResponse>('/api/user/register', { username: username, password: password, recaptchaToken: recaptchaToken })
         .then((res) => {
             return res;
         })
@@ -32,8 +49,8 @@ export const register = async (username, password, recaptchaToken) => {
         });
 }
 
-export const verify = async (token) => {
-    return instance.post('/api/user/verify', { token: token })
+export const verify = async (token: string): Promise<AxiosResponse<GenericResponse>> => {
+    return instance.post<GenericResponse>('/api/user/verify', { token: token })
         .then((res) => {
             return res;
         })
@@ -45,7 +62,12 @@ export const verify = async (token) => {
         });
 }
 
-export const updateUser = async (action, username, password, newValue) => {
+export const updateUser = async (
+    action: string, 
+    username: string, 
+    password: string, 
+    newValue: string
+): Promise<AxiosResponse<GenericResponse>> => {
     let url = `/api/user/update?action=${encodeURIComponent(action)}`;
     let body = {};
 
@@ -68,7 +90,7 @@ export const updateUser = async (action, username, password, newValue) => {
             throw new Error("invalid action supplied to updateUser call, must be: 'changePassword' or 'changeUsername'");
     }
 
-    return instance.put(url, body)
+    return instance.put<GenericResponse>(url, body)
         .then((res) => {
             return res;
         })
@@ -80,10 +102,13 @@ export const updateUser = async (action, username, password, newValue) => {
         });
 }
 
-export const deleteUser = async (username, password) => {
+export const deleteUser = async (
+    username: string, 
+    password: string
+): Promise<AxiosResponse<GenericResponse>> => {
     const url = `/api/user/delete?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
 
-    return instance.delete(url)
+    return instance.delete<GenericResponse>(url)
         .then((res) => {
             return res;
         })
@@ -95,8 +120,8 @@ export const deleteUser = async (username, password) => {
         });
 }
 
-export const getUserId = async (username) => {
-    return instance.get('/api/user/getId?username=' + encodeURIComponent(username))
+export const getUserId = async (username: string): Promise<AxiosResponse<UserIdResponse | GenericResponse>> => {
+    return instance.get<UserIdResponse>('/api/user/getId?username=' + encodeURIComponent(username))
         .then((res) => {
             return res;
         })
