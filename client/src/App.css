@@ -2,223 +2,37 @@
   text-align: center;
 }
 
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
 .App-header {
-  background-image: url("./assets/background.png");
-  background-color: #ffffff;
+  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: black;
-}
-
-.Garage-header {
-  /* background-image: url("./assets/background.png"); */
-  background-color: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
-}
-
-.Card {
-  margin-bottom: 15px;
-  border-radius: 10px !important;
-  border-color: black !important;
-  border-width: 1px !important;
-  width: 450px;
-}
-
-.Page-title {
-  margin-top: 15px;
-}
-
-.Card-text {
-  font-size: 15px;
-}
-
-.Account-header {
-  /* background-image: url("./assets/background.png"); */
-  background-color: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
-}
-
-.Dashboard-header {
-  /* background-image: url("./assets/background.png"); */
-  background-color: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
-}
-
-.Dashboard-card-text {
-  font-size: 18px;
-}
-
-.Modal-filename {
-  font-size: 12px;
-  margin-left: 10px;
-  margin-top: 15px;
-}
-
-.Garage-dropdown-container {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.RSI-servicename {
-  display: flex;
-}
-
-.servicenamebox {
-  margin-right: 1px;
-}
-
-.VSR-card-title {
-  display: flex;
-  justify-content: space-between;
-}
-
-.VSR-card-buttons {
-  display: flex;
-}
-
-.Edit-service-item-button {
-  margin-left: 5px;
-  width: 75px;
-  height: 40px;
-}
-
-.Tracking-service-item-btn {
-  width: fit-content;
-  height: 40px;
-}
-
-.Dashboard-card-header {
-  display: flex;
-  border-radius: 10px !important;
-  justify-content: space-between;
-}
-
-.dashboardServicedText {
-  font-size: 14px;
-  margin-top: -8px;
-}
-
-.Generate-report-body {
-  display: flex;
-  align-items: center;
-}
-
-.Report-name {
-  font-size: 12px;
-  margin-left: 10px;
-}
-
-.Background-attribution {
-  font-size: 10px;
   color: white;
-  display: flex;
-  justify-content: center;
-  position: absolute; bottom: 0;
 }
 
-.Register-error {
-  height: 25px;
-  font-size: 15px;
+.App-link {
+  color: #61dafb;
 }
 
-.Login-btn {
-  margin-bottom: 30px;
-}
-
-.loginTitle {
-  margin-bottom: 30px;
-}
-
-.registerPrompt {
-  margin-top: 30px;
-  font-size: 14px;
-}
-
-.nav-link {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.loginForm {
-  background-color: white;
-  border-radius: 10px;
-  width: 340px;
-  height: 320px;
-}
-
-.registerForm {
-  background-color: white;
-  border-radius: 10px;
-  width: 340px;
-  height: 375px;
-}
-
-.accountDeletionPrompt {
-  margin-left: 20px;
-  width: 400px;
-}
-
-.usernameLabel {
-  margin-top: 15px;
-}
-
-.addVehicle {
-  margin-bottom: 50px;
-}
-
-.modalErrorDiv {
-  margin-left: 15px;
-  margin-bottom: 5px;
-  font-size: 18px;
-  height: 18px;
-  color: red;
-}
-
-.vehicleItem {
-  color: blue;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.serviceRecordsAccordion {
-  width: 100%;
-  margin-top: 25px;
-}
-
-.accordion-button {
-  height: 35px;
-  margin-bottom: 10px;
-}
-
-.serviceRecordsAccordionBody {
-  font-size: 16px;
-  margin-bottom: -15px;
-}
-
-.service-records-card {
-  width: 100% !important;
-}
-
-.dontTrackBtn {
-  border-radius: 10px !important;
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
