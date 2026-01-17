@@ -32,7 +32,7 @@ export const login = async (
 };
 
 // just a simple helper function that clears localstorage variables
-export const logout = () => {
+export const logout = (): void => {
   localStorage.removeItem("token");
   localStorage.removeItem("username");
 };
