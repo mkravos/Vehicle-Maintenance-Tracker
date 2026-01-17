@@ -1,5 +1,15 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { ThemeProvider as MuiThemeProvider, createTheme, PaletteMode } from "@mui/material";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
+import {
+  ThemeProvider as MuiThemeProvider,
+  createTheme,
+  PaletteMode,
+} from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
 interface ThemeContextType {
@@ -87,7 +97,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
               }),
         },
         typography: {
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+          fontFamily:
+            '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
           h1: {
             fontWeight: 700,
             letterSpacing: "-1.5px",
@@ -136,7 +147,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
           },
         },
       }),
-    [mode]
+    [mode],
   );
 
   const contextValue = useMemo(
@@ -144,7 +155,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       mode,
       toggleTheme,
     }),
-    [mode]
+    [mode],
   );
 
   return (
