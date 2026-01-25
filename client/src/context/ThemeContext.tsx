@@ -31,7 +31,7 @@ interface ThemeProviderProps {
   children: React.ReactNode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+export function ThemeProvider({ children }: ThemeProviderProps) {
   const [mode, setMode] = useState<PaletteMode>(() => {
     // Get saved preference from localStorage or default to light
     const savedMode = localStorage.getItem("themeMode");
@@ -163,4 +163,4 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
     </ThemeContext.Provider>
   );
-};
+}

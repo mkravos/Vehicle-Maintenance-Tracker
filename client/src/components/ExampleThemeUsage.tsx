@@ -15,7 +15,7 @@ import { Lightbulb, Code, Palette } from "@mui/icons-material";
 /**
  * Example component showing how to use the theme context
  */
-const ExampleThemeUsage: React.FC = () => {
+function ExampleThemeUsage() {
   const theme = useTheme();
   const { mode, toggleTheme } = useThemeMode();
 
@@ -129,7 +129,8 @@ const ExampleThemeUsage: React.FC = () => {
               fontFamily: "monospace",
             }}
           >
-            {`import { useTheme } from '@mui/material';
+            {`
+import { useTheme } from '@mui/material';
 import { useThemeMode } from '../context/ThemeContext';
 
 function MyComponent() {
@@ -147,12 +148,13 @@ function MyComponent() {
       <Button onClick={toggleTheme}>Toggle</Button>
     </Box>
   );
-}`}
+}
+            `}
           </Box>
         </Paper>
       </Stack>
     </Box>
   );
-};
+}
 
 export default ExampleThemeUsage;

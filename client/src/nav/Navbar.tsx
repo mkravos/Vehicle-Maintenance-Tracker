@@ -27,10 +27,11 @@ import {
   Logout as LogoutIcon,
   LightMode as LightModeIcon,
   DarkMode as DarkModeIcon,
-  ColorLens as ColorLensIcon,
+  Dashboard as DashboardIcon,
 } from "@mui/icons-material";
 import { useThemeMode } from "../context/ThemeContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { slugs } from "../resources/strings/slugs";
 
 const drawerWidth = 280;
 
@@ -38,7 +39,7 @@ interface NavbarProps {
   children?: React.ReactNode;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ children }) => {
+function Navbar({ children }: NavbarProps) {
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useTheme();
@@ -58,11 +59,21 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
     setAnchorEl(null);
   };
 
+  const navigateTo = (path: string) => {
+    navigate(path);
+    handleMenuClose();
+  };
+
+  const handleLogout = () => {
+    // TODO handle logout
+    handleMenuClose();
+  };
+
   const menuItems = [
     {
-      text: "Theme Examples",
-      icon: <ColorLensIcon />,
-      path: "/",
+      text: "Dashboard",
+      icon: <DashboardIcon />,
+      path: slugs.dashboard,
     },
   ];
 
@@ -77,7 +88,6 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
     >
       <CssBaseline />
 
-      {/* Modern Top AppBar with Glassmorphism */}
       <AppBar
         position="fixed"
         elevation={0}
@@ -130,7 +140,6 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {/* Theme Toggle Button */}
           <IconButton
             onClick={toggleTheme}
             sx={{
@@ -146,7 +155,6 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
             {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
           </IconButton>
 
-          {/* Modern User Avatar */}
           <IconButton
             onClick={handleAvatarClick}
             sx={{
@@ -172,7 +180,6 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
             </Avatar>
           </IconButton>
 
-          {/* Modern User Menu */}
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -213,7 +220,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
               },
             }}
           >
-            <MenuItem onClick={handleMenuClose}>
+            <MenuItem onClick={() => navigateTo(slugs.profile)}>
               <ListItemIcon>
                 <PersonIcon
                   fontSize="small"
@@ -222,7 +229,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
               </ListItemIcon>
               Profile
             </MenuItem>
-            <MenuItem onClick={handleMenuClose}>
+            <MenuItem onClick={() => navigateTo(slugs.settings)}>
               <ListItemIcon>
                 <SettingsIcon
                   fontSize="small"
@@ -232,7 +239,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
               Settings
             </MenuItem>
             <Divider sx={{ my: 1 }} />
-            <MenuItem onClick={handleMenuClose}>
+            <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <LogoutIcon fontSize="small" sx={{ color: "#f44336" }} />
               </ListItemIcon>
@@ -242,7 +249,6 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
         </Toolbar>
       </AppBar>
 
-      {/* Modern Sidebar Drawer */}
       <Drawer
         variant="persistent"
         open={open}
@@ -372,6 +378,6 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
       </Box>
     </Box>
   );
-};
+}
 
 export default Navbar;
