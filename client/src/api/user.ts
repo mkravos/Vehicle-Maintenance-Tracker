@@ -27,6 +27,9 @@ export const login = async (
       if (err.response && err.response.status === 401) {
         return err.response;
       }
+      if (err.response && err.response.status === 404) {
+        return err.response;
+      }
       throw err;
     });
 };
@@ -53,6 +56,9 @@ export const register = async (
     })
     .catch((err) => {
       if (err.response && err.response.status === 401) {
+        return err.response;
+      }
+      if (err.response && err.response.status === 409) {
         return err.response;
       }
       throw err;

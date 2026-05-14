@@ -107,6 +107,15 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if _, err := database.GetUserId(u.Username); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrUserNotFound,
+		})
+		return
+	}
+
 	if err := database.VerifyPassword(u.Username, u.Password); err == nil {
 		tokenString, err := createToken(u.Username)
 		if err != nil {
@@ -159,6 +168,15 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(GenericResponse{
 			Success: false,
 			Message: ErrInvalidRecaptcha,
+		})
+		return
+	}
+
+	if _, err := database.GetUserId(u.Username); err == nil {
+		w.WriteHeader(http.StatusConflict)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrUserAlreadyExists,
 		})
 		return
 	}

@@ -17,6 +17,8 @@ const (
 	ErrInvalidUsernameOrPass     = "Invalid credentials provided"
 	ErrInvalidOrExpiredToken     = "Invalid or expired token"
 	ErrCreatingJWTToken          = "Error creating JWT token"
+	ErrUserNotFound              = "User not found"
+	ErrUserAlreadyExists         = "User with the provided username already exists"
 	ErrParamActionMissing        = "Required body parameter 'action' was not provided in request"
 	ErrParamUsernameMissing      = "Required body parameter 'username' was not provided in request"
 	ErrParamPasswordMissing      = "Required body parameter 'password' was not provided in request"
