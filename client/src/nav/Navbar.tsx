@@ -32,6 +32,8 @@ import {
 import { useThemeMode } from "../context/ThemeContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { slugs } from "../resources/strings/slugs";
+import { logout } from "../api/user";
+import { useAuth } from "../context/AuthContext";
 
 const drawerWidth = 280;
 
@@ -46,6 +48,7 @@ function Navbar({ children }: NavbarProps) {
   const { mode, toggleTheme } = useThemeMode();
   const navigate = useNavigate();
   const location = useLocation();
+  const { setIsAuthenticated } = useAuth();
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -65,8 +68,9 @@ function Navbar({ children }: NavbarProps) {
   };
 
   const handleLogout = () => {
-    // TODO handle logout
     handleMenuClose();
+    logout();
+    setIsAuthenticated(false);
   };
 
   const menuItems = [

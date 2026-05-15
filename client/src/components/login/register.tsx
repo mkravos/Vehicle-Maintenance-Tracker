@@ -12,29 +12,30 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Lock } from "@mui/icons-material";
-import { login } from "../../api/user";
-import { useNavigate } from "react-router-dom";
+import { PersonAdd } from "@mui/icons-material";
+import { register } from "../../api/user";
 import { slugs } from "../../resources/strings/slugs";
-import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const loginFailed: string =
-  "Login failed. Please check your credentials and try again.";
-const accountNotFound: string =
-  "This account does not exist. Please register for an account or check your email address and try again.";
 const generalError: string =
-  "An error occurred while trying to log you in. Please try again later.";
+  "An error occurred during account creation. Please try again later.";
+const accountExists: string =
+  "An account with this email already exists. Please log in or use a different email address.";
+const registrationSuccess: string =
+  "Account created successfully! You can now log in with your new account.";
 
-export default function Login() {
+export default function Register() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { setIsAuthenticated } = useAuth();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const passwordRef = React.useRef<HTMLInputElement>(null);
+  const confirmPasswordRef = React.useRef<HTMLInputElement>(null);
 
   const [username, setUsername] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [confirmPassword, setConfirmPassword] = React.useState<string>("");
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
 
   const { mutate, isPending, isError } = useMutation({
     mutationFn: ({
@@ -45,24 +46,28 @@ export default function Login() {
       username: string;
       password: string;
       recaptchaToken: string;
-    }) => login(username, password, recaptchaToken),
+    }) => register(username, password, recaptchaToken),
     onSuccess: (res) => {
-      if (res.status === 200 && "token" in res.data) {
+      if (res.status === 201) {
         setErrorMsg(null);
-        localStorage.setItem("username", username);
-        localStorage.setItem("token", res.data.token);
-        setIsAuthenticated(true);
-      } else if (res.status === 401) {
-        setErrorMsg(loginFailed);
-      } else if (res.status === 404) {
-        setErrorMsg(accountNotFound);
+        setSuccessMsg(registrationSuccess);
+      } else if (res.status === 409) {
+        setErrorMsg(accountExists);
+        setSuccessMsg(null);
+      } else {
+        setErrorMsg(generalError);
+        setSuccessMsg(null);
       }
     },
   });
 
   const handleSubmit = async () => {
+    if (password !== confirmPassword) {
+      setErrorMsg("Passwords do not match. Please try again.");
+      return;
+    }
     if (!executeRecaptcha) return;
-    const recaptchaToken = await executeRecaptcha("login");
+    const recaptchaToken = await executeRecaptcha("register");
     mutate({ username, password, recaptchaToken });
   };
 
@@ -86,21 +91,30 @@ export default function Login() {
           mt: 4,
           p: 4,
           width: "575px",
-          height: "575px",
+          height: "600px",
           backgroundColor: theme.palette.background.paper,
         }}
       >
-        <Lock sx={{ fontSize: 64, color: theme.palette.primary.main }} />
+        <PersonAdd sx={{ fontSize: 64, color: theme.palette.primary.main }} />
         <Typography variant="h5" color={theme.palette.text.primary}>
-          Login
+          Register
         </Typography>
-        <Typography
-          sx={{ height: 10, mt: 2, fontWeight: "bold" }}
-          variant="body2"
-          color={theme.palette.error.main}
-        >
-          {isError ? generalError : errorMsg}
-        </Typography>
+        <Box sx={{ height: 10, mt: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: "bold" }}
+            color={theme.palette.error.main}
+          >
+            {isError ? generalError : errorMsg}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: "bold" }}
+            color={theme.palette.success.main}
+          >
+            {successMsg}
+          </Typography>
+        </Box>
         <Divider sx={{ my: 5 }} />
         <FormControl fullWidth>
           <TextField
@@ -117,9 +131,22 @@ export default function Login() {
           <TextField
             label="Password"
             variant="outlined"
+            sx={{ mb: 2 }}
             type="password"
             inputRef={passwordRef}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                confirmPasswordRef.current?.focus();
+              }
+            }}
+          />
+          <TextField
+            label="Re-Enter Password"
+            variant="outlined"
+            type="password"
+            inputRef={confirmPasswordRef}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleSubmit();
@@ -136,7 +163,7 @@ export default function Login() {
           onClick={() => handleSubmit()}
           disabled={isPending}
         >
-          Sign In
+          Create Account
         </Button>
         <Box
           sx={{
@@ -146,26 +173,15 @@ export default function Login() {
           }}
         >
           <Link
-            href={slugs.forgot}
+            href={slugs.login}
             variant="body2"
             sx={{ mt: 2, fontWeight: "bold" }}
             onClick={(e) => {
               e.preventDefault();
-              navigate(slugs.forgot);
+              navigate(slugs.login);
             }}
           >
-            Forgot password?
-          </Link>
-          <Link
-            href={slugs.register}
-            variant="body2"
-            sx={{ mt: 2, fontWeight: "bold" }}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate(slugs.register);
-            }}
-          >
-            Don't have an account? Register
+            Already have an account? Sign In
           </Link>
         </Box>
       </Paper>

@@ -7,6 +7,7 @@ export const slugs = {
   root: "/",
   login: "/login",
   register: "/register",
+  forgot: "/forgot",
   dashboard: "/dashboard",
   garage: "/garage",
   profile: "/profile",
