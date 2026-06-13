@@ -3,6 +3,8 @@ package database
 import (
 	"errors"
 	"fmt"
+	"strings"
+	"unicode"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -23,6 +25,11 @@ func GetUserId(username string) (id string, err error) {
 
 // AddUser creates a new user account with the given username and password
 func AddUser(username, password string) error {
+	err := enforcePasswordComplexity(password)
+	if err != nil {
+		return err
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return fmt.Errorf("failed to hash password: %v", err)
@@ -48,7 +55,12 @@ func AddUser(username, password string) error {
 
 // ChangePassword updates the password for the given username after verifying the old password
 func ChangePassword(username, oldPassword, newPassword string) error {
-	err := VerifyPassword(username, oldPassword)
+	err := enforcePasswordComplexity(newPassword)
+	if err != nil {
+		return err
+	}
+
+	err = VerifyPassword(username, oldPassword)
 	if err != nil {
 		return errors.New(ErrInvalidUsernameOrPass)
 	}
@@ -137,4 +149,38 @@ func getUserKey(username string) (string, error) {
 	}
 
 	return hashedPassword, nil
+}
+
+func enforcePasswordComplexity(password string) error {
+	specialChars := "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+	hasUpper := false
+	hasLower := false
+	hasDigit := false
+	hasSpecial := false
+	minLength := 12
+
+	if len(password) < minLength {
+		return fmt.Errorf("password must be at least %d characters long", minLength)
+	}
+
+	for _, char := range password {
+		if unicode.IsUpper(char) {
+			hasUpper = true
+		}
+		if unicode.IsLower(char) {
+			hasLower = true
+		}
+		if unicode.IsDigit(char) {
+			hasDigit = true
+		}
+		if strings.ContainsRune(specialChars, char) {
+			hasSpecial = true
+		}
+	}
+
+	if !hasUpper || !hasLower || !hasDigit || !hasSpecial {
+		return fmt.Errorf("password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character ($s)", specialChars)
+	}
+
+	return nil
 }

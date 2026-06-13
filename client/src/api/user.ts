@@ -61,6 +61,9 @@ export const register = async (
       if (err.response && err.response.status === 409) {
         return err.response;
       }
+      if (err.response && err.response.status === 500) {
+        return err.response;
+      }
       throw err;
     });
 };

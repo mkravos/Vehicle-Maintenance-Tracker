@@ -48,12 +48,20 @@ export default function Register() {
       recaptchaToken: string;
     }) => register(username, password, recaptchaToken),
     onSuccess: (res) => {
+      console.log(res);
       if (res.status === 201) {
         setErrorMsg(null);
         setSuccessMsg(registrationSuccess);
       } else if (res.status === 409) {
         setErrorMsg(accountExists);
         setSuccessMsg(null);
+      } else if (res.status === 500) {
+        if (res.data?.message?.includes("password")) {
+          setErrorMsg(
+            "Password must be at least 12 characters long, include uppercase and lowercase letters, numbers, and special characters.",
+          );
+          setSuccessMsg(null);
+        }
       } else {
         setErrorMsg(generalError);
         setSuccessMsg(null);
