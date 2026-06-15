@@ -21,8 +21,12 @@ const generalError: string =
   "An error occurred during account creation. Please try again later.";
 const accountExists: string =
   "An account with this email already exists. Please log in or use a different email address.";
+const passwordComplexity: string =
+  "Password must be at least 12 characters long, and include uppercase and lowercase letters, numbers, and special characters.";
+const invalidEmail: string = "Please enter a valid email address.";
 const registrationSuccess: string =
   "Account created successfully! You can now log in with your new account.";
+const requiredFields: string = "Please fill in all required fields.";
 
 export default function Register() {
   const theme = useTheme();
@@ -56,10 +60,15 @@ export default function Register() {
         setErrorMsg(accountExists);
         setSuccessMsg(null);
       } else if (res.status === 500) {
-        if (res.data?.message?.includes("password")) {
-          setErrorMsg(
-            "Password must be at least 12 characters long, and include uppercase and lowercase letters, numbers, and special characters.",
-          );
+        if (
+          res.data?.message?.includes("format:")
+        ) /* hack to detect invalid email format error from backend */ {
+          setErrorMsg(invalidEmail);
+          setSuccessMsg(null);
+        } else if (
+          res.data?.message?.includes("complexity:")
+        ) /* hack to detect password complexity error from backend */ {
+          setErrorMsg(passwordComplexity);
           setSuccessMsg(null);
         }
       } else {
@@ -70,6 +79,10 @@ export default function Register() {
   });
 
   const handleSubmit = async () => {
+    if (!username || !password || !confirmPassword) {
+      setErrorMsg(requiredFields);
+      return;
+    }
     if (password !== confirmPassword) {
       setErrorMsg("Passwords do not match. Please try again.");
       return;
@@ -128,6 +141,8 @@ export default function Register() {
           <TextField
             label="Email Address"
             variant="outlined"
+            required
+            error={errorMsg === requiredFields && !username}
             sx={{ mb: 2 }}
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={(e) => {
@@ -139,6 +154,8 @@ export default function Register() {
           <TextField
             label="Password"
             variant="outlined"
+            required
+            error={errorMsg === requiredFields && !password}
             sx={{ mb: 2 }}
             type="password"
             inputRef={passwordRef}
@@ -152,6 +169,8 @@ export default function Register() {
           <TextField
             label="Re-Enter Password"
             variant="outlined"
+            required
+            error={errorMsg === requiredFields && !confirmPassword}
             type="password"
             inputRef={confirmPasswordRef}
             onChange={(e) => setConfirmPassword(e.target.value)}

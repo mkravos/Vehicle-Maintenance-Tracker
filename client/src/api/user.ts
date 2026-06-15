@@ -86,9 +86,8 @@ export const verify = async (
 
 export const updateUser = async (
   action: string,
-  username: string,
-  password: string,
   newValue: string,
+  password: string,
 ): Promise<AxiosResponse<GenericResponse>> => {
   const url = `/api/user/update?action=${encodeURIComponent(action)}`;
   let body = {};
@@ -96,14 +95,14 @@ export const updateUser = async (
   switch (action) {
     case "changeUsername":
       body = {
-        username: username,
+        username: localStorage.getItem("username") || "",
         password: password,
         newUsername: newValue,
       };
       break;
     case "changePassword":
       body = {
-        username: username,
+        username: localStorage.getItem("username") || "",
         password: password,
         newPassword: newValue,
       };
@@ -121,6 +120,12 @@ export const updateUser = async (
     })
     .catch((err) => {
       if (err.response && err.response.status === 401) {
+        return err.response;
+      }
+      if (err.response && err.response.status === 409) {
+        return err.response;
+      }
+      if (err.response && err.response.status === 500) {
         return err.response;
       }
       throw err;

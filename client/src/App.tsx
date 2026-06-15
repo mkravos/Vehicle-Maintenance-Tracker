@@ -8,6 +8,8 @@ import ExampleThemeUsage from "./components/ExampleThemeUsage";
 import { slugs } from "./resources/strings/slugs";
 import Login from "./components/login/login";
 import Register from "./components/login/register";
+import Settings from "./components/settings/settings";
+import AccountSettings from "./components/settings/account";
 
 const RECAPTCHA_SITE_KEY = "6Lfl2C8sAAAAAP__IBKBC-Vq7tRkgl5LBpk_EZYZ";
 
@@ -73,7 +75,15 @@ function App() {
                 path={slugs.settings}
                 element={
                   <PrivateRoute>
-                    <div>Settings Page</div>
+                    <Settings />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path={slugs.settingsAccount}
+                element={
+                  <PrivateRoute>
+                    <AccountSettings />
                   </PrivateRoute>
                 }
               />

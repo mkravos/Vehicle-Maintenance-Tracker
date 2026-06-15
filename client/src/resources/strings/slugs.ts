@@ -12,4 +12,9 @@ export const slugs = {
   garage: "/garage",
   profile: "/profile",
   settings: "/settings",
+  settingsAccount: "/settings/account",
+  settingsNotifications: "/settings/notifications",
+  settingsSecurity: "/settings/security",
+  settingsSharing: "/settings/sharing",
+  settingsPreferences: "/settings/preferences",
 } as const;

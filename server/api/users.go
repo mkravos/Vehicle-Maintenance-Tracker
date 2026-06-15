@@ -278,39 +278,11 @@ func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	switch action {
 	case "changeUsername":
-		if u.NewUsername == "" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(GenericResponse{
-				Success: false,
-				Message: ErrParamNewUsernameMissing,
-			})
-		}
-		if err = database.ChangeUsername(u.Username, u.Password, u.NewUsername); err == nil {
-			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(GenericResponse{
-				Success: true,
-				Message: "Username updated",
-			})
-		} else {
-			err = fmt.Errorf("error updating username: %v", err)
-		}
+		u.handleChangeUsername(w, r)
+		return
 	case "changePassword":
-		if u.NewPassword == "" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(GenericResponse{
-				Success: false,
-				Message: ErrParamNewPasswordMissing,
-			})
-		}
-		if err = database.ChangePassword(u.Username, u.Password, u.NewPassword); err == nil {
-			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(GenericResponse{
-				Success: true,
-				Message: "Password updated",
-			})
-		} else {
-			err = fmt.Errorf("error updating password: %v", err)
-		}
+		u.handleChangePassword(w, r)
+		return
 	default:
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(GenericResponse{
@@ -318,8 +290,33 @@ func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
 			Message: ErrInvalidAction,
 		})
 	}
+}
 
-	if err != nil {
+// handleChangeUsername updates the username of a user account after verifying the password and
+// checking for uniqueness
+func (u *UpdateUserRequestBody) handleChangeUsername(w http.ResponseWriter, r *http.Request) {
+	if u.NewUsername == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrParamNewUsernameMissing,
+		})
+	}
+	if _, err := database.GetUserId(u.NewUsername); err == nil {
+		w.WriteHeader(http.StatusConflict)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrUserAlreadyExists,
+		})
+		return
+	}
+	if err := database.ChangeUsername(u.Username, u.Password, u.NewUsername); err == nil {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: true,
+			Message: "Username updated",
+		})
+	} else {
 		if strings.Contains(err.Error(), ErrInvalidUsernameOrPass) {
 			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(GenericResponse{
@@ -330,7 +327,49 @@ func HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(GenericResponse{
 				Success: false,
-				Message: err.Error(),
+				Message: fmt.Sprintf("Error updating username: %v", err),
+			})
+		}
+	}
+}
+
+// handleChangePassword updates the password of a user account, after
+// verifying the current password and ensuring the new password is different
+// and meets complexity requirements
+func (u *UpdateUserRequestBody) handleChangePassword(w http.ResponseWriter, r *http.Request) {
+	if u.NewPassword == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: ErrParamNewPasswordMissing,
+		})
+	}
+	if u.Password == u.NewPassword {
+		w.WriteHeader(http.StatusConflict)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: false,
+			Message: "New password cannot be the same as the old password",
+		})
+		return
+	}
+	if err := database.ChangePassword(u.Username, u.Password, u.NewPassword); err == nil {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(GenericResponse{
+			Success: true,
+			Message: "Password updated",
+		})
+	} else {
+		if strings.Contains(err.Error(), ErrInvalidUsernameOrPass) {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: ErrInvalidUsernameOrPass,
+			})
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(GenericResponse{
+				Success: false,
+				Message: fmt.Sprintf("Error updating password: %v", err),
 			})
 		}
 	}

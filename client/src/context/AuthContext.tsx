@@ -12,7 +12,9 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const setRecaptchaBadgeVisibility = (visible: boolean) => {
-  const badge = document.querySelector(".grecaptcha-badge") as HTMLElement | null;
+  const badge = document.querySelector(
+    ".grecaptcha-badge",
+  ) as HTMLElement | null;
   if (badge) badge.style.visibility = visible ? "visible" : "hidden";
 };
 
@@ -35,7 +37,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [runVerify]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (
+      isAuthenticated &&
+      (window.location.pathname === slugs.login ||
+        window.location.pathname === slugs.register ||
+        window.location.pathname === slugs.forgot)
+    ) {
       navigate(slugs.dashboard);
     }
     setRecaptchaBadgeVisibility(!isAuthenticated);

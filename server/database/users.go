@@ -3,6 +3,7 @@ package database
 import (
 	"errors"
 	"fmt"
+	"net/mail"
 	"strings"
 	"unicode"
 
@@ -11,7 +12,7 @@ import (
 )
 
 const (
-	ErrInvalidUsernameOrPass = "invalid credentials provided"
+	ErrInvalidUsernameOrPass = "Invalid credentials provided"
 )
 
 func GetUserId(username string) (id string, err error) {
@@ -44,6 +45,11 @@ func AddUser(username, password string) error {
 		return fmt.Errorf("user %s already exists", username)
 	}
 
+	err = enforceUsernameIsEmailAddress(username)
+	if err != nil {
+		return err
+	}
+
 	_, err = database.Exec("INSERT INTO user_account (id, username, userkey) VALUES ($1, $2, $3)",
 		uuid.New().String(), username, string(hashedPassword))
 	if err != nil {
@@ -58,6 +64,10 @@ func ChangePassword(username, oldPassword, newPassword string) error {
 	err := enforcePasswordComplexity(newPassword)
 	if err != nil {
 		return err
+	}
+
+	if oldPassword == newPassword {
+		return fmt.Errorf("new password cannot be the same as the old password")
 	}
 
 	err = VerifyPassword(username, oldPassword)
@@ -84,6 +94,11 @@ func ChangeUsername(username, password, newUsername string) error {
 	err := VerifyPassword(username, password)
 	if err != nil {
 		return errors.New(ErrInvalidUsernameOrPass)
+	}
+
+	err = enforceUsernameIsEmailAddress(newUsername)
+	if err != nil {
+		return err
 	}
 
 	userExists := false
@@ -160,7 +175,7 @@ func enforcePasswordComplexity(password string) error {
 	minLength := 12
 
 	if len(password) < minLength {
-		return fmt.Errorf("password must be at least %d characters long", minLength)
+		return fmt.Errorf("complexity: password must be at least %d characters long", minLength)
 	}
 
 	for _, char := range password {
@@ -179,8 +194,16 @@ func enforcePasswordComplexity(password string) error {
 	}
 
 	if !hasUpper || !hasLower || !hasDigit || !hasSpecial {
-		return fmt.Errorf("password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character ($s)", specialChars)
+		return fmt.Errorf("complexity: password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character ($s)", specialChars)
 	}
 
+	return nil
+}
+
+func enforceUsernameIsEmailAddress(username string) error {
+	addr, err := mail.ParseAddress(username)
+	if err != nil || addr.Address != username {
+		return fmt.Errorf("format: username must be a valid email address")
+	}
 	return nil
 }

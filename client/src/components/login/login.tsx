@@ -24,6 +24,7 @@ const accountNotFound: string =
   "This account does not exist. Please register for an account or check your email address and try again.";
 const generalError: string =
   "An error occurred while trying to log you in. Please try again later.";
+const requiredFields: string = "Please fill in all required fields.";
 
 export default function Login() {
   const theme = useTheme();
@@ -61,6 +62,10 @@ export default function Login() {
   });
 
   const handleSubmit = async () => {
+    if (!username || !password) {
+      setErrorMsg(requiredFields);
+      return;
+    }
     if (!executeRecaptcha) return;
     const recaptchaToken = await executeRecaptcha("login");
     mutate({ username, password, recaptchaToken });
@@ -106,6 +111,8 @@ export default function Login() {
           <TextField
             label="Email Address"
             variant="outlined"
+            required
+            error={errorMsg === requiredFields && !username}
             sx={{ mb: 2 }}
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={(e) => {
@@ -118,6 +125,8 @@ export default function Login() {
             label="Password"
             variant="outlined"
             type="password"
+            required
+            error={errorMsg === requiredFields && !password}
             inputRef={passwordRef}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
